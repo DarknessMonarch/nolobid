@@ -1,0 +1,92 @@
+"use client";
+
+import Link from "next/link";
+import toast from "react-hot-toast";
+import styles from "@/app/styles/sidenav.module.css";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+
+import {
+  HomeIcon,
+  WalletIcon,
+  Cog8ToothIcon as SettingIcon,
+  IdentificationIcon as ContactIcon,
+  InformationCircleIcon as AboutIcon,
+  ArrowRightStartOnRectangleIcon as LogoutIcon,
+} from "@heroicons/react/24/outline";
+
+export default function SideNavComponent() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const logout = () => {
+    toast.success("Logged Out");
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
+
+  const handleWallet = () => {
+    const params = new URLSearchParams(searchParams);
+    const currentWalletState = params.get("wallet");
+    params.delete("id");
+    
+    if (currentWalletState === "open") {
+      params.delete("wallet");
+    } else {
+      params.set("wallet", "open");
+    }
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const isWalletOpen = () => {
+    return searchParams.get("wallet") === "open";
+  };
+
+  const isActive = (path) => {
+    if (isWalletOpen()) return "";
+    return pathname === path ? styles.activesideNav : "";
+  };
+
+  return (
+    <div className={styles.sideNavContainer}>
+      <div className={styles.sideNavContainerTop}>
+        <Link
+          href="/page/home"
+          className={`${styles.sideNavLinkContainer} ${isActive("/page/home") || isActive("/")}`}
+        >
+          <HomeIcon height={24} width={24} className={styles.sideNavIcon} alt="Home icon" />
+        </Link>
+        <div
+          onClick={handleWallet}
+          className={`${styles.sideNavLinkContainer} ${isWalletOpen() ? styles.activesideNav : ""}`}
+        >
+          <WalletIcon height={24} width={24} className={styles.sideNavIcon} alt="Wallet icon" />
+        </div>
+        <Link
+          href="/page/contact"
+          className={`${styles.sideNavLinkContainer} ${isActive("/page/contact")}`}
+        >
+          <ContactIcon height={24} width={24} className={styles.sideNavIcon} alt="Contact icon" />
+        </Link>
+        <Link
+          href="/page/about"
+          className={`${styles.sideNavLinkContainer} ${isActive("/page/about")}`}
+        >
+          <AboutIcon height={24} width={24} className={styles.sideNavIcon} alt="About icon" />
+        </Link>
+      </div>
+      <div className={styles.sideNavContainerBottom}>
+        <Link
+          href="/page/settings"
+          className={`${styles.sideNavLinkContainer} ${isActive("/page/settings")}`}
+        >
+          <SettingIcon height={24} width={24} className={styles.sideNavIcon} alt="Settings icon" />
+        </Link>
+        <div className={styles.sideNavBtn} onClick={logout}>
+          <LogoutIcon height={24} width={24} className={styles.sideNavIcon} alt="Logout icon" />
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,62 @@
+@media screen {
+  .sideNavContainer {
+    gap: 20px;
+    height: 100%;
+    display: flex;
+    padding: 20px 0;
+    width: fit-content;
+    flex-direction: column;
+    width: var(--sidenav-width);
+    border-radius: 0  12px 12px 0;
+    min-width: var(--sidenav-width);
+    background-color: var(--primary-light-color);
+  }
+
+  .sideNavContainerTop {
+    gap: 30px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .sideNavLinkContainer {
+    display: flex;
+    cursor: pointer;
+  }
+
+  .sideNavLinkContainer:hover .sideNavIcon {
+    color: var(--secondary-color);
+  }
+
+  .sideNavIcon {
+    width: 24px;
+    height: 24px;
+    color: var(--background-color);
+  }
+
+  .activesideNav .sideNavIcon {
+    color: var(--secondary-color);
+  } 
+
+  .sideNavContainerBottom {
+    gap: 30px;
+    display: flex;
+    padding: 10px 0;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .sideNavBtn:hover .sideNavIcon {
+    color: var(--secondary-color);
+    cursor: pointer;
+  }
+
+}
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .sideNavContainer {
+    border-radius: 12px;
+  }
+}

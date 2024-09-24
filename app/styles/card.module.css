@@ -1,0 +1,170 @@
+@media screen {
+  .cardMain {
+    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .cardContainer {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    cursor: pointer;
+    height: fit-content;
+    border-radius: 12px;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--primary-light-color);
+  }
+
+  .cardImage {
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .cardImageWrapper {
+    gap: 20px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+
+  }
+
+  .cardImageInfo {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cardImageInfo h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  .cardImageInfo span {
+    font-weight: 300;
+    font-size: 0.9rem;
+    color: var(--background-light-color);
+  }
+
+  .cardGlass {
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    border-radius: 12px;
+    color: var(--secondary-color);
+    justify-content: space-between;
+    background-color: var(--primary-glass-color);
+  }
+
+  .cardGlassInfo {
+    gap: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cardGlassInfo h3 {
+    font-size: 0.8rem;
+    font-weight: 200;
+    color: var(--background-color);
+  }
+
+  .cardGlassInfo span {
+    font-size: 0.8rem;
+    font-weight: 200;
+    color: var(--secondary-color);
+  }
+
+  .cardHr {
+    height: 20px;
+    border: 1px solid var(--secondary-color);
+  }
+
+  .cardBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--background-light-color);
+  }
+
+  .cardBottomInfo {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .cardBottomInfo h3 {
+    font-weight: 200;
+    font-size: 0.8rem;
+  }
+}
+
+
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .cardMain {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+  }
+
+  .cardImage {
+    width: auto;
+  }
+
+
+  .cardImageWrapper {
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+
+  }
+
+  
+}
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+  .cardMain {
+    overflow: hidden;
+    overflow-y: auto;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+  }
+
+  .cardImage {
+    width: auto;
+  }
+
+  
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  .cardMain {
+    overflow: hidden;
+    overflow-y: auto;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+  }
+
+  .cardImageWrapper {
+    flex-wrap: nowrap;
+
+  }
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+  .cardMain {
+    overflow: hidden;
+    overflow-y: auto;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+  }
+
+  .cardImageWrapper {
+    flex-wrap: nowrap;
+
+  }
+}

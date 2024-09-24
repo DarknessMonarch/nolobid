@@ -1,0 +1,118 @@
+@media screen {
+  .advertComponent {
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    min-height: 200px;
+    position: relative;
+    border-radius: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .imageSlider {
+    gap: 5px;
+    right: 0;
+    padding: 10px;
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    border-radius: inherit;
+  }
+
+  .circleAdv {
+    width: 10px;
+    height: 10px;
+    border-radius: 360%;
+    border: 2px solid var(--background-color);
+  }
+
+  .activeCircle {
+    width: 20px;
+    height: 10px;
+    border-radius: 12px;
+    background-color: var(--background-color);
+  }
+
+  .advertImage {
+    border-radius: inherit;
+    filter: brightness(70%);
+  }
+
+  .bannerInfo {
+    z-index: 10;
+    display: flex;
+    padding: 10px 0;
+    min-height: inherit;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .bannerInfo h1 {
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+
+  .bannerInfo span {
+    color: var(--secondary-color);
+  }
+
+
+  .buttonBanner {
+    cursor: pointer;
+    padding: 10px 30px;
+    width: fit-content;
+    border-radius: 8px;
+    text-transform: capitalize;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+  }
+
+  .buttonBanner:hover {
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+  }
+
+}
+
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .advertComponent {
+    min-height: 200px;
+  }
+
+  .imageSlider {
+    justify-content: center;
+  }
+
+  .advertImage {
+    filter: brightness(80%);
+  }
+
+  .bannerInfo {
+    gap: 20px;
+    justify-content: center;
+  }
+
+
+  .bannerInfo h1 {
+    font-size: 2rem !important; 
+    
+  }
+ 
+
+}
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+}

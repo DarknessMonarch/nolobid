@@ -1,0 +1,78 @@
+@media screen {
+.aboutContainer {
+  gap: 30px;
+  height: 100%;
+  display: flex;
+  padding: 10px;
+  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: justify;
+  flex-direction: column;
+}
+
+.aboutContainer h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.aboutContainer h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+
+.aboutContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+
+.aboutContainer p {
+  font-size: 1rem;
+  font-weight: 300;
+
+}
+
+.aboutContainer span {
+  text-transform: capitalize;
+  color: var(--secondary-color);
+}
+
+
+.introComponent {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.services {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+  
+}
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+
+}
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+}

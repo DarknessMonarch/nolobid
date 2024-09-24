@@ -1,0 +1,69 @@
+@media screen {
+  .homeMain {
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .content {
+    width: 100%;
+    padding: 10px;
+    /* overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden; */
+  }
+
+  .sideContent {
+    bottom: 0;
+    height: 80%;
+    z-index: 999;
+    padding: 10px;
+    display: flex;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    transform: translateX(-100%);
+    transition: transform 1s ease;
+    border-radius: 12px 12px 0 0;
+    background-color: var(--primary-light-color);
+  }
+
+  .sideContent.slideIn {
+    transform: translateX(0);
+  }
+}
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .content {
+    padding: 0;
+    width: 100%;
+  }
+
+  .sideContent {
+    z-index: 0;
+    height: 100%;
+    position: relative;
+    border-radius: 12px;
+    transform: translateX(0);
+    width: var(--sideContent-width);
+  }
+}
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+ 
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+ 
+}

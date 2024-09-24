@@ -1,0 +1,71 @@
+@media screen {
+  .infocardContainer {
+    gap: 10px;
+    display: flex;
+    padding: 10px 0;
+    overflow-x: auto; 
+    overflow-y: hidden;
+    flex-wrap: nowrap; 
+    justify-content: flex-start;
+  }
+
+  .infocard {
+    gap: 10px;
+    width: 200px; 
+    padding: 10px;
+    display: flex;
+    flex: 0 0 auto; 
+    align-items: center;
+    border-radius: 12px;
+    flex-direction: column;
+    background-color: var(--primary-light-color);
+  }
+
+  .infocardIcon {
+    color: var(--secondary-color);
+  }
+
+  .infocard h2 {
+    font-size: .9rem;
+    font-weight: 100;
+    text-align: center;
+    color: var(--secondary-color);
+  }
+
+  .infocard p {
+    font-size: 0.9rem;
+    font-weight: 100;
+    text-align: center;
+  }
+}
+
+/* For larger devices */
+@media only screen and (min-width: 48em) {
+  .infocardContainer {
+    justify-content: space-between;
+  }
+
+  .infocard {
+    width: calc(25% - 10px); 
+  }
+}
+/* iPad Pro & Laptop screens */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+  .infocard {
+    width: calc(33.33% - 10px); 
+  }
+}
+
+/* Desktop and 4k screens */
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  .infocard {
+    width: calc(25% - 10px); 
+  }
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+  .infocard {
+    width: calc(25% - 10px); 
+  }
+}

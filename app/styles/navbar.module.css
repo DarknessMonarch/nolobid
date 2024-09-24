@@ -1,0 +1,182 @@
+@media screen {
+  .navMain {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    padding: 0 10px;
+    height: fit-content;
+    flex-direction: column;
+  }
+
+  .navContainer {
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    justify-content: space-between;
+  }
+
+  .navContainerTop {
+    gap: 40px;
+    display: flex;
+    align-items: center;
+  }
+
+  .navContainerTop .searchContainer {
+    display: none;
+  }
+
+  .logo {
+    width: 40px;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .searchContainer {
+    gap: 10px;
+    top: 100px;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    padding: 0 10px;
+    align-items: center;
+    border-radius: 10px;
+    background-color: var(--primary-light-color);
+  }
+
+  .searchIcon {
+    height: 30px;
+    width: 30px;
+  }
+
+  .searchInput {
+    width: 100%;
+    border: none;
+    height: 40px;
+    padding: 10px;
+    outline: none;
+    color: var(--background-color);
+    background-color: transparent;
+  }
+
+  .searchInput::placeholder {
+    font-size: .8rem;
+    color: var(--background-color);
+  }
+
+  .navContainerBottom {
+    gap: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .wallet {
+    gap: 10px;
+    height: 40px;
+    display: none;
+    padding: 10px;
+    border-radius: 12px;
+    align-items: center;
+    color: var(--background-color);
+    background-color: var(--primary-light-color);
+  }
+
+  .wallet span {
+    font-size: .8rem;
+  }
+
+  .btnContainer {
+    gap: 10px;
+    height: 40px;
+    display: flex;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 8px;
+    align-items: center;
+    background: transparent;
+    text-transform: capitalize;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+  }
+
+  .logutNavIcon {
+    color: var(--primary-color);
+  }
+
+  .btnContainer:hover {
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+  }
+
+  .btnContainer:hover .logutNavIcon {
+    color: var(--background-color);
+  }
+
+  .profileImg {
+    height: 40px;
+    object-fit: cover;
+    border-radius: 20px;
+    object-position: center;
+    border: 2px solid var(--primary-light-color);
+  }
+
+  .userProfile {
+    gap: 10px;
+    padding: 5px;
+    display: flex;
+    cursor: pointer;
+    border-radius: 8px;
+    position: relative;
+    align-items: center;
+  }
+
+  .userDetails {
+    gap: 2px;
+    display: flex;
+  }
+
+  .userProfile h1 {
+    font-weight: 400;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    color: var(--secondary-color);
+  }
+
+  .userProfile span {
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: capitalize;
+    color: var(--secondary-color);
+  }
+
+  .navIcon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
+  }
+
+  .btnContainer:hover .navIcon {
+    color: var(--background-color);
+  }
+}
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .navMain {
+    padding: 0;
+  }
+
+  .navMain .searchContainer {
+    display: none;
+  }
+
+  .wallet {
+    display: flex;
+  }
+
+  .navContainerTop .searchContainer {
+    display: flex;
+  }
+}

@@ -5,6 +5,6 @@ export default function robots() {
       allow: '/',
       disallow: '/private/',
     },
-    sitemap: 'https://nolobid.com/sitemap.xml',
+    sitemap: 'https://nolobid.vercel.app/sitemap.xml',
   }
 }

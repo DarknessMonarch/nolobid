@@ -6,14 +6,14 @@ import toast, { Toaster } from "react-hot-toast";
 const inter = Inter({ weight: ['400', '500', '600', '700'], subsets: ['latin'] });
 
 export const metadata = {
-  metadataBase: new URL('https://nolobid.com/'),
+  metadataBase: new URL('https://nolobid.vercel.app/'),
   title: 'Nolobid - The Ultimate Bidding Platform',
   applicationName: 'Nolobid',
   author: 'DarknessMonarch',
   images:
     "https://raw.githubusercontent.com/DarknessMonarch/nolobid/refs/heads/master/public/assets/banner.png",
   description: 'Nolobid is an all-in-one bidding platform where you can win desired items at the lowest possible prices, offering a seamless online auction experience with unbeatable deals.',
-  metadataBase: new URL("https://www.nolobid.com/"),
+  metadataBase: new URL("https://nolobid.vercel.app/"),
   keywords: ['Bidding platfor',
     'Online auctions',
     'Lowest price bids',
@@ -29,7 +29,7 @@ export const metadata = {
   openGraph: {
     title: 'Nolobid - The Ultimate Bidding Platform',
     description: 'Nolobid is an all-in-one bidding platform where you can win desired items at the lowest possible prices, offering a seamless online auction experience with unbeatable deals.',
-    url: 'https://nolobid.com/',
+    url: 'https://nolobid.vercel.app/',
     siteName: 'Nolobid',
     images:
       "https://raw.githubusercontent.com/DarknessMonarch/nolobid/refs/heads/master/public/assets/banner.png",

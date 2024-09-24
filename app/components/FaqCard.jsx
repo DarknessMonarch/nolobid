@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/app/styles/infocard.module.css";
+import styles from "@/app/styles/faqcard.module.css";
 
 const InfocardData = [
   {
@@ -16,11 +16,11 @@ const InfocardData = [
     title: "3. Wait for a win",
 
     description:
-      "After the bidding is closed, you will be announced as the winner if your bid was the <span>Lowest Unique Bid</span>",
+      "After the bidding is closed, you will be announced as the winner if your bid was the Lowest Unique Bid",
   },
 ];
 
-export default function Infocard() {
+export default function FaqCard() {
   return (
     <div className={styles.infocardContainer}>
       {InfocardData.map((item, index) => (

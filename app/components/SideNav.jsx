@@ -8,6 +8,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   HomeIcon,
   WalletIcon,
+  BookOpenIcon as TermIcon,
   Cog8ToothIcon as SettingIcon,
   IdentificationIcon as ContactIcon,
   InformationCircleIcon as AboutIcon,
@@ -70,12 +71,20 @@ export default function SideNavComponent() {
           <ContactIcon height={24} width={24} className={styles.sideNavIcon} alt="Contact icon" />
         </Link>
         <Link
+          href="/page/terms"
+          className={`${styles.sideNavLinkContainer} ${isActive("/page/terms")}`}
+        >
+          <TermIcon height={24} width={24} className={styles.sideNavIcon} alt="terms icon" />
+        </Link>
+        <Link
           href="/page/about"
           className={`${styles.sideNavLinkContainer} ${isActive("/page/about")}`}
         >
           <AboutIcon height={24} width={24} className={styles.sideNavIcon} alt="About icon" />
         </Link>
+      
       </div>
+      
       <div className={styles.sideNavContainerBottom}>
         <Link
           href="/page/settings"

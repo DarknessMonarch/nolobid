@@ -8,10 +8,10 @@ import {
   PhoneIcon as CustomerSupportIcon,
 } from "@heroicons/react/24/outline";
 
-const InfocardData = [
+const serviceData = [
   {
     title: "Live Bids",
-    icon: <LiveBid className={styles.infocardIcon} height={30} alt="Live Bids" />,
+    icon: <LiveBid className={styles.serviceIcon} height={30} alt="Live Bids" />,
     description:
       "Join live auctions and bid on exciting products in real-time.",
   },
@@ -19,7 +19,7 @@ const InfocardData = [
     title: "Instant Bidding",
     icon: (
       <BiddingIcon
-        className={styles.infocardIcon}
+        className={styles.serviceIcon}
         height={30}
         alt="Instant Bidding"
       />
@@ -30,7 +30,7 @@ const InfocardData = [
     title: "Fast Delivery",
     icon: (
       <DeliveryIcon
-        className={styles.infocardIcon}
+        className={styles.serviceIcon}
         height={30}
         alt="Fast Delivery"
       />
@@ -41,7 +41,7 @@ const InfocardData = [
     title: "24/7 Customer Support",
     icon: (
       <CustomerSupportIcon
-        className={styles.infocardIcon}
+        className={styles.serviceIcon}
         height={30}
         alt="24/7 Customer Support"
       />
@@ -51,11 +51,11 @@ const InfocardData = [
   },
 ];
 
-export default function Infocard() {
+export default function Service() {
   return (
-    <div className={styles.infocardContainer}>
-      {InfocardData.map((item, index) => (
-        <div className={styles.infocard} key={index}>
+    <div className={styles.serviceContainer}>
+      {serviceData.map((item, index) => (
+        <div className={styles.service} key={index}>
           {item.icon}
           <h2>{item.title}</h2>
           <p>{item.description}</p>

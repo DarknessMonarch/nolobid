@@ -1,86 +1,56 @@
 @media screen {
-.aboutContainer {
+.termContainer {
   gap: 30px;
   height: 100%;
   display: flex;
   padding: 10px;
+  margin: 10px;
   overflow: hidden;
   overflow-y: auto;
   overflow-x: hidden;
-  text-align: justify;
   flex-direction: column;
 }
 
-.aboutContainer h1 {
+.termContainer h1 {
   font-size: 1.4rem;
   font-weight: 800;
   text-transform: capitalize;
 }
 
-.aboutContainer h2 {
+.termContainer h2 {
   font-size: 1.3rem;
   font-weight: 700;
   text-transform: capitalize;
 }
 
 
-.aboutContainer h3 {
+.termContainer h3 {
   font-size: 1.2rem;
   font-weight: 600;
   text-transform: capitalize;
 }
 
 
-.aboutContainer p {
+.termContainer p {
   font-size: 1rem;
   font-weight: 300;
+  text-align: justify;
 
 }
 
-.aboutContainer span {
+.termContainer span {
   text-transform: capitalize;
   color: var(--secondary-color);
 }
 
-
-.introComponent {
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-
-.services {
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.help {
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-
-.questionsContainer {
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.questionsWrapper {
+.termContainer ul {
   gap: 10px;
   display: flex;
-  padding: 10px;
-  border-radius: 12px;
+  list-style: square;
   flex-direction: column;
-  border: 1px solid var(--background-color);
 }
-  
-.questionsWrapper p {
-  color: var(--background-light-color);
-}
+
+
 }
 
 /* using it as global style for larger devices  */

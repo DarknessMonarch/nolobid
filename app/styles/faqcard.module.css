@@ -11,13 +11,14 @@
 
   .infocard {
     gap: 10px;
-    width: 200px; 
-    padding: 10px;
+    flex-grow: 1;
+    width: 300px; 
+    padding: 20px;
     display: flex;
-    flex: 0 0 auto; 
-    align-items: center;
+    min-width: 240px;
     border-radius: 12px;
     flex-direction: column;
+    justify-content: center;
     background-color: var(--primary-light-color);
   }
 
@@ -26,16 +27,15 @@
   }
 
   .infocard h2 {
-    font-size: .9rem;
+    font-size: 1rem !important;
     font-weight: 100;
-    text-align: center;
     color: var(--secondary-color);
   }
 
   .infocard p {
-    font-size: 0.9rem;
+    font-size: 0.9rem !important;
     font-weight: 100;
-    text-align: center;
+    text-align: start;
   }
 }
 
@@ -45,27 +45,19 @@
     justify-content: space-between;
   }
 
-  .infocard {
-    width: calc(25% - 10px); 
-  }
+ 
 }
 /* iPad Pro & Laptop screens */
 @media only screen and (min-width: 49em) and (max-width: 64em) {
-  .infocard {
-    width: calc(33.33% - 10px); 
-  }
+ 
 }
 
 /* Desktop and 4k screens */
 @media only screen and (min-width: 64.063em) and (max-width: 90em) {
-  .infocard {
-    width: calc(25% - 10px); 
-  }
+
 }
 
 /* 5k screens and above */
 @media only screen and (min-width: 91em) {
-  .infocard {
-    width: calc(25% - 10px); 
-  }
+
 }

@@ -1,5 +1,5 @@
 @media screen {
-  .infocardContainer {
+  .serviceContainer {
     gap: 10px;
     display: flex;
     padding: 10px 0;
@@ -9,30 +9,31 @@
     justify-content: flex-start;
   }
 
-  .infocard {
+  .service {
     gap: 10px;
-    width: 200px; 
+    width: 300px; 
     padding: 10px;
     display: flex;
-    flex: 0 0 auto; 
+    flex-grow: 1;
+    min-width: 240px;
     align-items: center;
     border-radius: 12px;
     flex-direction: column;
-  }
-
-  .infocardIcon {
     color: var(--secondary-color);
+    box-shadow: var(--shadow-effect);
+
   }
 
-  .infocard h2 {
-    font-size: .9rem;
+
+
+  .service h2 {
+    font-size: 1rem !important;
     font-weight: 100;
     text-align: center;
-    color: var(--secondary-color);
   }
 
-  .infocard p {
-    font-size: 0.9rem;
+  .service p {
+    font-size: .9rem !important;
     font-weight: 100;
     text-align: center;
   }
@@ -40,31 +41,22 @@
 
 /* For larger devices */
 @media only screen and (min-width: 48em) {
-  .infocardContainer {
+  .serviceContainer {
     justify-content: space-between;
   }
-
-  .infocard {
-    width: calc(25% - 10px); 
-  }
+ 
 }
 /* iPad Pro & Laptop screens */
 @media only screen and (min-width: 49em) and (max-width: 64em) {
-  .infocard {
-    width: calc(33.33% - 10px); 
-  }
+
 }
 
 /* Desktop and 4k screens */
 @media only screen and (min-width: 64.063em) and (max-width: 90em) {
-  .infocard {
-    width: calc(25% - 10px); 
-  }
+
 }
 
 /* 5k screens and above */
 @media only screen and (min-width: 91em) {
-  .infocard {
-    width: calc(25% - 10px); 
-  }
+
 }

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
 import LogoImg from "@/public/assets/logo.png";
+import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/auth.module.css";
 import auth1Image from "@/public/assets/auth1Image.jpg";
 import auth2Image from "@/public/assets/auth2Image.jpg";
@@ -14,17 +15,13 @@ import auth4Image from "@/public/assets/auth4Image.jpg";
 
 
 import {
-  KeyIcon as PasswordIcon,
-  EyeIcon as ShowPasswordIcon,
-  EyeSlashIcon as HidePasswordIcon,
+  QrCodeIcon as VerificationIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Reset({ params }) {
-  
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setConfirmPassword] = useState(false);
+export default function Forgot() {
   const [isLoading, setIsLoading] = useState(false);
 
+  
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -50,28 +47,6 @@ export default function Reset({ params }) {
 
   const router = useRouter();
 
-
-  const toggleConfirmPassword = () => {
-    setConfirmPassword(!showConfirmPassword);
-  };
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const policy = () => {
-    router.push("/page/policy", { scroll: false });
-  };
-
-  const readTerms = () => {
-    router.push("/page/terms", { scroll: false });
-  };
-
- 
-  const Login = () => {
-    router.push("login", { scroll: false });
-  };
-
   async function onSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
@@ -83,12 +58,11 @@ export default function Reset({ params }) {
       //   body: formData,
       // });
 
-      toast.success("Reset link successful");
-
-      router.push("/page/login ", { scroll: false });
+      toast.success("Account verified")
+      router.push("/page/dashboard", { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("Reset failed");
+      toast.error("reset failed");
     } finally {
       setIsLoading(false);
     }
@@ -138,71 +112,24 @@ export default function Reset({ params }) {
           />
           </div>
           <div className={styles.formHeader}>
-            <h1>Reset Password</h1>
-            <p>Enter your new Password</p>
+            <h1>Verify</h1>
+            <p>Enter your verification code</p>
           </div>
-  
-          {/*  password */}
+          {/* Verification code */}
 
           <div className={styles.authInput}>
-            <PasswordIcon
+            <VerificationIcon
               className={styles.authIcon}
-              alt="password icon"
+              alt="Verification icon"
               width={20}
               height={20}
             />
             <input
-              type={showPassword ? "text" : "password"}
-              name="Password"
-              id="Password"
-              placeholder="New Password"
+              type="text"
+              name="Verification"
+              id="Verification"
+              placeholder="000 000 000"
             />
-            <button type="button" className={styles.showBtn} onClick={toggleShowPassword}>
-              {showPassword ? (
-                <HidePasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
-              ) : (
-                <ShowPasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
-              )}
-            </button>
-          </div>
-          {/* confirm password */}
-
-          <div className={styles.authInput}>
-            <PasswordIcon
-              className={styles.authIcon}
-              alt="confirm password"
-              width={20}
-              height={20}
-            />
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              id="confirmPassword"
-              placeholder="Confirm Password"
-            />
-            <button type="button" className={styles.showBtn} onClick={toggleConfirmPassword}>
-              {showConfirmPassword ? (
-                <HidePasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
-              ) : (
-                <ShowPasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
-              )}
-            </button>
           </div>
           <div className={styles.authBottomBtn}>
                <button
@@ -210,16 +137,10 @@ export default function Reset({ params }) {
             disabled={isLoading}
             className={styles.formAuthButton}
           >
-            {isLoading ? <Loader /> : "Reset "}
+            {isLoading ? <Loader /> : "Verify your account"}
           </button>
-       
           </div> 
-          <h3>
-            Already have an account?{" "}
-            <div className={styles.btnLogin} onClick={Login}>
-              Login
-            </div>
-          </h3>
+         
         </form>
       </div>
     </div>

@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
+import LogoImg from "@/public/assets/logo.png";
 import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/auth.module.css";
 import auth1Image from "@/public/assets/auth1Image.jpg";
@@ -38,6 +39,7 @@ export default function SignUp() {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
+ 
   const prevImage = () => {
     setCurrentImageIndex(
       (prevIndex) => (prevIndex - 1 + images.length) % images.length
@@ -66,13 +68,14 @@ export default function SignUp() {
     setShowPassword(!showPassword);
   };
 
-  const policy = () => {
-    router.push("/page/policy", { scroll: false });
-  };
+ 
 
   const readTerms = () => {
     router.push("/page/terms", { scroll: false });
   };
+  const handleTermsClick = () => {
+    router.push
+  }
 
   const forgotPassword = () => {
     router.push("forgot", { scroll: false });
@@ -94,8 +97,8 @@ export default function SignUp() {
       // });
 
       toggleAuth();
-      toast.success("Account created successfully");
-      router.push("/page/dashboard", { scroll: false });
+      toast.success("Check verification on your sms");
+      router.push("verification", { scroll: false });
     } catch (error) {
       console.error(error);
       toast.error("Sign up failed");
@@ -108,7 +111,7 @@ export default function SignUp() {
     <div className={styles.authComponent}>
       <div className={styles.authComponentBgImage}>
         <Image
-          className={styles.advertImage}
+          className={styles.authImage}
           src={images[currentImageIndex]}
           alt="auth image"
           layout="fill"
@@ -137,30 +140,31 @@ export default function SignUp() {
       </div>
       <div className={styles.authWrapper}>
         <form onSubmit={onSubmit} className={styles.formContainer}>
+          <div className={styles.formLogo}>
+          <Image
+            className={styles.logo}
+            src={LogoImg}
+            alt="logo"
+            width={50}
+            priority={true}
+
+          />
+          </div>
           <div className={styles.formHeader}>
             <h1>Sign up</h1>
             <p>Enter your account details</p>
           </div>
-          {/* First Name */}
+          {/* Username */}
           <div className={styles.authInput}>
             <UserNameIcon
               className={styles.authIcon}
-              alt="First name icon"
+              alt="username icon"
               width={20}
               height={20}
             />
-            <input type="text" name="firstName" id="firstName" placeholder="First name" />
+            <input type="text" name="username" id="username" placeholder="username" />
           </div>
-          {/* Last Name */}
-          <div className={styles.authInput}>
-            <UserNameIcon
-              className={styles.authIcon}
-              alt="Last name icon"
-              width={20}
-              height={20}
-            />
-            <input type="text" name="lastName" id="lastName" placeholder="Last name" />
-          </div>
+    
           {/* Email */}
           <div className={styles.authInput}>
             <EmailIcon
@@ -267,7 +271,7 @@ export default function SignUp() {
                 checked={terms}
                 onChange={handleTermsChange}
               />
-              <label htmlFor="terms">Accept terms and conditions</label>
+              <label onClick={readTerms} htmlFor="terms">Accept terms and conditions</label>
             </div>
             <span onClick={forgotPassword}>Forgot Password</span>
           </div>

@@ -14,6 +14,8 @@
     background-color: var(--primary-color);
   }
 
+
+
   .authWrapper {
     width: 90%;
     padding: 10px;
@@ -31,12 +33,21 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    
   }
+
+  .formLogo {
+    padding: 10px;
+    border-radius: 12px;
+    width: fit-content;
+    border: 1px solid var(--background-light-color);
+
+  }
+
 
   .formHeader {
     gap: 10px;
     display: flex;
-    padding-top: 50px;
     flex-direction: column;
   }
 
@@ -98,6 +109,7 @@
   .termsContainer {
     gap: 10px;
     display: flex;
+    cursor: pointer;
     align-items: center;
   }
 
@@ -123,6 +135,7 @@
   }
 
   .termsContainer label {
+    cursor: pointer;
     font-size: 0.8rem;
   }
 
@@ -209,6 +222,10 @@
     gap: 30px;
   }
 
+  .formLogo {
+    border: 4px solid var(--primary-light-color);
+  }
+
   .slideController {
     width: 100%;
     z-index: 9999;
@@ -261,7 +278,7 @@
     height: 100%;
     border: none;
     transform: none;
-    padding: 0 200px;
+    padding: 0 30px;
     border-radius: 0;
     position: relative;
     align-items: center;
@@ -274,7 +291,6 @@
 
   .authComponentBgImage {
     flex: 50%;
-    padding: 0 30px;
     border-radius: 0;
     align-items: end;
     position: relative;
@@ -292,13 +308,22 @@
 
 /* ipad pro screens & laptop */
 @media only screen and (min-width: 49em) and (max-width: 64em) {
+  .authWrapper {
+    padding: 0 40px;
+  }
 }
 
 /* large screens : Desktop and 4k screens */
 
 @media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  .authWrapper {
+    padding: 0 50px;
+  }
 }
 
 /* 5k screens and above */
 @media only screen and (min-width: 91em) {
+  .authWrapper {
+    padding: 0 100px;
+  }
 }

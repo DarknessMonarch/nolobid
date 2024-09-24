@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
+import LogoImg from "@/public/assets/logo.png";
 import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/auth.module.css";
 import auth1Image from "@/public/assets/auth1Image.jpg";
@@ -57,9 +58,6 @@ export default function SignUp() {
     setShowPassword(!showPassword);
   };
 
-  const policy = () => {
-    router.push("/page/policy", { scroll: false });
-  };
 
   const readTerms = () => {
     router.push("/page/terms", { scroll: false });
@@ -85,7 +83,7 @@ export default function SignUp() {
       router.push("/page/dashboard", { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("Sign up failed");
+      toast.error("login up failed");
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +93,7 @@ export default function SignUp() {
     <div className={styles.authComponent}>
       <div className={styles.authComponentBgImage}>
         <Image
-          className={styles.advertImage}
+          className={styles.authImage}
           src={images[currentImageIndex]}
           alt="auth image"
           layout="fill"
@@ -124,6 +122,16 @@ export default function SignUp() {
       </div>
       <div className={styles.authWrapper}>
         <form onSubmit={onSubmit} className={styles.formContainer}>
+        <div className={styles.formLogo}>
+          <Image
+            className={styles.logo}
+            src={LogoImg}
+            alt="logo"
+            width={50}
+            priority={true}
+
+          />
+          </div>
           <div className={styles.formHeader}>
             <h1>Login</h1>
             <p>Enter your account details</p>
@@ -180,7 +188,7 @@ export default function SignUp() {
               checked={terms}
               onChange={handleTermsChange}
             />
-            <label htmlFor="terms">Accept terms and condition</label>
+            <label onClick={readTerms} htmlFor="terms">Accept terms and condition</label>
           </div>
           <button
             type="submit"

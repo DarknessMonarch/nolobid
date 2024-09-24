@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { toast } from "react-hot-toast";
 import debounce from "lodash.debounce";
 import LogoImg from "@/public/assets/logo.png";
 import { useAuthStore } from "@/app/store/Auth";
@@ -17,7 +16,7 @@ import {
   ArrowLeftEndOnRectangleIcon as LogoutIcon,
 } from "@heroicons/react/24/outline";
 
-export default function NavbarComponent() {
+export default function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const [username, setUsername] = useState("penguin");
   const { isAuth, toggleAuth } = useAuthStore();

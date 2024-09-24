@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Wallet from '@/app/components/Wallet';
-import styles from '@/app/styles/homelayout.module.css';
-import CardInformation from '@/app/components/CardInformation';
 import { useSearchParams } from "next/navigation";
+import styles from '@/app/styles/homeLayout.module.css';
+import CardInformation from '@/app/components/CardInformation';
 
 export default function HomeLayout({ children }) {
   const searchParams = useSearchParams();

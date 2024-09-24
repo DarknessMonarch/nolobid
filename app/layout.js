@@ -11,7 +11,7 @@ export const metadata = {
   applicationName: 'Nolobid',
   author: 'DarknessMonarch',
   images:
-    "https://raw.githubusercontent.com/Nolojia-Technologies/nolobids/master/src/assets/banner.png",
+    "https://raw.githubusercontent.com/DarknessMonarch/nolobid/refs/heads/master/public/assets/banner.png",
   description: 'Nolobid is an all-in-one bidding platform where you can win desired items at the lowest possible prices, offering a seamless online auction experience with unbeatable deals.',
   metadataBase: new URL("https://www.nolobid.com/"),
   keywords: ['Bidding platfor',
@@ -32,7 +32,7 @@ export const metadata = {
     url: 'https://nolobid.com/',
     siteName: 'Nolobid',
     images:
-      "https://raw.githubusercontent.com/Nolojia-Technologies/nolobids/master/src/assets/banner.png",
+      "https://raw.githubusercontent.com/DarknessMonarch/nolobid/refs/heads/master/public/assets/banner.png",
 
   },
 

@@ -9,6 +9,7 @@ import {
   HomeIcon,
   WalletIcon,
   BookOpenIcon as TermIcon,
+  ChartBarIcon as AnalyticIcon,
   Cog8ToothIcon as SettingIcon,
   IdentificationIcon as ContactIcon,
   InformationCircleIcon as AboutIcon,
@@ -82,6 +83,20 @@ export default function SideNavComponent() {
             alt="Wallet icon"
           />
         </div>
+
+        <Link
+          href="/page/analytic"
+          className={`${styles.sideNavLinkContainer} ${isActive(
+            "/page/analytic"
+          )}`}
+        >
+          <AnalyticIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="analytic icon"
+          />
+        </Link>
         <Link
           href="/page/contact"
           className={`${styles.sideNavLinkContainer} ${isActive(

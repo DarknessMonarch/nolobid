@@ -74,6 +74,13 @@
     color: var(--secondary-color);
   }
 
+  .formAuthBtnWrapper {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   .formAuthButton {
     gap: 10px;
     width: 100%;
@@ -96,6 +103,32 @@
     text-align: center;
     color: var(--secondary-color);
   }
+
+  .socialContainer {
+    display: flex;
+    padding: 10px 0;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .socialIconWrap {
+    padding: 10px;
+    display: flex;
+    cursor: pointer;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-glass-color);
+  }
+
+  .socialIconWrap:hover {
+    background-color: var(--secondary-color);
+  }
+
+  .socialIcon {
+    height: 18px;
+    width: 18px;
+  }
 }
 
 /* using it as global style for larger devices  */
@@ -105,6 +138,7 @@
     align-items: center;
     justify-content: center;
   }
+
   .contactWrap {
     width: fit-content;
   }
@@ -128,6 +162,17 @@
   .authInput {
     padding: 14px;
   }
+
+  .socialContainer {
+    padding: 10px;
+    justify-content: space-evenly;
+  }
+
+  .socialIcon {
+    height: 24px;
+    width: 24px;
+  }
+
 }
 
 /* ipad pro screens & laptop */

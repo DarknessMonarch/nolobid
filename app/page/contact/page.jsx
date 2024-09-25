@@ -1,8 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Loader from "@/app/components/loader";
 import styles from "@/app/styles/contact.module.css";
+
+//social icons
+import Instagram from "@/public/icons/instagram.svg";
+import Whatsapp from "@/public/icons/whatsapp.svg";
+import linkedIn from "@/public/icons/linkedIn.svg";
+import Telegram from "@/public/icons/telegram.svg";
+import Twitter from "@/public/icons/twitter.svg";
+import Youtube from "@/public/icons/youtube.svg";
 
 import {
   UserIcon as UserNameIcon,
@@ -12,6 +21,43 @@ import {
 
 export default function ContactPage() {
   const [isLoading, setIsLoading] = useState(false);
+
+  const socialData = [
+    {
+      name: "Twitter",
+      icons: Twitter,
+      link: "https://twitter",
+    },
+    {
+      name: "Youtube",
+      icons: Youtube,
+      link: "https://youtube",
+    },
+    {
+      name: "Telegram",
+      icons: Telegram,
+      link: "https://telegram",
+    },
+    {
+      name: "linkedIn",
+      icons: linkedIn,
+      link: "https://linkedIn",
+    },
+    {
+      name: "Whatsapp",
+      icons: Whatsapp,
+      link: "https://whatsapp",
+    },
+    {
+      name: "Instagram",
+      icons: Instagram,
+      link: "https://instagram",
+    },
+  ];
+
+  const openLink = (link) => {
+    window.open(`${link}`, "_blank");
+  };
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -32,7 +78,6 @@ export default function ContactPage() {
       setIsLoading(false);
     }
   }
-
 
   return (
     <form onSubmit={onSubmit} className={styles.formContactContainer}>
@@ -118,14 +163,32 @@ export default function ContactPage() {
             ></textarea>
           </div>
         </div>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={styles.formAuthButton}
-        >
-          {isLoading ? <Loader /> : "Contact Us"}
-        </button>
-        
+        <div className={styles.formAuthBtnWrapper}>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={styles.formAuthButton}
+          >
+            {isLoading ? <Loader /> : "Contact Us"}
+          </button>
+          <div className={styles.socialContainer}>
+            {socialData.map((data, index) => (
+              <div
+                className={styles.socialIconWrap}
+                key={index}
+                onClick={() => openLink(data.link)}
+              >
+                <Image
+                  className={styles.socialIcon}
+                  src={data.icons}
+                  alt={data.name}
+                  height={24}
+                  priority={true}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </form>
   );

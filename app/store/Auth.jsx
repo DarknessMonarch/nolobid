@@ -18,10 +18,12 @@ export const useAuthStore = create((set, get) => {
     toggleAuth: () => {
       set((state) => {
         const newAuthState = { isAuth: !state.isAuth };
-        // Save the updated state to local storage
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...state, ...newAuthState }));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...state, ...newAuthState }));
+        }
         return newAuthState;
       });
     },
+    
   };
 });

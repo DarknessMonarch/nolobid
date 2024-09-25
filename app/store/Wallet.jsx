@@ -13,33 +13,42 @@ const loadState = () => {
 export const useWalletStore = create((set, get) => {
   const initialState = loadState();
 
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialState));
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialState));
+  }
 
   return {
     ...initialState,
     setAmount: (newAmount) => {
       set({ amount: newAmount });
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+      }
     },
     toggleShowAmount: () => {
       set((state) => {
         const newState = { showAmount: !state.showAmount };
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), ...newState }));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), ...newState }));
+        }
         return newState; 
       });
     },
-    
     deposit: (value) => {
       set((state) => {
         const newAmount = state.amount + value;
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+        }
         return { amount: newAmount };
       });
     },
     withdraw: (value) => {
       set((state) => {
         const newAmount = state.amount - value;
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+        }
         return { amount: newAmount };
       });
     },

@@ -17,6 +17,17 @@ export const useWalletStore = create((set, get) => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialState));
   }
 
+  const updateStoreFromLocalStorage = (event) => {
+    if (event.key === LOCAL_STORAGE_KEY) {
+      const newState = JSON.parse(event.newValue);
+      set(newState);
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', updateStoreFromLocalStorage);
+  }
+
   return {
     ...initialState,
     setAmount: (newAmount) => {

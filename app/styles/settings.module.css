@@ -1,10 +1,12 @@
 @media screen {
   .formSettingContainer {
     gap: 20px;
-    height: 100%;
     display: flex;
     padding: 10px;
+    overflow: hidden;
+    overflow-y: auto;
     flex-direction: column;
+    justify-content: space-between;
   }
 
   .settingWrap {
@@ -103,7 +105,7 @@
   }
 
   .settingWrapinfo {
-    gap: 20px;
+    gap: 30px;
     display: flex;
     flex-direction: column;
   }
@@ -203,12 +205,15 @@
   .deleteAccount {
     cursor: pointer;
     text-align: center;
-    color: var(--tertiary-color);
+    color: var(--secondary-color);
   }
 }
 
 /* using it as global style for larger devices  */
 @media only screen and (min-width: 48em) {
+  .formSettingContainer {
+    height: 100%;
+}
   .settingWrap {
     width: fit-content;
   }
@@ -217,9 +222,13 @@
     width: 100px;
     height: 100px;
   }
+  
+  .settingWrapinfo {
+    gap: 40px;
+  }
 
   .settingWrapS {
-    gap: 100px;
+    gap: 20px;
     flex-direction: row;
     justify-content: space-between;
   }

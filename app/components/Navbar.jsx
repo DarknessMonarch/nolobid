@@ -22,12 +22,29 @@ import {
 export default function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const [username, setUsername] = useState("penguin");
-  const { isAuth, toggleAuth } = useAuthStore();
+  const { isAuth, email, toggleAuth, setUser, clearUser } = useAuthStore();
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const { amount, showAmount, toggleShowAmount } = useWalletStore();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (storedData) {
+        const newState = JSON.parse(storedData);
+        toggleAuth(newState.isAuth);
+        setUser(newState.email, newState.username, newState.token, newState.accountType, newState.phoneNumber);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [setUser, toggleAuth]);
 
   const performSearch = useMemo(
     () =>

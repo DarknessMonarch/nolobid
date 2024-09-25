@@ -26,13 +26,29 @@ export default function Wallet() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { isAuth, toggleAuth } = useAuthStore();
-  const { amount, showAmount, toggleShowAmount, deposit, withdraw } =
+  const { amount, showAmount, toggleShowAmount, setAmount, deposit, withdraw } =
     useWalletStore();
-    
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (storedData) {
+        const newState = JSON.parse(storedData);
+        setAmount(newState.amount);
+        toggleShowAmount(newState.showAmount);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [setAmount, toggleShowAmount]);
 
   const closeCard = useCallback(() => {
     const params = new URLSearchParams(searchParams);
@@ -44,7 +60,7 @@ export default function Wallet() {
     const value = e.target.value.replace(/\D/g, "");
     setPhoneNumber(value.slice(0, 10));
   }, []);
-  
+
   const handleAmountChange = useCallback((e) => {
     const value = e.target.value.replace(/\D/g, "");
     setTransactionAmount(value);

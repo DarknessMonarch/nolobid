@@ -7,7 +7,7 @@ import { useAuthStore } from "@/app/store/Auth";
 import { useWalletStore } from "@/app/store/Wallet";
 import styles from "@/app/styles/wallet.module.css";
 import WalletImage from "@/public/assets/walletCard.png";
-import { useState, useCallback } from "react";
+import { useState, useEffect , useCallback } from "react";
 
 import {
   PhoneIcon,

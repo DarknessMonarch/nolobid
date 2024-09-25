@@ -53,7 +53,7 @@ export default function ContactPage() {
               type="text"
               name="username"
               id="username"
-              placeholder="nalojenga"
+              placeholder="noloblid"
               required
             />
           </div>
@@ -75,7 +75,7 @@ export default function ContactPage() {
               type="email"
               name="email"
               id="email"
-              placeholder="nolojenga@gmail.com"
+              placeholder="noloblid@gmail.com"
               required
             />
           </div>
@@ -97,7 +97,7 @@ export default function ContactPage() {
               type="tel"
               name="phone"
               id="phone"
-              placeholder="+254796143149"
+              placeholder="07xxxxxxxx"
               required
             />
           </div>

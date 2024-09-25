@@ -119,7 +119,7 @@ export default function SettingsPage() {
                 type="text"
                 name="username"
                 id="username"
-                placeholder="nalojenga"
+                placeholder="noloblid"
               />
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                 type="text"
                 name="email"
                 id="email"
-                placeholder="nolojenga@gmail.com"
+                placeholder="noloblid@gmail.com"
               />
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function SettingsPage() {
               type="text"
               name="phone"
               id="phone"
-              placeholder="+254796143149"
+              placeholder="07xxxxxxxx"
             />
           </div>
         </div>

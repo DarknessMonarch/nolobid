@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 import LogoImg from "@/public/assets/logo.png";
 import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/navbar.module.css";
-import { useWalletStore } from "@/app/store/wallet";
+import { useWalletStore } from "@/app/store/Wallet";
 import ProfileImg from "@/public/assets/auth1Image.jpg";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";

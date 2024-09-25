@@ -1,0 +1,153 @@
+@media screen {
+  .formContactContainer {
+    gap: 20px;
+    display: flex;
+    padding: 10px;
+    overflow: hidden;
+    overflow-y: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .contactWrapinfo {
+    gap: 30px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contactWrapS {
+    gap: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .authInputContainer {
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .authLabel {
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: capitalize;
+  }
+
+  .authInput {
+    gap: 20px;
+    width: 100%;
+    display: flex;
+    padding: 10px 20px;
+    border-radius: 8px;
+    align-items: center;
+    background-color: var(--primary-light-color);
+  }
+
+  .authInput:hover {
+    border: 1px solid var(--secondary-light-color);
+  }
+
+  .authInput input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px;
+    background: transparent;
+  }
+
+  .authInput input::placeholder {
+    font-size: 0.8rem;
+    text-transform: capitalize;
+  }
+
+  .formChangeS {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    cursor: pointer;
+    font-size: 0.9rem;
+    align-items: end;
+    justify-content: end;
+    text-decoration: underline;
+    color: var(--secondary-color);
+  }
+
+  .formAuthButton {
+    gap: 10px;
+    width: 100%;
+    max-height: 50px;
+    min-height: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 8px;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+  }
+
+  .formAuthButton:hover {
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+  }
+
+  .deleteAccount {
+    cursor: pointer;
+    text-align: center;
+    color: var(--secondary-color);
+  }
+}
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .formContactContainer {
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .contactWrap {
+    width: fit-content;
+  }
+
+  .profileImageContain {
+    width: 100px;
+    height: 100px;
+  }
+
+  .contactWrapinfo {
+    gap: 40px;
+    width: 80%;
+  }
+
+  .contactWrapS {
+    gap: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .authInput {
+    padding: 14px;
+  }
+}
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+  .contactWrapinfo {
+    width: calc(100% / 2);
+  }
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  .contactWrapinfo {
+    width: calc(100% / 2);
+  }
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+  .contactWrapinfo {
+    width: calc(100% / 2);
+  }
+}

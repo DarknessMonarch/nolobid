@@ -38,6 +38,15 @@
     outline: none;
   }
 
+   input:-webkit-autofill,
+   input:-webkit-autofill:hover,
+   input:-webkit-autofill:focus,
+   input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: var(--background-color) !important;
+  }
+
+
   button {
     outline: none;
     border: none;
@@ -46,15 +55,38 @@
   input:focus,
   input:hover {
     outline: none;
+    background-color: transparent;
+
   }
 
-  textarea {
-    outline: none;
+  input::placeholder {
+    color: var(--background-color);
   }
+
+
+  textarea {
+    flex: 1; 
+    border: none; 
+    outline: none; 
+    resize: none; 
+    padding: 0.5rem; 
+    font-size: 1rem; 
+    line-height: 1.5; 
+    border-radius: 4px;
+    background: transparent;
+  }
+
+   
+ textarea::placeholder {
+    color: var(--background-color); 
+  }
+
 
   textarea:focus,
   textarea:hover {
     outline: none;
+    border-color: none; 
+
   }
 
   select {

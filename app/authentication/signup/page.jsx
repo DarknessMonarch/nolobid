@@ -25,90 +25,102 @@ import {
 
 const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
-
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    userId: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState({});
   const { isAuth, toggleAuth } = useAuthStore();
   const [terms, setTerms] = useState(false);
 
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
-
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
- 
-  const prevImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
-  };
-
-  useEffect(() => {
-    const interval = setInterval(nextImage, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentImageIndex]);
 
   const router = useRouter();
 
-  const handleTermsChange = (event) => {
-    setTerms(event.target.checked);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const toggleConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
+  const handleTermsChange = (e) => {
+    setTerms(e.target.checked);
+    setErrors((prev) => ({ ...prev, terms: "" }));
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
+  const togglePasswordVisibility = (field) => {
+    if (field === "password") {
+      setShowPassword(!showPassword);
+    } else {
+      setShowConfirmPassword(!showConfirmPassword);
+    }
   };
 
- 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.username.trim()) newErrors.username = "Username is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
+    if (!formData.userId.trim()) newErrors.userId = "National ID is required";
+    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 8) newErrors.password = "Password must be at least 8 characters";
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+    if (!terms) newErrors.terms = "You must accept the terms and conditions";
 
-  const readTerms = () => {
-    router.push("/page/terms", { scroll: false });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
-  const handleTermsClick = () => {
-    router.push
-  }
 
-  const forgotPassword = () => {
-    router.push("forgot", { scroll: false });
-  };
-
-  const Login = () => {
-    router.push("login", { scroll: false });
-  };
-
-  async function onSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setIsLoading(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
-      // const response = await fetch("/api/submit", {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const { confirmPassword, ...dataToSend } = formData;
+      const response = await fetch(`${SERVER_API}/users/public/promoters/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Sign up failed");
+      }
 
       toggleAuth();
-      toast.success("Check verification on your sms");
+      toast.success(data.message || "Sign up successful! Please check your email for verification.");
       router.push("verification", { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("Sign up failed");
+      toast.error(error.message || "Sign up failed");
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className={styles.authComponent}>
@@ -123,35 +135,32 @@ export default function SignUp() {
           priority={true}
         />
         <div className={styles.slideController}>
-          <div onClick={nextImage} className={styles.slideBtn}>
+          <div onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)} className={styles.slideBtn}>
             Next
           </div>
           <div className={styles.imageSlider}>
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`${styles.circleAdv} ${
-                  currentImageIndex === index ? styles.activeCircle : ""
-                }`}
+                className={`${styles.circleAdv} ${currentImageIndex === index ? styles.activeCircle : ""}`}
               ></div>
             ))}
           </div>
-          <div onClick={prevImage} className={styles.slideBtn}>
+          <div onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)} className={styles.slideBtn}>
             Previous
           </div>
         </div>
       </div>
       <div className={styles.authWrapper}>
-        <form onSubmit={onSubmit} className={styles.formContainer}>
+        <form onSubmit={handleSubmit} className={styles.formContainer}>
           <div className={styles.formLogo}>
-          <Image
-            className={styles.logo}
-            src={LogoImg}
-            alt="logo"
-            width={50}
-            priority={true}
-
-          />
+            <Image
+              className={styles.logo}
+              src={LogoImg}
+              alt="logo"
+              width={50}
+              priority={true}
+            />
           </div>
           <div className={styles.formHeader}>
             <h1>Sign up</h1>
@@ -159,113 +168,104 @@ export default function SignUp() {
           </div>
           {/* Username */}
           <div className={styles.authInput}>
-            <UserNameIcon
-              className={styles.authIcon}
-              alt="username icon"
-              width={20}
-              height={20}
+            <UserNameIcon className={styles.authIcon} alt="username icon" width={20} height={20} />
+            <input 
+              type="text" 
+              name="username" 
+              value={formData.username}
+              onChange={handleInputChange}
+              placeholder="Username" 
             />
-            <input type="text" name="username" id="username" placeholder="username" />
           </div>
-    
+          {errors.username && <p className={styles.errorText}>{errors.username}</p>}
+          
           {/* Email */}
           <div className={styles.authInput}>
-            <EmailIcon
-              className={styles.authIcon}
-              alt="Email icon"
-              width={20}
-              height={20}
+            <EmailIcon className={styles.authIcon} alt="Email icon" width={20} height={20} />
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Email" 
             />
-            <input type="email" name="email" id="email" placeholder="Email" />
           </div>
+          {errors.email && <p className={styles.errorText}>{errors.email}</p>}
+          
           {/* National ID */}
           <div className={styles.authInput}>
-            <IdentificationIcon
-              className={styles.authIcon}
-              alt="National ID icon"
-              width={20}
-              height={20}
+            <IdentificationIcon className={styles.authIcon} alt="National ID icon" width={20} height={20} />
+            <input 
+              type="text" 
+              name="userId" 
+              value={formData.userId}
+              onChange={handleInputChange}
+              placeholder="National ID" 
             />
-            <input type="text" name="nationalId" id="nationalId" placeholder="National ID" />
           </div>
+          {errors.userId && <p className={styles.errorText}>{errors.userId}</p>}
+          
           {/* Phone Number */}
           <div className={styles.authInput}>
-            <PhoneIcon
-              className={styles.authIcon}
-              alt="Phone icon"
-              width={20}
-              height={20}
+            <PhoneIcon className={styles.authIcon} alt="Phone icon" width={20} height={20} />
+            <input 
+              type="tel" 
+              name="phoneNumber" 
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              placeholder="2547xxxxxxx" 
             />
-            <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="Phone number" />
           </div>
+          {errors.phoneNumber && <p className={styles.errorText}>{errors.phoneNumber}</p>}
+          
           {/* Password */}
           <div className={styles.authInput}>
-            <PasswordIcon
-              className={styles.authIcon}
-              alt="password icon"
-              width={20}
-              height={20}
-            />
+            <PasswordIcon className={styles.authIcon} alt="password icon" width={20} height={20} />
             <input
               type={showPassword ? "text" : "password"}
               name="password"
-              id="password"
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="Password"
             />
             <button
               type="button"
               className={styles.showBtn}
-              onClick={toggleShowPassword}
+              onClick={() => togglePasswordVisibility("password")}
             >
               {showPassword ? (
-                <HidePasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
+                <HidePasswordIcon className={styles.authIcon} width={20} height={20} />
               ) : (
-                <ShowPasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
+                <ShowPasswordIcon className={styles.authIcon} width={20} height={20} />
               )}
             </button>
           </div>
+          {errors.password && <p className={styles.errorText}>{errors.password}</p>}
+          
           {/* Confirm Password */}
           <div className={styles.authInput}>
-            <PasswordIcon
-              className={styles.authIcon}
-              alt="confirm password"
-              width={20}
-              height={20}
-            />
+            <PasswordIcon className={styles.authIcon} alt="confirm password" width={20} height={20} />
             <input
               type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
-              id="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
               placeholder="Confirm Password"
             />
             <button
               type="button"
               className={styles.showBtn}
-              onClick={toggleConfirmPassword}
+              onClick={() => togglePasswordVisibility("confirmPassword")}
             >
               {showConfirmPassword ? (
-                <HidePasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
+                <HidePasswordIcon className={styles.authIcon} width={20} height={20} />
               ) : (
-                <ShowPasswordIcon
-                  className={styles.authIcon}
-                  width={20}
-                  height={20}
-                />
+                <ShowPasswordIcon className={styles.authIcon} width={20} height={20} />
               )}
             </button>
           </div>
+          {errors.confirmPassword && <p className={styles.errorText}>{errors.confirmPassword}</p>}
+          
           <div className={styles.formChange}>
             <div className={styles.termsContainer}>
               <input
@@ -274,9 +274,12 @@ export default function SignUp() {
                 checked={terms}
                 onChange={handleTermsChange}
               />
-              <label onClick={readTerms} htmlFor="terms">Accept terms and conditions</label>
+              <label onClick={() => router.push("/page/terms", { scroll: false })} htmlFor="terms">
+                Accept terms and conditions
+              </label>
             </div>
-            <span onClick={forgotPassword}>Forgot Password</span>
+            {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
+            <span onClick={() => router.push("forgot", { scroll: false })}>Forgot Password</span>
           </div>
           <button
             type="submit"
@@ -288,7 +291,7 @@ export default function SignUp() {
 
           <h3>
             Already have an account?{" "}
-            <div className={styles.btnLogin} onClick={Login}>
+            <div className={styles.btnLogin} onClick={() => router.push("login", { scroll: false })}>
               Login
             </div>
           </h3>

@@ -15,77 +15,89 @@ import auth4Image from "@/public/assets/auth4Image.jpg";
 
 import {
   KeyIcon as PasswordIcon,
-  EnvelopeIcon as EmailIcon,
+  UserIcon as UserNameIcon,
   EyeIcon as ShowPasswordIcon,
   EyeSlashIcon as HidePasswordIcon,
 } from "@heroicons/react/24/outline";
 
-export default function SignUp() {
+const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isAuth, toggleAuth } = useAuthStore();
   const [terms, setTerms] = useState(false);
+  const [formData, setFormData] = useState({
+    usernameEmail: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
 
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
-
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
-  };
-
-  useEffect(() => {
-    const interval = setInterval(nextImage, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentImageIndex]);
 
   const router = useRouter();
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
   const handleTermsChange = (event) => {
     setTerms(event.target.checked);
+    setErrors((prev) => ({ ...prev, terms: "" }));
   };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.usernameEmail.trim()) newErrors.usernameEmail = "usernameEmail is required";
+    if (!terms) newErrors.terms = "You must accept the terms and conditions";
+    if (!formData.password) newErrors.password = "Password is required";
 
-  const readTerms = () => {
-    router.push("/page/terms", { scroll: false });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
-
-  const SignUp = () => {
-    router.push("signup", { scroll: false });
-  };
-
-  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   async function onSubmit(e) {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setIsLoading(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
-      // const response = await fetch("/api/submit", {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const response = await fetch(`${SERVER_API}/users/public/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
 
       toggleAuth();
-      toast.success("Welcome");
-      router.push("/page/dashboard", { scroll: false });
+      toast.success("Welcome back!");
+      router.push("/page/home", { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("login up failed");
+      toast.error(error.message || "Login failed");
     } finally {
       setIsLoading(false);
     }
@@ -103,53 +115,57 @@ export default function SignUp() {
           objectFit="cover"
           priority={true}
         />
-        <div class={styles.slideController}>
-          <div onClick={nextImage} className={styles.slideBtn}>
+        <div className={styles.slideController}>
+          <div onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)} className={styles.slideBtn}>
             Next
           </div>
           <div className={styles.imageSlider}>
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`${styles.circleAdv} ${
-                  currentImageIndex === index ? styles.activeCircle : ""
-                }`}
+                className={`${styles.circleAdv} ${currentImageIndex === index ? styles.activeCircle : ""}`}
               ></div>
             ))}
           </div>
-          <div onClick={prevImage} className={styles.slideBtn}>
+          <div onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)} className={styles.slideBtn}>
             Previous
           </div>
         </div>
       </div>
       <div className={styles.authWrapper}>
         <form onSubmit={onSubmit} className={styles.formContainer}>
-        <div className={styles.formLogo}>
-          <Image
-            className={styles.logo}
-            src={LogoImg}
-            alt="logo"
-            width={50}
-            priority={true}
-
-          />
+          <div className={styles.formLogo}>
+            <Image
+              className={styles.logo}
+              src={LogoImg}
+              alt="logo"
+              width={50}
+              priority={true}
+            />
           </div>
           <div className={styles.formHeader}>
             <h1>Login</h1>
             <p>Enter your account details</p>
           </div>
-          {/* Email */}
+          {/* usernameEmail */}
           <div className={styles.authInput}>
-            <EmailIcon
+            <UserNameIcon
               className={styles.authIcon}
-              alt="Email icon"
+              alt="usernameEmail icon"
               width={20}
               height={20}
             />
-            <input type="text" name="Email" id="Email" placeholder="Email" />
+            <input 
+              type="usernameEmail" 
+              name="usernameEmail" 
+              value={formData.usernameEmail}
+              onChange={handleInputChange}
+              placeholder="username or email" 
+            />
           </div>
-          {/*  password */}
-
+          {errors.usernameEmail && <p className={styles.errorText}>{errors.usernameEmail}</p>}
+          
+          {/* Password */}
           <div className={styles.authInput}>
             <PasswordIcon
               className={styles.authIcon}
@@ -159,8 +175,9 @@ export default function SignUp() {
             />
             <input
               type={showPassword ? "text" : "password"}
-              name="Password"
-              id="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="Password"
             />
             <button
@@ -183,6 +200,8 @@ export default function SignUp() {
               )}
             </button>
           </div>
+          {errors.password && <p className={styles.errorText}>{errors.password}</p>}
+          
           <div className={styles.termsContainer}>
             <input
               type="checkbox"
@@ -190,8 +209,12 @@ export default function SignUp() {
               checked={terms}
               onChange={handleTermsChange}
             />
-            <label onClick={readTerms} htmlFor="terms">Accept terms and condition</label>
+            <label onClick={() => router.push("/page/terms", { scroll: false })} htmlFor="terms">
+              Accept terms and conditions
+            </label>
           </div>
+          {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
+          
           <button
             type="submit"
             disabled={isLoading}
@@ -202,8 +225,8 @@ export default function SignUp() {
             {isLoading ? <Loader /> : "Login"}
           </button>
           <h3>
-            Don’t have an account?{" "}
-            <div className={styles.btnLogin} onClick={SignUp}>
+            Don&apos;t have an account?{" "}
+            <div className={styles.btnLogin} onClick={() => router.push("signup", { scroll: false })}>
               Sign up
             </div>
           </h3>

@@ -20,9 +20,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Navbar() {
+  const { isAuth, email, toggleAuth, setUser, clearUser } = useAuthStore();
   const [isSearching, setIsSearching] = useState(false);
   const [username, setUsername] = useState("penguin");
-  const { isAuth, email, toggleAuth, setUser, clearUser } = useAuthStore();
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -31,7 +31,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const storedData = localStorage.getItem("LOCAL_STORAGE_KEY");
       if (storedData) {
         const newState = JSON.parse(storedData);
         toggleAuth(newState.isAuth);

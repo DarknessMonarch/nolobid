@@ -6,25 +6,29 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
 import LogoImg from "@/public/assets/logo.png";
-import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/auth.module.css";
 import auth1Image from "@/public/assets/auth1Image.jpg";
 import auth2Image from "@/public/assets/auth2Image.jpg";
 import auth3Image from "@/public/assets/auth3Image.jpg";
 import auth4Image from "@/public/assets/auth4Image.jpg";
 
+import { QrCodeIcon as VerificationIcon } from "@heroicons/react/24/outline";
 
-import {
-  QrCodeIcon as VerificationIcon,
-} from "@heroicons/react/24/outline";
-
-export default function Forgot() {
+export default function Verify() {
   const [isLoading, setIsLoading] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const router = useRouter();
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
-  
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -36,34 +40,35 @@ export default function Forgot() {
     );
   };
 
-  useEffect(() => {
-    const interval = setInterval(nextImage, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentImageIndex]);
-
-
-  const router = useRouter();
-  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
-
   async function onSubmit(e) {
     e.preventDefault();
+    const verificationCode = e.target.Verification.value.trim();
+
+    if (!verificationCode) {
+      toast.error("Verification code is required");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
-      // const response = await fetch("/api/submit", {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const response = await fetch(`${SERVER_API}/users/public/verify/${verificationCode}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      toast.success("Account verified")
-      router.push("/page/dashboard", { scroll: false });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Verification failed");
+      }
+
+      toast.success("Account verified");
+      router.push("login", { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("reset failed");
+      toast.error(error.message || "Verification failed");
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +76,7 @@ export default function Forgot() {
 
   return (
     <div className={styles.authComponent}>
-     <div className={styles.authComponentBgImage}>
+      <div className={styles.authComponentBgImage}>
         <Image
           className={styles.authImage}
           src={images[currentImageIndex]}
@@ -81,7 +86,7 @@ export default function Forgot() {
           objectFit="cover"
           priority={true}
         />
-        <div class={styles.slideController}>
+        <div className={styles.slideController}>
           <div onClick={nextImage} className={styles.slideBtn}>
             Next
           </div>
@@ -102,22 +107,20 @@ export default function Forgot() {
       </div>
       <div className={styles.authWrapper}>
         <form onSubmit={onSubmit} className={styles.formContainer}>
-        <div className={styles.formLogo}>
-          <Image
-            className={styles.logo}
-            src={LogoImg}
-            alt="logo"
-            width={50}
-            priority={true}
-
-          />
+          <div className={styles.formLogo}>
+            <Image
+              className={styles.logo}
+              src={LogoImg}
+              alt="logo"
+              width={50}
+              priority={true}
+            />
           </div>
           <div className={styles.formHeader}>
             <h1>Verify</h1>
             <p>Enter your verification code</p>
           </div>
           {/* Verification code */}
-
           <div className={styles.authInput}>
             <VerificationIcon
               className={styles.authIcon}
@@ -129,19 +132,18 @@ export default function Forgot() {
               type="text"
               name="Verification"
               id="Verification"
-              placeholder="000 000 000"
+              placeholder="00000"
             />
           </div>
           <div className={styles.authBottomBtn}>
-               <button
-            type="submit"
-            disabled={isLoading}
-            className={styles.formAuthButton}
-          >
-            {isLoading ? <Loader /> : "Verify your account"}
-          </button>
-          </div> 
-         
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={styles.formAuthButton}
+            >
+              {isLoading ? <Loader /> : "Verify your account"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

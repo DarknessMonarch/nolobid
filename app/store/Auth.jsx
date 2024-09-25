@@ -14,6 +14,7 @@ const loadAuthState = () => {
           token: '',
           accountType: '',
           phoneNumber: '',
+          // access token and refresh token
         };
   }
   return {

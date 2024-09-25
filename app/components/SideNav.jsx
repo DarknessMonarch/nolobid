@@ -27,19 +27,23 @@ export default function SideNavComponent() {
   };
 
   const handleWallet = () => {
-    const params = new URLSearchParams(searchParams);
-    const currentWalletState = params.get("wallet");
-    params.delete("id");
-    
-    if (currentWalletState === "open") {
-      params.delete("wallet");
+    if (pathname !== "/page/home") {
+      router.push("/page/home", { scroll: false });
     } else {
-      params.set("wallet", "open");
+      const params = new URLSearchParams(searchParams);
+      const currentWalletState = params.get("wallet");
+
+      params.delete("id");
+
+      if (currentWalletState === "open") {
+        params.delete("wallet");
+      } else {
+        params.set("wallet", "open");
+      }
+
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }
-
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
-
   const isWalletOpen = () => {
     return searchParams.get("wallet") === "open";
   };
@@ -54,46 +58,92 @@ export default function SideNavComponent() {
       <div className={styles.sideNavContainerTop}>
         <Link
           href="/page/home"
-          className={`${styles.sideNavLinkContainer} ${isActive("/page/home") || isActive("/")}`}
+          className={`${styles.sideNavLinkContainer} ${
+            isActive("/page/home") || isActive("/")
+          }`}
         >
-          <HomeIcon height={24} width={24} className={styles.sideNavIcon} alt="Home icon" />
+          <HomeIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="Home icon"
+          />
         </Link>
         <div
           onClick={handleWallet}
-          className={`${styles.sideNavLinkContainer} ${isWalletOpen() ? styles.activesideNav : ""}`}
+          className={`${styles.sideNavLinkContainer} ${
+            isWalletOpen() ? styles.activesideNav : ""
+          }`}
         >
-          <WalletIcon height={24} width={24} className={styles.sideNavIcon} alt="Wallet icon" />
+          <WalletIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="Wallet icon"
+          />
         </div>
         <Link
           href="/page/contact"
-          className={`${styles.sideNavLinkContainer} ${isActive("/page/contact")}`}
+          className={`${styles.sideNavLinkContainer} ${isActive(
+            "/page/contact"
+          )}`}
         >
-          <ContactIcon height={24} width={24} className={styles.sideNavIcon} alt="Contact icon" />
+          <ContactIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="Contact icon"
+          />
         </Link>
         <Link
           href="/page/terms"
-          className={`${styles.sideNavLinkContainer} ${isActive("/page/terms")}`}
+          className={`${styles.sideNavLinkContainer} ${isActive(
+            "/page/terms"
+          )}`}
         >
-          <TermIcon height={24} width={24} className={styles.sideNavIcon} alt="terms icon" />
+          <TermIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="terms icon"
+          />
         </Link>
         <Link
           href="/page/about"
-          className={`${styles.sideNavLinkContainer} ${isActive("/page/about")}`}
+          className={`${styles.sideNavLinkContainer} ${isActive(
+            "/page/about"
+          )}`}
         >
-          <AboutIcon height={24} width={24} className={styles.sideNavIcon} alt="About icon" />
+          <AboutIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="About icon"
+          />
         </Link>
-      
       </div>
-      
+
       <div className={styles.sideNavContainerBottom}>
         <Link
           href="/page/settings"
-          className={`${styles.sideNavLinkContainer} ${isActive("/page/settings")}`}
+          className={`${styles.sideNavLinkContainer} ${isActive(
+            "/page/settings"
+          )}`}
         >
-          <SettingIcon height={24} width={24} className={styles.sideNavIcon} alt="Settings icon" />
+          <SettingIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="Settings icon"
+          />
         </Link>
         <div className={styles.sideNavBtn} onClick={logout}>
-          <LogoutIcon height={24} width={24} className={styles.sideNavIcon} alt="Logout icon" />
+          <LogoutIcon
+            height={24}
+            width={24}
+            className={styles.sideNavIcon}
+            alt="Logout icon"
+          />
         </div>
       </div>
     </div>

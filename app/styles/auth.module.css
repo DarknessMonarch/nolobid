@@ -84,8 +84,21 @@
     color: var(--background-color);
   }
 
+  .authInput input:focus {
+    background-color: transparent;
+  }
+
+  .authInput input:-webkit-autofill,
+  .authInput input:-webkit-autofill:hover,
+  .authInput input:-webkit-autofill:focus,
+  .authInput input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: var(--background-color) !important;
+  }
+
   .authInput input::placeholder {
     font-size: 0.8rem;
+    text-transform: capitalize;
     color: var(--background-color);
   }
 

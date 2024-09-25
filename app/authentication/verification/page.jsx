@@ -46,6 +46,7 @@ export default function Forgot() {
 
 
   const router = useRouter();
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   async function onSubmit(e) {
     e.preventDefault();

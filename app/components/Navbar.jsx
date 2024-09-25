@@ -12,6 +12,8 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   UserIcon,
   WalletIcon,
+  EyeIcon as ShowAmountIcon,
+  EyeSlashIcon as HideAmountIcon,
   MagnifyingGlassIcon as SearchIcon,
   ArrowLeftEndOnRectangleIcon as LogoutIcon,
 } from "@heroicons/react/24/outline";
@@ -19,12 +21,25 @@ import {
 export default function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const [username, setUsername] = useState("penguin");
+  const [showAmount, setShowAmount] = useState(false);
   const { isAuth, toggleAuth } = useAuthStore();
   const [amount, setAmount] = useState(1000000);
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const isAmountShown = localStorage.getItem("showAmount");
+    if (isAmountShown !== null) {
+      setShowAmount(isAmountShown);
+    }
+  }, []);
+
+  const toggleShowAmount = () => {
+    setShowAmount(!showAmount);
+    localStorage.setItem("showAmount", showAmount);
+  };
 
   const updateAmount = () => {
     setAmount(10);
@@ -75,7 +90,6 @@ export default function Navbar() {
             alt="logo"
             width={50}
             priority={true}
-
           />
           {pathname === "/page/home" ? (
             <div className={styles.searchContainer}>
@@ -96,12 +110,32 @@ export default function Navbar() {
         </div>
         <div className={styles.navContainerBottom}>
           <div className={styles.wallet}>
-            <WalletIcon
-              className={styles.walletIcon}
-              height={20}
-              alt="wallet icon"
-            />
-            <span>Ksh {amount}</span>
+            {showAmount ? (
+              <WalletIcon
+                className={styles.walletIcon}
+                height={20}
+                alt="wallet icon"
+              />
+            ) : null}
+            {showAmount ? <span>Ksh {amount}</span> : null}
+
+            {showAmount ? (
+              <ShowAmountIcon
+                className={styles.showIcon}
+                onClick={toggleShowAmount}
+                alt="show icon"
+                width={20}
+                height={20}
+              />
+            ) : (
+              <HideAmountIcon
+                className={styles.hideIcon}
+                onClick={toggleShowAmount}
+                alt="hide icon"
+                width={20}
+                height={20}
+              />
+            )}
           </div>
           {isAuth ? (
             <button onClick={handleAuth} className={styles.btnContainer}>
@@ -138,24 +172,23 @@ export default function Navbar() {
           )}
         </div>
       </div>
-       
-        {pathname === "/page/home" ? (
-          <div className={styles.searchContainer}>
-            <SearchIcon
-              className={styles.searchIcon}
-              height={24}
-              alt="Search icon"
-            />
-            <input
-              type="text"
-              value={search}
-              onChange={handleInputChange}
-              placeholder="Search ..."
-              className={styles.searchInput}
-            />
-          </div>
-        ) : null}
-       
+
+      {pathname === "/page/home" ? (
+        <div className={styles.searchContainer}>
+          <SearchIcon
+            className={styles.searchIcon}
+            height={24}
+            alt="Search icon"
+          />
+          <input
+            type="text"
+            value={search}
+            onChange={handleInputChange}
+            placeholder="Search ..."
+            className={styles.searchInput}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

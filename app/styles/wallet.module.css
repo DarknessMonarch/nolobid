@@ -24,13 +24,23 @@
     gap: 10px;
     display: flex;
     position: relative;
+    border-radius: 12px;
     flex-direction: column;
     box-shadow: var(--shadow-effect);
+  }
+
+  .hideBtnWrapper {
+    position: absolute;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 10;
+    right: 0;
   }
 
   .walletImage {
     width: 100%;
     object-fit: cover;
+    border-radius: inherit;
   }
 
   .cardWalletInfo {
@@ -56,6 +66,48 @@
     color: var(--background-light-color);
   }
 
+  .hiddenAmount {
+    height: 20px;
+    width: 100px;
+    padding: 10px 40px;
+    border-radius: 8px;
+    background-color: var(--primary-light-color);
+  }
+
+  
+
+  .walletController {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .walletControllerBtn {
+    gap: 10px;
+    flex-grow: 1;
+    display: flex;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-effect);
+  }
+
+  .walletControllerBtn:hover {
+    background-color: var(--secondary-color);
+  }
+
+  .walletControllerBtn h3 {
+    font-weight: 300;
+    font-size: 1rem;
+  }
+
+  .activeWalletBtn {
+    background-color: var(--secondary-color);
+  }
+
   .footerForm {
     gap: 10px;
     height: 100%;
@@ -63,9 +115,7 @@
     border-radius: 0;
     flex-direction: column;
     justify-content: space-between;
-
   }
-
 
   .formInputContain {
     gap: 10px;
@@ -94,7 +144,6 @@
     background-color: transparent;
     background-color: var(--primary-color);
     border: 1px solid var(--primary-color);
-
   }
 
   .formInput:hover {

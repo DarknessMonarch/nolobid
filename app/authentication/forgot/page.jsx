@@ -51,6 +51,7 @@ export default function Forgot() {
     router.push("login", { scroll: false });
   };
 
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   async function onSubmit(e) {
     e.preventDefault();

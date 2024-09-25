@@ -67,6 +67,8 @@ export default function SignUp() {
     router.push("signup", { scroll: false });
   };
 
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
   async function onSubmit(e) {
     e.preventDefault();
     setIsLoading(true);

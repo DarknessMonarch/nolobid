@@ -23,6 +23,9 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 
+const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
+
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

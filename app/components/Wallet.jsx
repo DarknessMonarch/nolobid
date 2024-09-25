@@ -1,25 +1,46 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import toast from "react-hot-toast";
+import { useState, useEffect } from "react";
 import Loader from "@/app/components/loader";
 import styles from "@/app/styles/wallet.module.css";
 import WalletImage from "@/public/assets/walletCard.png";
 import {
-  BanknotesIcon as AmountIcon,
   PhoneIcon as PhoneIcon,
   XMarkIcon as CloseIcon,
+  BanknotesIcon as AmountIcon,
+  EyeIcon as ShowAmountIcon,
+  EyeSlashIcon as HideAmountIcon,
+  ArrowsUpDownIcon as DepositIcon,
+  ArrowDownTrayIcon as WithrawIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function Wallet() {
+  const [btnController, setbtnController] = useState("Deposit");
+  const [showAmount, setShowAmount] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState(200);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
+  useEffect(() => {
+    const isAmountShown = localStorage.getItem("showAmount");
+    if (isAmountShown !== null) {
+      setShowAmount(isAmountShown);
+    }
+  }, []);
+
+  const toggleShowAmount = () => {
+    setShowAmount(!showAmount);
+    localStorage.setItem("showAmount", showAmount);
+  };
+
+  const updateController = (state) => {
+    setbtnController(state);
+  };
   const closeCard = () => {
     const params = new URLSearchParams(searchParams);
     params.delete("wallet");
@@ -30,10 +51,11 @@ export default function Wallet() {
   async function onSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
+    const api = btnController === "Deposit" ? "/api/deposit" : "/api/withdraw";
 
     try {
       const formData = new FormData(e.currentTarget);
-      // const response = await fetch("/api/submit", {
+      // const response = await fetch(`${api}`, {
       //   method: "POST",
       //   body: formData,
       // });
@@ -57,16 +79,69 @@ export default function Wallet() {
         />
       </div>
       <div className={styles.cardWalletImage}>
-         <Image
-              className={styles.walletImage}
-              src={WalletImage}
-               alt="wallet image"
-              height={250}
-              priority={true}
+        <div className={styles.hideBtnWrapper}>
+          {showAmount ? (
+            <ShowAmountIcon
+              className={styles.hideIcon}
+              onClick={toggleShowAmount}
+              alt="show icon"
+              width={24}
+              height={24}
             />
+          ) : (
+            <HideAmountIcon
+              className={styles.hideIcon}
+              onClick={toggleShowAmount}
+              alt="hide icon"
+              width={24}
+              height={24}
+            />
+          )}
+        </div>
+        <Image
+          className={styles.walletImage}
+          src={WalletImage}
+          alt="wallet image"
+          height={250}
+          priority={true}
+        />
         <div className={styles.cardWalletInfo}>
           <h1>Wallet Amount</h1>
-          <h2>Ksh. {amount}</h2>
+          {showAmount ? (
+            <h2>Ksh. {amount}</h2>
+          ) : (
+            <div className={styles.hiddenAmount}></div>
+          )}
+        </div>
+      </div>
+      <div className={styles.walletController}>
+        <div
+          className={`${styles.walletControllerBtn} ${
+            btnController === "Deposit" ? `${styles.activeWalletBtn}` : ""
+          }`}
+          onClick={() => updateController("Deposit")}
+        >
+          <DepositIcon
+            className={styles.walletIconB}
+            alt="deposit icon"
+            width={24}
+            height={24}
+          />
+          <h5>Deposit</h5>
+        </div>
+        <div
+          className={`${styles.walletControllerBtn} ${
+            btnController === "Withdraw" ? `${styles.activeWalletBtn}` : ""
+          }`}
+          onClick={() => updateController("Withdraw")}
+        >
+          <WithrawIcon
+            className={styles.walletIconB}
+            alt="withdraw icon"
+            width={24}
+            height={24}
+          />
+          <h5>Withdraw</h5>
         </div>
       </div>
       <form onSubmit={onSubmit} className={styles.footerForm}>
@@ -117,7 +192,7 @@ export default function Wallet() {
           disabled={isLoading}
           className={styles.formButton}
         >
-          {isLoading ? <Loader /> : "Pay Now"}
+          {isLoading ? <Loader /> : btnController}
         </button>
       </form>
     </div>

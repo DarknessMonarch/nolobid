@@ -16,7 +16,7 @@
 
   .sideContent {
     bottom: 0;
-    height: 80%;
+    height: 100%;
     z-index: 999;
     padding: 10px;
     display: flex;
@@ -24,14 +24,13 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: absolute;
-    transform: translateX(-100%);
+    transform: translateY(-100%);
     transition: transform 1s ease;
-    border-radius: 12px 12px 0 0;
     background-color: var(--primary-light-color);
   }
 
   .sideContent.slideIn {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
@@ -47,7 +46,7 @@
     height: 100%;
     position: relative;
     border-radius: 12px;
-    transform: translateX(0);
+    transform: translateY(0);
     width: var(--sideContent-width);
   }
 }

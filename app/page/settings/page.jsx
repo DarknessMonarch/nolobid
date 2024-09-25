@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef } from "react";
 import Loader from "@/app/components/loader";
+import { useState, useEffect, useRef } from "react";
 import Profile from "@/public/assets/auth1Image.jpg";
 import styles from "@/app/styles/settings.module.css";
 
@@ -17,10 +17,20 @@ import { PencilIcon as EditIcon } from "@heroicons/react/24/solid";
 export default function SettingsPage() {
   const [accountType, setaccountType] = useState("promoter");
   const [profileImage, setProfileImage] = useState(Profile);
-  const [username, setusername] = useState("penguin");
+  const [email, setEmail] = useState("penguin@gmail.com");
+  const [username, setUsername] = useState("penguin");
   const [isLoading, setIsLoading] = useState(false);
 
-  const DeleteAccount = () => {};
+  // useEffect(() => {
+  //   const email =  localStorage.getItem("email") ;
+  //   setEmail(email);
+  // }, []);
+
+  const updateEmail = (email) => {
+    setEmail(email);
+  };
+
+  const deleteAccount = () => {};
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -57,143 +67,135 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className={styles.mainComponent}>
-      <div className={styles.settingComponent}>
-        <form onSubmit={onSubmit} className={styles.formContainer}>
-          <h1>Account settings</h1>
-
-          <div className={styles.settingWrap}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              ref={fileInputRef}
-              style={{ display: "none" }}
+    <form onSubmit={onSubmit} className={styles.formSettingContainer}>
+      <div className={styles.settingWrap}>
+      <span>{accountType}</span>
+      <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          ref={fileInputRef}
+          style={{ display: "none" }}
+        />
+        <div className={styles.profileSection}>
+            <div className={styles.profileImageContain}>
+            <Image
+              src={profileImage}
+              alt="Profile Image"
+              className={styles.profileImage}
+              width={100}
+              height={100}
             />
-            <div className={styles.profileSection}>
-              <div className={styles.profileImageContain}>
-                <Image
-                  src={profileImage}
-                  alt="Profile Image"
-                  className={styles.profileImage}
-                  width={100}
-                  height={100}
-                />
-                <div
-                  className={styles.uploadEditIcon}
-                  onClick={handleIconClick}
-                >
-                  <EditIcon
-                    className={styles.EditIcon}
-                    alt="Edit Icon"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-              </div>
-              <div className={styles.profileDetails}>
-                <h2>{username}</h2>
-                <span>{accountType}</span>
-              </div>
+            <div className={styles.uploadEditIcon} onClick={handleIconClick}>
+              <EditIcon
+                className={styles.EditIcon}
+                alt="Edit Icon"
+                width={20}
+                height={20}
+              />
             </div>
           </div>
-          <div className={styles.settingWrapinfo}>
-            <div className={styles.settingWrapS}>
-              {/* Username */}
-              <div className={styles.authInputContainer}>
-                <label htmlFor="username" className={styles.authLabel}>
-                  Username
-                </label>
-                <div className={styles.authInput}>
-                  <UserNameIcon
-                    className={styles.authIcon}
-                    alt="Username icon"
-                    width={16}
-                    height={16}
-                  />
-                  <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    placeholder="nalojenga"
-                  />
-                </div>
-              </div>
-
-              {/* Email */}
-              <div className={styles.authInputContainer}>
-                <label htmlFor="email" className={styles.authLabel}>
-                  Email
-                </label>
-                <div className={styles.authInput}>
-                  <EmailIcon
-                    className={styles.authIcon}
-                    alt="email icon"
-                    width={16}
-                    height={16}
-                  />
-                  <input
-                    type="text"
-                    name="email"
-                    id="email"
-                    placeholder="nolojenga@gmail.com"
-                  />
-                </div>
-              </div>
-            </div>
-            {/* Phone */}
-            <div className={styles.authInputContainer}>
-              <label htmlFor="phone" className={styles.authLabel}>
-                Phone Number
-              </label>
-              <div className={styles.authInput}>
-                <PhoneIcon
-                  className={styles.authIcon}
-                  alt="phone icon"
-                  width={16}
-                  height={16}
-                />
-                <input
-                  type="text"
-                  name="phone"
-                  id="phone"
-                  placeholder="+254796143149"
-                />
-              </div>
-            </div>
-            {/*  password */}
-            <div className={styles.authInputContainer}>
-              <label htmlFor="password" className={styles.authLabel}>
-                password
-              </label>
-              <div className={styles.authInput}>
-                <PasswordIcon
-                  className={styles.authIcon}
-                  alt="password icon"
-                  width={16}
-                  height={16}
-                />
-                <input
-                  type="text"
-                  name="password"
-                  id="password"
-                  placeholder="*********"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={styles.formAuthButton}
-            >
-              {isLoading ? <Loader /> : "Update"}
-            </button>
-            <span onClick={DeleteAccount} className={styles.deleteAccount}>
-              Delete account
-            </span>
+          <div className={styles.profileDetails}>
+            <h1>{username}</h1>
+            <h3>{email}</h3>
           </div>
-        </form>
+        </div>
       </div>
-    </div>
+      <div className={styles.settingWrapinfo}>
+        <div className={styles.settingWrapS}>
+          {/* Username */}
+          <div className={styles.authInputContainer}>
+            <label htmlFor="username" className={styles.authLabel}>
+              Username
+            </label>
+            <div className={styles.authInput}>
+              <UserNameIcon
+                className={styles.authIcon}
+                alt="Username icon"
+                width={20}
+                height={20}
+              />
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="nalojenga"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className={styles.authInputContainer}>
+            <label htmlFor="email" className={styles.authLabel}>
+              Email
+            </label>
+            <div className={styles.authInput}>
+              <EmailIcon
+                className={styles.authIcon}
+                alt="email icon"
+                width={20}
+                height={20}
+              />
+              <input
+                type="text"
+                name="email"
+                id="email"
+                placeholder="nolojenga@gmail.com"
+              />
+            </div>
+          </div>
+        </div>
+        {/* Phone */}
+        <div className={styles.authInputContainer}>
+          <label htmlFor="phone" className={styles.authLabel}>
+            Phone Number
+          </label>
+          <div className={styles.authInput}>
+            <PhoneIcon
+              className={styles.authIcon}
+              alt="phone icon"
+              width={20}
+              height={20}
+            />
+            <input
+              type="text"
+              name="phone"
+              id="phone"
+              placeholder="+254796143149"
+            />
+          </div>
+        </div>
+        {/*  password */}
+        <div className={styles.authInputContainer}>
+          <label htmlFor="password" className={styles.authLabel}>
+            password
+          </label>
+          <div className={styles.authInput}>
+            <PasswordIcon
+              className={styles.authIcon}
+              alt="password icon"
+              width={20}
+              height={20}
+            />
+            <input
+              type="text"
+              name="password"
+              id="password"
+              placeholder="*********"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={styles.formAuthButton}
+        >
+          {isLoading ? <Loader /> : "Update"}
+        </button>
+        <span onClick={deleteAccount} className={styles.deleteAccount}>
+          Delete account
+        </span>
+      </div>
+    </form>
   );
 }

@@ -7,8 +7,8 @@
     width: fit-content;
     flex-direction: column;
     width: var(--sidenav-width);
-    border-radius: 0  12px 12px 0;
     min-width: var(--sidenav-width);
+    border-right: 1px solid var(--primary-color);
     background-color: var(--primary-light-color);
   }
 
@@ -58,5 +58,7 @@
 @media only screen and (min-width: 48em) {
   .sideNavContainer {
     border-radius: 12px;
-  }
+    border-right: none;
+    
+}
 }

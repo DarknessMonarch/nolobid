@@ -1,6 +1,27 @@
 import { create } from 'zustand';
 
-export const useAuthStore = create((set) => ({
-    isAuth: false,
-    toggleAuth: () => set((state) => ({ isAuth: !state.isAuth })),
-}));
+const LOCAL_STORAGE_KEY = 'authStore';
+
+const loadAuthState = () => {
+  if (typeof window !== 'undefined') {
+    const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return storedData ? JSON.parse(storedData) : { isAuth: false };
+  }
+  return { isAuth: false }; 
+};
+
+export const useAuthStore = create((set, get) => {
+  const initialState = loadAuthState();
+
+  return {
+    ...initialState,
+    toggleAuth: () => {
+      set((state) => {
+        const newAuthState = { isAuth: !state.isAuth };
+        // Save the updated state to local storage
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...state, ...newAuthState }));
+        return newAuthState;
+      });
+    },
+  };
+});

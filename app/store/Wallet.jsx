@@ -1,0 +1,47 @@
+import { create } from 'zustand';
+
+const LOCAL_STORAGE_KEY = 'walletStore';
+
+const loadState = () => {
+  if (typeof window !== 'undefined') {
+    const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return storedData ? JSON.parse(storedData) : { amount: 500, showAmount: false };
+  }
+  return { amount: 500, showAmount: false }; 
+};
+
+export const useWalletStore = create((set, get) => {
+  const initialState = loadState();
+
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialState));
+
+  return {
+    ...initialState,
+    setAmount: (newAmount) => {
+      set({ amount: newAmount });
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+    },
+    toggleShowAmount: () => {
+      set((state) => {
+        const newState = { showAmount: !state.showAmount };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), ...newState }));
+        return newState; 
+      });
+    },
+    
+    deposit: (value) => {
+      set((state) => {
+        const newAmount = state.amount + value;
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+        return { amount: newAmount };
+      });
+    },
+    withdraw: (value) => {
+      set((state) => {
+        const newAmount = state.amount - value;
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...get(), amount: newAmount }));
+        return { amount: newAmount };
+      });
+    },
+  };
+});

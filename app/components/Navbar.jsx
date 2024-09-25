@@ -5,6 +5,7 @@ import debounce from "lodash.debounce";
 import LogoImg from "@/public/assets/logo.png";
 import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/navbar.module.css";
+import { useWalletStore } from "@/app/store/wallet";
 import ProfileImg from "@/public/assets/auth1Image.jpg";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -21,29 +22,12 @@ import {
 export default function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
   const [username, setUsername] = useState("penguin");
-  const [showAmount, setShowAmount] = useState(false);
   const { isAuth, toggleAuth } = useAuthStore();
-  const [amount, setAmount] = useState(1000000);
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    const isAmountShown = localStorage.getItem("showAmount");
-    if (isAmountShown !== null) {
-      setShowAmount(isAmountShown);
-    }
-  }, []);
-
-  const toggleShowAmount = () => {
-    setShowAmount(!showAmount);
-    localStorage.setItem("showAmount", showAmount);
-  };
-
-  const updateAmount = () => {
-    setAmount(10);
-  };
+  const { amount, showAmount, toggleShowAmount } = useWalletStore();
 
   const performSearch = useMemo(
     () =>
@@ -74,7 +58,7 @@ export default function Navbar() {
   const handleAuth = useCallback(() => {
     toggleAuth();
     if (isAuth) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("token"); 
     } else {
       router.push("/authentication/login", { scroll: false });
     }
@@ -123,7 +107,7 @@ export default function Navbar() {
               <ShowAmountIcon
                 className={styles.showIcon}
                 onClick={toggleShowAmount}
-                alt="show icon"
+                alt="hide icon"
                 width={20}
                 height={20}
               />
@@ -131,7 +115,7 @@ export default function Navbar() {
               <HideAmountIcon
                 className={styles.hideIcon}
                 onClick={toggleShowAmount}
-                alt="hide icon"
+                alt="show icon"
                 width={20}
                 height={20}
               />

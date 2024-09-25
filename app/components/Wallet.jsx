@@ -2,78 +2,91 @@
 
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { useState, useEffect } from "react";
 import Loader from "@/app/components/loader";
+import { useAuthStore } from "@/app/store/Auth";
+import { useWalletStore } from "@/app/store/Wallet";
 import styles from "@/app/styles/wallet.module.css";
 import WalletImage from "@/public/assets/walletCard.png";
+import { useState, useCallback } from "react";
+
 import {
-  PhoneIcon as PhoneIcon,
+  PhoneIcon,
   XMarkIcon as CloseIcon,
   BanknotesIcon as AmountIcon,
   EyeIcon as ShowAmountIcon,
   EyeSlashIcon as HideAmountIcon,
   ArrowsUpDownIcon as DepositIcon,
-  ArrowDownTrayIcon as WithrawIcon,
+  ArrowDownTrayIcon as WithdrawIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function Wallet() {
-  const [btnController, setbtnController] = useState("Deposit");
-  const [showAmount, setShowAmount] = useState(false);
+  const [transactionType, setTransactionType] = useState("Deposit");
+  const [transactionAmount, setTransactionAmount] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [amount, setAmount] = useState(200);
+  const { isAuth, toggleAuth } = useAuthStore();
+  const { amount, showAmount, toggleShowAmount, deposit, withdraw } =
+    useWalletStore();
+    
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  useEffect(() => {
-    const isAmountShown = localStorage.getItem("showAmount");
-    if (isAmountShown !== null) {
-      setShowAmount(isAmountShown);
-    }
-  }, []);
-
-  const toggleShowAmount = () => {
-    setShowAmount(!showAmount);
-    localStorage.setItem("showAmount", showAmount);
-  };
-
-  const updateController = (state) => {
-    setbtnController(state);
-  };
-  const closeCard = () => {
+  const closeCard = useCallback(() => {
     const params = new URLSearchParams(searchParams);
     params.delete("wallet");
-
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  }, [searchParams, pathname, router]);
 
-  async function onSubmit(e) {
-    e.preventDefault();
-    setIsLoading(true);
-    const api = btnController === "Deposit" ? "/api/deposit" : "/api/withdraw";
+  const handlePhoneNumberChange = useCallback((e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setPhoneNumber(value.slice(0, 10));
+  }, []);
+  
+  const handleAmountChange = useCallback((e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setTransactionAmount(value);
+  }, []);
 
-    try {
-      const formData = new FormData(e.currentTarget);
-      // const response = await fetch(`${api}`, {
-      //   method: "POST",
-      //   body: formData,
-      // });
+  const onSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (!isAuth) {
+        toast.error("Please log in to perform transactions");
+        return;
+      }
 
-      toast.success("Paid successfully");
-    } catch (error) {
-      toast.error("failed to make payment");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+      setIsLoading(true);
+      try {
+        const amountValue = parseInt(transactionAmount);
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+        if (transactionType === "Deposit") {
+          deposit(amountValue);
+        } else if (transactionType === "Withdraw") {
+          withdraw(amountValue);
+        }
+
+        toast.success(`${transactionType} successful`);
+        setTransactionAmount("");
+      } catch (error) {
+        toast.error(`Failed to ${transactionType.toLowerCase()}`);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [transactionType, transactionAmount, isAuth, deposit, withdraw]
+  );
+
   return (
     <div className={styles.walletContainer}>
       <div className={styles.cardImageTop}>
         <CloseIcon
           className={styles.closeIcon}
           onClick={closeCard}
-          alt="close icon"
+          aria-label="close"
           width={24}
           height={24}
         />
@@ -84,7 +97,7 @@ export default function Wallet() {
             <ShowAmountIcon
               className={styles.hideIcon}
               onClick={toggleShowAmount}
-              alt="show icon"
+              aria-label="show amount"
               width={24}
               height={24}
             />
@@ -92,7 +105,7 @@ export default function Wallet() {
             <HideAmountIcon
               className={styles.hideIcon}
               onClick={toggleShowAmount}
-              alt="hide icon"
+              aria-label="hide amount"
               width={24}
               height={24}
             />
@@ -101,86 +114,87 @@ export default function Wallet() {
         <Image
           className={styles.walletImage}
           src={WalletImage}
-          alt="wallet image"
+          alt="wallet"
           height={250}
           priority={true}
         />
         <div className={styles.cardWalletInfo}>
           <h1>Wallet Amount</h1>
-          {showAmount ? (
-            <h2>Ksh. {amount}</h2>
+          {isLoading ? (
+            <Loader />
+          ) : showAmount ? (
+            <h2>Ksh. {amount?.toLocaleString() ?? "N/A"}</h2>
           ) : (
             <div className={styles.hiddenAmount}></div>
           )}
         </div>
       </div>
       <div className={styles.walletController}>
-        <div
-          className={`${styles.walletControllerBtn} ${
-            btnController === "Deposit" ? `${styles.activeWalletBtn}` : ""
-          }`}
-          onClick={() => updateController("Deposit")}
-        >
-          <DepositIcon
-            className={styles.walletIconB}
-            alt="deposit icon"
-            width={24}
-            height={24}
-          />
-          <h5>Deposit</h5>
-        </div>
-        <div
-          className={`${styles.walletControllerBtn} ${
-            btnController === "Withdraw" ? `${styles.activeWalletBtn}` : ""
-          }`}
-          onClick={() => updateController("Withdraw")}
-        >
-          <WithrawIcon
-            className={styles.walletIconB}
-            alt="withdraw icon"
-            width={24}
-            height={24}
-          />
-          <h5>Withdraw</h5>
-        </div>
+        {["Deposit", "Withdraw"].map((type) => (
+          <div
+            key={type}
+            className={`${styles.walletControllerBtn} ${
+              transactionType === type ? styles.activeWalletBtn : ""
+            }`}
+            onClick={() => setTransactionType(type)}
+          >
+            {type === "Deposit" ? (
+              <DepositIcon
+                className={styles.walletIconB}
+                aria-hidden="true"
+                width={24}
+                height={24}
+              />
+            ) : (
+              <WithdrawIcon
+                className={styles.walletIconB}
+                aria-hidden="true"
+                width={24}
+                height={24}
+              />
+            )}
+            <h5>{type}</h5>
+          </div>
+        ))}
       </div>
       <form onSubmit={onSubmit} className={styles.footerForm}>
-        {/* Phone Number */}
         <div className={styles.formInputContain}>
           <div className={styles.formInputWrapper}>
-            <label htmlFor="Phone Number">Phone Number</label>
+            <label htmlFor="phoneNumber">Phone Number</label>
             <div className={styles.formInput}>
               <PhoneIcon
                 className={styles.formIcon}
-                alt="Phone icon"
+                aria-hidden="true"
                 width={30}
                 height={30}
               />
               <input
-                type="text"
-                name="Phone"
-                id="Phone"
+                type="tel"
+                id="phoneNumber"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
                 required
                 placeholder="07XXXXXXXX"
+                maxLength={10}
               />
             </div>
           </div>
 
-          {/* Amount */}
           <div className={styles.formInputWrapper}>
-            <label htmlFor="Amount">Amount</label>
+            <label htmlFor="transactionAmount">Amount</label>
             <div className={styles.formInput}>
               <AmountIcon
                 className={styles.formIcon}
-                alt="Amount icon"
+                aria-hidden="true"
                 width={30}
                 height={30}
               />
               <input
                 type="text"
-                name="Amount"
+                id="transactionAmount"
+                value={transactionAmount}
+                onChange={handleAmountChange}
                 required
-                id="Amount"
                 placeholder="10"
               />
             </div>
@@ -192,7 +206,7 @@ export default function Wallet() {
           disabled={isLoading}
           className={styles.formButton}
         >
-          {isLoading ? <Loader /> : btnController}
+          {isLoading ? <Loader /> : transactionType}
         </button>
       </form>
     </div>

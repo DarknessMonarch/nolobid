@@ -131,7 +131,7 @@ export default function Reset({ params }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ password }),
-        }
+        }  
       );
 
       if (!response.ok) {

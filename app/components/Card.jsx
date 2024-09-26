@@ -42,9 +42,9 @@ export default function Card() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  useEffect(() => {
-    getProducts();
-  });
+  // useEffect(() => {
+  //   getProducts();
+  // });
 
   const getProducts = async () => {
     setIsLoading(true);
@@ -54,7 +54,7 @@ export default function Card() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+          "Authorization": `Bearer ${accessToken}`,
         },
       });
 

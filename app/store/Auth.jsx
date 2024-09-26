@@ -1,10 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
 export const useAuthStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       isAuth: false,
+      profile:null,
       username: "",
       email: "",
       phoneNumber: "",
@@ -18,6 +21,7 @@ export const useAuthStore = create(
       setUser: (userData) => 
         set({
           isAuth: true,
+          profile:null,
           username: userData.username,
           email: userData.email,
           phoneNumber: userData.phoneNumber,
@@ -31,7 +35,9 @@ export const useAuthStore = create(
 
       clearUser: () => 
         set({
+          
           isAuth: false,
+          profile: null,
           username: "",
           email: "",
           phoneNumber: "",
@@ -42,6 +48,46 @@ export const useAuthStore = create(
           firstTime: false,
           enabled: false,
         }),
+
+      refreshAccessToken: async () => {
+        const { refreshToken } = get();
+        if (!refreshToken) {
+          console.error("No refresh token available");
+          return false;
+        }
+
+        try {
+          const response = await fetch(`${SERVER_API}/users/public/promoter/refresh`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ refreshToken }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to refresh token");
+          }
+
+          const data = await response.json();
+          set({ accessToken: data.accessToken });
+          return true;
+        } catch (error) {
+          console.error("Error refreshing token:", error);
+          return false;
+        }
+      },
+
+      getAccessToken: async () => {
+        const { accessToken, refreshAccessToken } = get();
+        if (!accessToken) {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) {
+            return null;
+          }
+        }
+        return get().accessToken;
+      },
     }),
     {
       name: "auth-storage",

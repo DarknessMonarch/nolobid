@@ -91,13 +91,13 @@
   }
 
   .profileDetails h1 {
-    font-size: 1rem;
+    font-size: .8rem;
     font-weight: 300;
   }
 
   .profileDetails h3 {
     padding: 10px;
-    font-size: .7rem;
+    font-size: .6rem;
     font-weight: 300;
     border-radius: 12px;
     background-color: var(--primary-glass-color);
@@ -129,6 +129,8 @@
     font-weight: 300;
     text-transform: capitalize;
   }
+
+
 
   .authInput {
     gap: 20px;
@@ -236,5 +238,14 @@
   .authInput {
     padding: 14px;
   }
+
+  .profileDetails h3 {
+    padding: 10px;
+    font-size: .8rem;
+    font-weight: 300;
+    border-radius: 12px;
+
+  }
+
 
 }

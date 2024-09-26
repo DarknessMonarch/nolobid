@@ -19,15 +19,37 @@ import {
 
 export default function SideNavComponent() {
   const searchParams = useSearchParams();
-  const { isAuth } = useAuthStore();
+  const { isAuth, clearUser } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
-  const logout = () => {
-   
-    localStorage.removeItem("user");
-    localStorage.setItem("isAuth", false);
+  const logOut = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${SERVER_API}/users/logout`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Logout failed");
+      }
+
+      clearUser();
+      toast.success("Logout Sucessfully");
+    } catch (error) {
+      toast.error(error.message || "Logout failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   const handleWallet = () => {
     if (pathname !== "/page/home") {
@@ -161,7 +183,7 @@ export default function SideNavComponent() {
                 alt="Settings icon"
               />
             </Link>
-            <div className={styles.sideNavBtn} onClick={logout}>
+            <div className={styles.sideNavBtn} onClick={logOut}>
               <LogoutIcon
                 height={24}
                 width={24}

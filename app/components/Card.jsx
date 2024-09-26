@@ -5,6 +5,7 @@ import tv from "@/public/assets/tv.png";
 import ps5 from "@/public/assets/ps5.png";
 import { useState, useEffect } from "react";
 import { useTimer } from "@/app/hooks/timer";
+import { useAuthStore } from "@/app/store/Auth";
 import Iphone from "@/public/assets/iphone.png";
 import styles from "@/app/styles/card.module.css";
 import Portable from "@/public/assets/portable.png";
@@ -23,6 +24,7 @@ export default function Card() {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const searchParams = useSearchParams();
+  const { accessToken } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -40,9 +42,9 @@ export default function Card() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  // useEffect(() => {
-  //   getProducts();
-  // });
+  useEffect(() => {
+    getProducts();
+  });
 
   const getProducts = async () => {
     setIsLoading(true);
@@ -52,6 +54,7 @@ export default function Card() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 

@@ -17,10 +17,9 @@ import {
 import { PencilIcon as EditIcon } from "@heroicons/react/24/solid";
 
 export default function SettingsPage() {
-  const [accountType, setaccountType] = useState("promoter");
   const [profileImage, setProfileImage] = useState(Profile);
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuth, username, email, profile } = useAuthStore();
+  const { isAuth, username, email, profile, userType } = useAuthStore();
 
   useEffect(() => {
     if (!isAuth) {
@@ -67,7 +66,8 @@ export default function SettingsPage() {
   return (
     <form onSubmit={onSubmit} className={styles.formSettingContainer}>
       <div className={styles.settingWrap}>
-        <span>{accountType}</span>
+      <span>{userType}</span>
+
         <input
           type="file"
           accept="image/*"
@@ -96,7 +96,7 @@ export default function SettingsPage() {
           <div className={styles.profileDetails}>
             <h1>{username}</h1>
             <h3>{email}</h3>
-          </div>
+        </div>
         </div>
       </div>
       <div className={styles.settingWrapinfo}>

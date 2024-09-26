@@ -23,7 +23,7 @@ import {
 
 export default function Navbar() {
   const { amount, showAmount, toggleShowAmount } = useWalletStore();
-  const { isAuth, toggleAuth, username } = useAuthStore();
+  const { isAuth, username, clearUser, accessToken } = useAuthStore();
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -66,6 +66,7 @@ export default function Navbar() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
         },
       });
 
@@ -75,12 +76,10 @@ export default function Navbar() {
         throw new Error(data.message || "Logout failed");
       }
 
-      localStorage.removeItem("user");
-      localStorage.setItem("isAuth", false);
-      toggleAuth();
+      clearUser();
       toast.success("Logout Sucessfully");
     } catch (error) {
-      toast.error(error.message || "Login failed");
+      toast.error(error.message || "Logout failed");
     } finally {
       setIsLoading(false);
     }
@@ -160,10 +159,13 @@ export default function Navbar() {
                   className={styles.profileImg}
                 />
                 <div className={styles.userDetails}>
-                  <h1>{username}</h1>
+                  <h1>Monarch</h1>
                 </div>
               </div>
-              <div onClick={logOut} className={styles.btnContainer}>
+              <div
+                onClick={logOut}
+                className={`${styles.btnContainer} ${styles.logoutBtn}`}
+              >
                 {isLoading ? (
                   <Loader />
                 ) : (

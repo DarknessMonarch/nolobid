@@ -20,18 +20,17 @@ import {
   EyeSlashIcon as HidePasswordIcon,
 } from "@heroicons/react/24/outline";
 
-const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
-
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuth, toggleAuth } = useAuthStore();
+  const { setUser, toggleAuth } = useAuthStore();
   const [terms, setTerms] = useState(false);
   const [formData, setFormData] = useState({
     usernameEmail: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -87,17 +86,19 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
 
-      toggleAuth();
-      toast.success("Welcome back!");
+      const responseData = await response.json();
+
+  
+      const userData = responseData.data;
+      setUser(userData);
+
+      toast.success("Welcome");
       router.push("/page/home", { scroll: false });
     } catch (error) {
-      console.error(error);
       toast.error(error.message || "Login failed");
     } finally {
       setIsLoading(false);
@@ -220,22 +221,26 @@ export default function Login() {
           {errors.password && (
             <p className={styles.errorText}>{errors.password}</p>
           )}
-
-          <div className={styles.termsContainer}>
-            <input
-              type="checkbox"
-              id="terms"
-              checked={terms}
-              onChange={handleTermsChange}
-            />
-            <label
-              onClick={() => router.push("/page/terms", { scroll: false })}
-              htmlFor="terms"
-            >
-              Accept terms and conditions
-            </label>
+          <div className={styles.formChange}>
+            <div className={styles.termsContainer}>
+              <input
+                type="checkbox"
+                id="terms"
+                checked={terms}
+                onChange={handleTermsChange}
+              />
+              <label
+                onClick={() => router.push("/page/terms", { scroll: false })}
+                htmlFor="terms"
+              >
+                Accept terms and conditions
+              </label>
+            </div>
+            {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
+            <span onClick={() => router.push("resetcode", { scroll: false })}>
+              Forgot Password
+            </span>
           </div>
-          {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
 
           <button
             type="submit"

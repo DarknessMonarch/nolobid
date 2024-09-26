@@ -83,13 +83,13 @@ export default function ContactPage() {
     <form onSubmit={onSubmit} className={styles.formContactContainer}>
       <div className={styles.contactWrapinfo}>
         {/* Username */}
-        <div className={styles.authInputContainer}>
-          <label htmlFor="username" className={styles.authLabel}>
+        <div className={styles.contactInputContainer}>
+          <label htmlFor="username" className={styles.contactLabel}>
             Username
           </label>
-          <div className={styles.authInput}>
+          <div className={styles.contactInput}>
             <UserNameIcon
-              className={styles.authIcon}
+              className={styles.contactIcon}
               alt="Username icon"
               width={20}
               height={20}
@@ -98,20 +98,20 @@ export default function ContactPage() {
               type="text"
               name="username"
               id="username"
-              placeholder="noloblid"
+              placeholder="Noloblid"
               required
             />
           </div>
         </div>
 
         {/* Email */}
-        <div className={styles.authInputContainer}>
-          <label htmlFor="email" className={styles.authLabel}>
+        <div className={styles.contactInputContainer}>
+          <label htmlFor="email" className={styles.contactLabel}>
             Email
           </label>
-          <div className={styles.authInput}>
+          <div className={styles.contactInput}>
             <EmailIcon
-              className={styles.authIcon}
+              className={styles.contactIcon}
               alt="email icon"
               width={20}
               height={20}
@@ -120,20 +120,20 @@ export default function ContactPage() {
               type="email"
               name="email"
               id="email"
-              placeholder="noloblid@gmail.com"
+              placeholder="Noloblid@gmail.com"
               required
             />
           </div>
         </div>
 
         {/* Phone */}
-        <div className={styles.authInputContainer}>
-          <label htmlFor="phone" className={styles.authLabel}>
+        <div className={styles.contactInputContainer}>
+          <label htmlFor="phone" className={styles.contactLabel}>
             Phone Number
           </label>
-          <div className={styles.authInput}>
+          <div className={styles.contactInput}>
             <PhoneIcon
-              className={styles.authIcon}
+              className={styles.contactIcon}
               alt="phone icon"
               width={20}
               height={20}
@@ -149,11 +149,11 @@ export default function ContactPage() {
         </div>
 
         {/* Message */}
-        <div className={styles.authInputContainer}>
-          <label htmlFor="message" className={styles.authLabel}>
+        <div className={styles.contactInputContainer}>
+          <label htmlFor="message" className={styles.contactLabel}>
             Message
           </label>
-          <div className={styles.authInput}>
+          <div className={styles.contactInput}>
             <textarea
               name="message"
               id="message"
@@ -163,11 +163,11 @@ export default function ContactPage() {
             ></textarea>
           </div>
         </div>
-        <div className={styles.formAuthBtnWrapper}>
+        <div className={styles.formcontactBtnWrapper}>
           <button
             type="submit"
             disabled={isLoading}
-            className={styles.formAuthButton}
+            className={styles.formcontactButton}
           >
             {isLoading ? <Loader /> : "Contact Us"}
           </button>

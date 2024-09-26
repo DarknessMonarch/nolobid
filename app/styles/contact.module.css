@@ -22,44 +22,42 @@
     flex-direction: column;
   }
 
-  .authInputContainer {
+  .contactInputContainer {
     gap: 20px;
     width: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .authLabel {
+  .contactLabel {
     font-size: 1rem;
     font-weight: 300;
     text-transform: capitalize;
   }
 
-  .authInput {
+  .contactInput {
     gap: 20px;
     width: 100%;
     display: flex;
     padding: 10px 20px;
     border-radius: 8px;
     align-items: center;
+    color: var(--background-color) ;
     background-color: var(--primary-light-color);
   }
 
-  .authInput:hover {
-    border: 1px solid var(--secondary-light-color);
-  }
 
-  .authInput input {
+  .contactInput input {
     width: 100%;
     border: none;
     outline: none;
     padding: 10px;
     background: transparent;
+    color: var(--background-color);
   }
 
-  .authInput input::placeholder {
+  .contactInput input::placeholder {
     font-size: 0.8rem;
-    text-transform: capitalize;
   }
 
   .formChangeS {
@@ -74,14 +72,14 @@
     color: var(--secondary-color);
   }
 
-  .formAuthBtnWrapper {
+  .formcontactBtnWrapper {
     gap: 10px;
     width: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .formAuthButton {
+  .formcontactButton {
     gap: 10px;
     width: 100%;
     max-height: 50px;
@@ -93,7 +91,7 @@
     background-color: var(--background-color);
   }
 
-  .formAuthButton:hover {
+  .formcontactButton:hover {
     color: var(--background-color);
     background-color: var(--secondary-color);
   }
@@ -159,7 +157,7 @@
     justify-content: space-between;
   }
 
-  .authInput {
+  .contactInput {
     padding: 14px;
   }
 

@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import Loader from "@/app/components/loader";
+import { useAuthStore } from "@/app/store/Auth";
 import { useState, useEffect, useRef } from "react";
 import Profile from "@/public/assets/auth1Image.jpg";
 import styles from "@/app/styles/settings.module.css";
@@ -17,18 +19,14 @@ import { PencilIcon as EditIcon } from "@heroicons/react/24/solid";
 export default function SettingsPage() {
   const [accountType, setaccountType] = useState("promoter");
   const [profileImage, setProfileImage] = useState(Profile);
-  const [email, setEmail] = useState("penguin@gmail.com");
-  const [username, setUsername] = useState("penguin");
   const [isLoading, setIsLoading] = useState(false);
+  const { isAuth, username, email, profile } = useAuthStore();
 
-  // useEffect(() => {
-  //   const email =  localStorage.getItem("email") ;
-  //   setEmail(email);
-  // }, []);
-
-  const updateEmail = (email) => {
-    setEmail(email);
-  };
+  useEffect(() => {
+    if (!isAuth) {
+      redirect("/page/home");
+    }
+  }, [isAuth]);
 
   const deleteAccount = () => {};
 
@@ -69,8 +67,8 @@ export default function SettingsPage() {
   return (
     <form onSubmit={onSubmit} className={styles.formSettingContainer}>
       <div className={styles.settingWrap}>
-      <span>{accountType}</span>
-      <input
+        <span>{accountType}</span>
+        <input
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
@@ -78,9 +76,9 @@ export default function SettingsPage() {
           style={{ display: "none" }}
         />
         <div className={styles.profileSection}>
-            <div className={styles.profileImageContain}>
+          <div className={styles.profileImageContain}>
             <Image
-              src={profileImage}
+              src={profile === null ? profileImage : profile}
               alt="Profile Image"
               className={styles.profileImage}
               width={100}

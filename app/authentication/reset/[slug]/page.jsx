@@ -124,9 +124,9 @@ export default function Reset({ params }) {
 
     try {
       const response = await fetch(
-        `${SERVER_API}/api/user/resetPassword/${params.slug}`,
+        `${SERVER_API}/api/user/users/public/update/recover/${params.slug}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -139,9 +139,8 @@ export default function Reset({ params }) {
       }
 
       toast.success("Password reset successful");
-      router.push("/page/login", { scroll: false });
+      router.push("/authentication/login", { scroll: false });
     } catch (error) {
-      console.error(error);
       toast.error(error.message || "Password reset failed");
     } finally {
       setIsLoading(false);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/sidenav.module.css";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
@@ -18,13 +19,14 @@ import {
 
 export default function SideNavComponent() {
   const searchParams = useSearchParams();
+  const { isAuth } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
   const logout = () => {
-    toast.success("Logged Out");
-    localStorage.removeItem("token");
-    router.push("/login");
+   
+    localStorage.removeItem("user");
+    localStorage.setItem("isAuth", false);
   };
 
   const handleWallet = () => {
@@ -70,33 +72,38 @@ export default function SideNavComponent() {
             alt="Home icon"
           />
         </Link>
-        <div
-          onClick={handleWallet}
-          className={`${styles.sideNavLinkContainer} ${
-            isWalletOpen() ? styles.activesideNav : ""
-          }`}
-        >
-          <WalletIcon
-            height={24}
-            width={24}
-            className={styles.sideNavIcon}
-            alt="Wallet icon"
-          />
-        </div>
+        {isAuth ? (
+          <div
+            onClick={handleWallet}
+            className={`${styles.sideNavLinkContainer} ${
+              isWalletOpen() ? styles.activesideNav : ""
+            }`}
+          >
+            <WalletIcon
+              height={24}
+              width={24}
+              className={styles.sideNavIcon}
+              alt="Wallet icon"
+            />
+          </div>
+        ) : null}
 
-        <Link
-          href="/page/analytic"
-          className={`${styles.sideNavLinkContainer} ${isActive(
-            "/page/analytic"
-          )}`}
-        >
-          <AnalyticIcon
-            height={24}
-            width={24}
-            className={styles.sideNavIcon}
-            alt="analytic icon"
-          />
-        </Link>
+        {isAuth ? (
+          <Link
+            href="/page/analytic"
+            className={`${styles.sideNavLinkContainer} ${isActive(
+              "/page/analytic"
+            )}`}
+          >
+            <AnalyticIcon
+              height={24}
+              width={24}
+              className={styles.sideNavIcon}
+              alt="analytic icon"
+            />
+          </Link>
+        ) : null}
+
         <Link
           href="/page/contact"
           className={`${styles.sideNavLinkContainer} ${isActive(
@@ -138,29 +145,33 @@ export default function SideNavComponent() {
         </Link>
       </div>
 
-      <div className={styles.sideNavContainerBottom}>
-        <Link
-          href="/page/settings"
-          className={`${styles.sideNavLinkContainer} ${isActive(
-            "/page/settings"
-          )}`}
-        >
-          <SettingIcon
-            height={24}
-            width={24}
-            className={styles.sideNavIcon}
-            alt="Settings icon"
-          />
-        </Link>
-        <div className={styles.sideNavBtn} onClick={logout}>
-          <LogoutIcon
-            height={24}
-            width={24}
-            className={styles.sideNavIcon}
-            alt="Logout icon"
-          />
-        </div>
-      </div>
+      {isAuth ? (
+        <>
+          <div className={styles.sideNavContainerBottom}>
+            <Link
+              href="/page/settings"
+              className={`${styles.sideNavLinkContainer} ${isActive(
+                "/page/settings"
+              )}`}
+            >
+              <SettingIcon
+                height={24}
+                width={24}
+                className={styles.sideNavIcon}
+                alt="Settings icon"
+              />
+            </Link>
+            <div className={styles.sideNavBtn} onClick={logout}>
+              <LogoutIcon
+                height={24}
+                width={24}
+                className={styles.sideNavIcon}
+                alt="Logout icon"
+              />
+            </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

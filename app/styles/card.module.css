@@ -18,6 +18,7 @@
     background-color: var(--primary-light-color);
   }
 
+
   .cardImage {
     width: 100%;
     object-fit: contain;
@@ -28,7 +29,6 @@
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-
   }
 
   .cardImageInfo {
@@ -100,9 +100,15 @@
     font-weight: 200;
     font-size: 0.8rem;
   }
+
+  /* when their is no data  */
+  
+  .emptyCard {
+    
+    height: 150px;
+    width: 100%;
+  }
 }
-
-
 
 /* using it as global style for larger devices  */
 @media only screen and (min-width: 48em) {
@@ -114,15 +120,19 @@
     width: auto;
   }
 
-
   .cardImageWrapper {
     flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
-
   }
 
+    /* when their is no data  */
   
+    .emptyCard {
+    
+      height: 150px;
+      width: 200;
+    }
 }
 
 /* ipad pro screens & laptop */
@@ -136,8 +146,6 @@
   .cardImage {
     width: auto;
   }
-
-  
 }
 
 /* large screens : Desktop and 4k screens */
@@ -151,7 +159,6 @@
 
   .cardImageWrapper {
     flex-wrap: nowrap;
-
   }
 }
 
@@ -165,6 +172,5 @@
 
   .cardImageWrapper {
     flex-wrap: nowrap;
-
   }
 }

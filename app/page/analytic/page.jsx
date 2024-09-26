@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { redirect } from 'next/navigation';
+import { useState, useEffect } from "react";
 import Loader from "@/app/components/loader";
+import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/contact.module.css";
 
 import {
@@ -13,7 +15,13 @@ import {
 
 export default function AnalyticPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const { isAuth } = useAuthStore();
 
+  useEffect(() => {
+    if (!isAuth) {
+      redirect("/page/home");
+    }
+  }, [isAuth]);
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -35,9 +43,5 @@ export default function AnalyticPage() {
     }
   }
 
-  return (
-   <div>
-
-   </div>
-  );
+  return <div></div>;
 }

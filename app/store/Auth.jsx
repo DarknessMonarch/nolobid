@@ -1,85 +1,51 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const LOCAL_STORAGE_KEY = 'authStore';
+export const useAuthStore = create(
+  persist(
+    (set) => ({
+      isAuth: false,
+      username: "",
+      email: "",
+      phoneNumber: "",
+      userType: "",
+      role: "",
+      accessToken: "",
+      refreshToken: "",
+      firstTime: false,
+      enabled: false,
 
-const loadAuthState = () => {
-  if (typeof window !== 'undefined') {
-    const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return storedData
-      ? JSON.parse(storedData)
-      : {
+      setUser: (userData) => 
+        set({
+          isAuth: true,
+          username: userData.username,
+          email: userData.email,
+          phoneNumber: userData.phoneNumber,
+          userType: userData.userType,
+          role: userData.role,
+          accessToken: userData.accessToken,
+          refreshToken: userData.refreshToken,
+          firstTime: userData.firstTime,
+          enabled: userData.enabled,
+        }),
+
+      clearUser: () => 
+        set({
           isAuth: false,
-          email: '',
-          username: '',
-          token: '',
-          accountType: '',
-          phoneNumber: '',
-          // access token and refresh token
-        };
-  }
-  return {
-    isAuth: false,
-    email: '',
-    username: '',
-    token: '',
-    accountType: '',
-    phoneNumber: '',
-  };
-};
-
-export const useAuthStore = create((set, get) => {
-  const initialState = loadAuthState();
-
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialState));
-  }
-
-  const updateStoreFromLocalStorage = (event) => {
-    if (event.key === LOCAL_STORAGE_KEY) {
-      const newState = JSON.parse(event.newValue);
-      set(newState);
+          username: "",
+          email: "",
+          phoneNumber: "",
+          userType: "",
+          role: "",
+          accessToken: "",
+          refreshToken: "",
+          firstTime: false,
+          enabled: false,
+        }),
+    }),
+    {
+      name: "auth-storage",
+      getStorage: () => localStorage,
     }
-  };
-
-  if (typeof window !== 'undefined') {
-    window.addEventListener('storage', updateStoreFromLocalStorage);
-  }
-
-  return {
-    ...initialState,
-    toggleAuth: () => {
-      set((state) => {
-        const newAuthState = { isAuth: !state.isAuth };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...state, ...newAuthState }));
-        }
-        return newAuthState;
-      });
-    },
-    setUser: (email, username, token, accountType, phoneNumber) => {
-      set((state) => {
-        const newUserData = { email, username, token, accountType, phoneNumber };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ ...state, ...newUserData }));
-        }
-        return { ...state, ...newUserData };
-      });
-    },
-    clearUser: () => {
-      set(() => {
-        const clearedState = {
-          isAuth: false,
-          email: '',
-          username: '',
-          token: '',
-          accountType: '',
-          phoneNumber: '',
-        };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(clearedState));
-        }
-        return clearedState;
-      });
-    },
-  };
-});
+  )
+);

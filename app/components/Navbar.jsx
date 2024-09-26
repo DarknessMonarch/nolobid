@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import toast from "react-hot-toast";
 import debounce from "lodash.debounce";
+import Loader from "@/app/components/loader";
 import LogoImg from "@/public/assets/logo.png";
 import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/navbar.module.css";
@@ -20,31 +22,16 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Navbar() {
-  const { isAuth, email, toggleAuth, setUser, clearUser } = useAuthStore();
+  const { amount, showAmount, toggleShowAmount } = useWalletStore();
+  const { isAuth, toggleAuth, username } = useAuthStore();
   const [isSearching, setIsSearching] = useState(false);
-  const [username, setUsername] = useState("penguin");
+  const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { amount, showAmount, toggleShowAmount } = useWalletStore();
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedData = localStorage.getItem("LOCAL_STORAGE_KEY");
-      if (storedData) {
-        const newState = JSON.parse(storedData);
-        toggleAuth(newState.isAuth);
-        setUser(newState.email, newState.username, newState.token, newState.accountType, newState.phoneNumber);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [setUser, toggleAuth]);
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   const performSearch = useMemo(
     () =>
@@ -64,7 +51,6 @@ export default function Navbar() {
   useEffect(() => {
     setIsSearching(search.trim() !== "");
     performSearch(search.trim());
-
     return () => performSearch.cancel();
   }, [search, performSearch]);
 
@@ -72,14 +58,37 @@ export default function Navbar() {
     setSearch(event.target.value);
   }, []);
 
-  const handleAuth = useCallback(() => {
-    toggleAuth();
-    if (isAuth) {
-      localStorage.removeItem("token"); 
-    } else {
-      router.push("/authentication/login", { scroll: false });
+  const logOut = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${SERVER_API}/users/logout`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Logout failed");
+      }
+
+      localStorage.removeItem("user");
+      localStorage.setItem("isAuth", false);
+      toggleAuth();
+      toast.success("Logout Sucessfully");
+    } catch (error) {
+      toast.error(error.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
-  }, [isAuth, toggleAuth, router]);
+  };
+
+  const login = () => {
+    router.push("/authentication/login", { scroll: false });
+  };
 
   return (
     <div className={styles.navMain}>
@@ -92,7 +101,7 @@ export default function Navbar() {
             width={50}
             priority={true}
           />
-          {pathname === "/page/home" ? (
+          {pathname === "/page/home" && (
             <div className={styles.searchContainer}>
               <SearchIcon
                 className={styles.searchIcon}
@@ -107,48 +116,41 @@ export default function Navbar() {
                 className={styles.searchInput}
               />
             </div>
-          ) : null}
+          )}
         </div>
         <div className={styles.navContainerBottom}>
-          <div className={styles.wallet}>
-            {showAmount ? (
-              <WalletIcon
-                className={styles.walletIcon}
-                height={20}
-                alt="wallet icon"
-              />
-            ) : null}
-            {showAmount ? <span>Ksh {amount}</span> : null}
-
-            {showAmount ? (
-              <ShowAmountIcon
-                className={styles.showIcon}
-                onClick={toggleShowAmount}
-                alt="hide icon"
-                width={20}
-                height={20}
-              />
-            ) : (
-              <HideAmountIcon
-                className={styles.hideIcon}
-                onClick={toggleShowAmount}
-                alt="show icon"
-                width={20}
-                height={20}
-              />
-            )}
-          </div>
           {isAuth ? (
-            <button onClick={handleAuth} className={styles.btnContainer}>
-              <UserIcon
-                className={styles.navIcon}
-                height={20}
-                alt="login icon"
-              />
-              Login
-            </button>
-          ) : (
             <>
+              <div className={styles.wallet}>
+                {showAmount ? null : (
+                  <HideAmountIcon
+                    className={styles.hideIcon}
+                    onClick={toggleShowAmount}
+                    alt="show icon"
+                    width={20}
+                    height={20}
+                  />
+                )}
+
+                {showAmount && (
+                  <>
+                    <WalletIcon
+                      className={styles.walletIcon}
+                      height={20}
+                      alt="wallet icon"
+                    />
+                    <span>Ksh {amount?.toLocaleString()}</span>
+                    <ShowAmountIcon
+                      className={styles.showIcon}
+                      onClick={toggleShowAmount}
+                      alt="hide icon"
+                      width={20}
+                      height={20}
+                    />
+                  </>
+                )}
+              </div>
+
               <div className={styles.userProfile}>
                 <Image
                   src={ProfileImg}
@@ -161,20 +163,36 @@ export default function Navbar() {
                   <h1>{username}</h1>
                 </div>
               </div>
-              <div onClick={handleAuth} className={styles.btnContainer}>
-                <LogoutIcon
-                  height={20}
-                  width={20}
-                  className={styles.logutNavIcon}
-                  alt="logout icon"
-                />
+              <div onClick={logOut} className={styles.btnContainer}>
+                {isLoading ? (
+                  <Loader />
+                ) : (
+                  <LogoutIcon
+                    height={20}
+                    width={20}
+                    className={styles.logoutNavIcon}
+                    alt="logout icon"
+                  />
+                )}
               </div>
             </>
+          ) : (
+            <button
+              onClick={login}
+              disabled={isLoading}
+              className={styles.btnContainer}
+            >
+              <UserIcon
+                className={styles.navIcon}
+                height={20}
+                alt="login icon"
+              />
+              Login
+            </button>
           )}
         </div>
       </div>
-
-      {pathname === "/page/home" ? (
+      {pathname === "/page/home" && (
         <div className={styles.searchContainer}>
           <SearchIcon
             className={styles.searchIcon}
@@ -189,7 +207,7 @@ export default function Navbar() {
             className={styles.searchInput}
           />
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

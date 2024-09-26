@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
 import LogoImg from "@/public/assets/logo.png";
-import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/auth.module.css";
 import auth1Image from "@/public/assets/auth1Image.jpg";
 import auth2Image from "@/public/assets/auth2Image.jpg";
@@ -38,7 +37,6 @@ export default function SignUp() {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-  const { isAuth, toggleAuth } = useAuthStore();
   const [terms, setTerms] = useState(false);
 
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
@@ -180,15 +178,12 @@ export default function SignUp() {
       if (!response.ok) {
         throw new Error(data.message || "Sign up failed");
       }
-
-      toggleAuth();
       toast.success(
         data.message ||
           "Sign up successful! Please check your email for verification."
       );
       router.push("verification", { scroll: false });
     } catch (error) {
-      console.error(error);
       toast.error(error.message || "Sign up failed");
     } finally {
       setIsLoading(false);
@@ -410,26 +405,22 @@ export default function SignUp() {
           {errors.confirmPassword && (
             <p className={styles.errorText}>{errors.confirmPassword}</p>
           )}
-          <div className={styles.formChange}>
-            <div className={styles.termsContainer}>
-              <input
-                type="checkbox"
-                id="terms"
-                checked={terms}
-                onChange={handleTermsChange}
-              />
-              <label
-                onClick={() => router.push("/page/terms", { scroll: false })}
-                htmlFor="terms"
-              >
-                Accept terms and conditions
-              </label>
-            </div>
-            {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
-            <span onClick={() => router.push("forgot", { scroll: false })}>
-              Forgot Password
-            </span>
+          <div className={styles.termsContainer}>
+            <input
+              type="checkbox"
+              id="terms"
+              checked={terms}
+              onChange={handleTermsChange}
+            />
+            <label
+              onClick={() => router.push("/page/terms", { scroll: false })}
+              htmlFor="terms"
+            >
+              Accept terms and conditions
+            </label>
           </div>
+          {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
+
           <button
             type="submit"
             disabled={isLoading}

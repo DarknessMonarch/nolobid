@@ -17,8 +17,8 @@ import { QrCodeIcon as ForgetCodeIcon } from "@heroicons/react/24/outline";
 export default function Verify() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [forgetCode, setforgetCode] = useState(""); 
-  const [error, setError] = useState(""); 
+  const [forgetCode, setforgetCode] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
   const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
@@ -67,39 +67,13 @@ export default function Verify() {
 
   async function onSubmit(e) {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-
-    try {
-      const response = await fetch(
-        `${SERVER_API}/users/public/reset/${forgetCode}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Reset code verification failed");
-      }
-
-      userId = data._id;
-
-      toast.success("reset code verified, redirecting to reset page...");
-      router.push(`/reset/${userId}`, { scroll: false });
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message || "Reset code verification failed");
-    } finally {
-      setIsLoading(false);
-    }
+    router.push(`reset/${forgetCode}`, { scroll: false });
+    setIsLoading(false);
   }
 
   return (
@@ -178,7 +152,10 @@ export default function Verify() {
           </div>
           <h3>
             Don&apos;t have an account?{" "}
-            <div className={styles.btnLogin} onClick={() => router.push("signup", { scroll: false })}>
+            <div
+              className={styles.btnLogin}
+              onClick={() => router.push("signup", { scroll: false })}
+            >
               Sign up
             </div>
           </h3>

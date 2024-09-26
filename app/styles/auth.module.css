@@ -15,7 +15,6 @@
   }
 
 
-
   .authWrapper {
     width: 90%;
     padding: 10px;
@@ -219,6 +218,10 @@
     color: var(--background-color);
     background-color: var(--secondary-color);
   }
+
+  
+
+
 }
 
 /* using it as global style for larger devices  */

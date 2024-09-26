@@ -7,7 +7,7 @@ import { useAuthStore } from "@/app/store/Auth";
 import { useWalletStore } from "@/app/store/Wallet";
 import styles from "@/app/styles/wallet.module.css";
 import WalletImage from "@/public/assets/walletCard.png";
-import { useState, useEffect , useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import {
   PhoneIcon,
@@ -25,30 +25,12 @@ export default function Wallet() {
   const [transactionAmount, setTransactionAmount] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuth, toggleAuth } = useAuthStore();
-  const { amount, showAmount, toggleShowAmount, setAmount, deposit, withdraw } =
-    useWalletStore();
+  const { isAuth } = useAuthStore();
+  const { amount, showAmount, toggleShowAmount, deposit, withdraw } = useWalletStore();
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (storedData) {
-        const newState = JSON.parse(storedData);
-        setAmount(newState.amount);
-        toggleShowAmount(newState.showAmount);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, [setAmount, toggleShowAmount]);
 
   const closeCard = useCallback(() => {
     const params = new URLSearchParams(searchParams);
@@ -77,23 +59,26 @@ export default function Wallet() {
       setIsLoading(true);
       try {
         const amountValue = parseInt(transactionAmount);
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
         if (transactionType === "Deposit") {
           deposit(amountValue);
+          toast.success(`Deposited Ksh. ${amountValue.toLocaleString()}`);
         } else if (transactionType === "Withdraw") {
+          if (amountValue > amount) {
+            throw new Error("Insufficient balance");
+          }
           withdraw(amountValue);
+          toast.success(`Withdrew Ksh. ${amountValue.toLocaleString()}`);
         }
 
-        toast.success(`${transactionType} successful`);
         setTransactionAmount("");
+        setPhoneNumber(""); // Reset phone number after transaction
       } catch (error) {
-        toast.error(`Failed to ${transactionType.toLowerCase()}`);
+        toast.error(`Failed to ${transactionType.toLowerCase()}: ${error.message}`);
       } finally {
         setIsLoading(false);
       }
     },
-    [transactionType, transactionAmount, isAuth, deposit, withdraw]
+    [transactionType, transactionAmount, isAuth, deposit, withdraw, amount]
   );
 
   return (
@@ -139,7 +124,7 @@ export default function Wallet() {
           {isLoading ? (
             <Loader />
           ) : showAmount ? (
-            <h2>Ksh. {amount?.toLocaleString() ?? "N/A"}</h2>
+            <h2>Ksh. {amount ?? "N/A"}</h2>
           ) : (
             <div className={styles.hiddenAmount}></div>
           )}
@@ -211,7 +196,7 @@ export default function Wallet() {
                 value={transactionAmount}
                 onChange={handleAmountChange}
                 required
-                placeholder="10"
+                placeholder="Amount"
               />
             </div>
           </div>

@@ -12,7 +12,6 @@ import auth2Image from "@/public/assets/auth2Image.jpg";
 import auth3Image from "@/public/assets/auth3Image.jpg";
 import auth4Image from "@/public/assets/auth4Image.jpg";
 
-
 import {
   KeyIcon as PasswordIcon,
   EyeIcon as ShowPasswordIcon,
@@ -20,14 +19,27 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Reset({ params }) {
-  
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState([]);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const router = useRouter();
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -39,58 +51,98 @@ export default function Reset({ params }) {
     );
   };
 
-  useEffect(() => {
-    const interval = setInterval(nextImage, 5000);
+  const validatePassword = (password) => {
+    const errors = [];
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentImageIndex]);
+    if (password.length < 8) {
+      errors.push("Password must be at least 8 characters long");
+    }
+    if (!/(?=.*[a-z])/.test(password)) {
+      errors.push("Password must contain at least one lowercase letter");
+    }
+    if (!/(?=.*[A-Z])/.test(password)) {
+      errors.push("Password must contain at least one uppercase letter");
+    }
+    if (!/(?=.*\d)/.test(password)) {
+      errors.push("Password must contain at least one number");
+    }
+    if (!/(?=.*[!@#$%^&*])/.test(password)) {
+      errors.push(
+        "Password must contain at least one special character (!@#$%^&*)"
+      );
+    }
 
+    return errors;
+  };
 
-  const router = useRouter();
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
 
+    const errors = validatePassword(newPassword);
+    setPasswordErrors(errors);
+  };
 
-  const toggleConfirmPassword = () => {
-    setConfirmPassword(!showConfirmPassword);
+  const handleConfirmPasswordChange = (e) => {
+    const confirmPassword = e.target.value;
+    setConfirmPassword(confirmPassword);
+
+    if (confirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+    }
   };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const policy = () => {
-    router.push("/page/policy", { scroll: false });
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const readTerms = () => {
-    router.push("/page/terms", { scroll: false });
-  };
-
- 
-  const Login = () => {
-    router.push("login", { scroll: false });
-  };
-
-  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   async function onSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
 
+    // Validate password
+    const errors = validatePassword(password);
+    if (errors.length > 0) {
+      setPasswordErrors(errors);
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const formData = new FormData(e.currentTarget);
-      // const response = await fetch("/api/submit", {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const response = await fetch(
+        `${SERVER_API}/api/user/resetPassword/${params.slug}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password }),
+        }
+      );
 
-      toast.success("Reset link successful");
+      if (!response.ok) {
+        throw new Error("Failed to reset password");
+      }
 
-      router.push("/page/login ", { scroll: false });
+      toast.success("Password reset successful");
+      router.push("/page/login", { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("Reset failed");
+      toast.error(error.message || "Password reset failed");
     } finally {
       setIsLoading(false);
     }
@@ -98,7 +150,7 @@ export default function Reset({ params }) {
 
   return (
     <div className={styles.authComponent}>
-     <div className={styles.authComponentBgImage}>
+      <div className={styles.authComponentBgImage}>
         <Image
           className={styles.authImage}
           src={images[currentImageIndex]}
@@ -108,7 +160,7 @@ export default function Reset({ params }) {
           objectFit="cover"
           priority={true}
         />
-        <div class={styles.slideController}>
+        <div className={styles.slideController}>
           <div onClick={nextImage} className={styles.slideBtn}>
             Next
           </div>
@@ -129,23 +181,21 @@ export default function Reset({ params }) {
       </div>
       <div className={styles.authWrapper}>
         <form onSubmit={onSubmit} className={styles.formContainer}>
-        <div className={styles.formLogo}>
-          <Image
-            className={styles.logo}
-            src={LogoImg}
-            alt="logo"
-            width={50}
-            priority={true}
-
-          />
+          <div className={styles.formLogo}>
+            <Image
+              className={styles.logo}
+              src={LogoImg}
+              alt="logo"
+              width={50}
+              priority={true}
+            />
           </div>
           <div className={styles.formHeader}>
             <h1>Reset Password</h1>
             <p>Enter your new Password</p>
           </div>
-  
-          {/*  password */}
 
+          {/* Password Input */}
           <div className={styles.authInput}>
             <PasswordIcon
               className={styles.authIcon}
@@ -155,11 +205,17 @@ export default function Reset({ params }) {
             />
             <input
               type={showPassword ? "text" : "password"}
-              name="Password"
-              id="Password"
+              name="password"
+              id="password"
               placeholder="New Password"
+              value={password}
+              onChange={handlePasswordChange}
             />
-            <button type="button" className={styles.showBtn} onClick={toggleShowPassword}>
+            <button
+              type="button"
+              className={styles.showBtn}
+              onClick={toggleShowPassword}
+            >
               {showPassword ? (
                 <HidePasswordIcon
                   className={styles.authIcon}
@@ -175,8 +231,15 @@ export default function Reset({ params }) {
               )}
             </button>
           </div>
-          {/* confirm password */}
 
+          {passwordErrors.length > 0 &&
+            passwordErrors.map((error, index) => (
+              <div key={index}>
+                <p className={styles.errorText}>{error}</p>
+              </div>
+            ))}
+
+          {/* Confirm Password */}
           <div className={styles.authInput}>
             <PasswordIcon
               className={styles.authIcon}
@@ -189,8 +252,14 @@ export default function Reset({ params }) {
               name="confirmPassword"
               id="confirmPassword"
               placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
             />
-            <button type="button" className={styles.showBtn} onClick={toggleConfirmPassword}>
+            <button
+              type="button"
+              className={styles.showBtn}
+              onClick={toggleShowConfirmPassword}
+            >
               {showConfirmPassword ? (
                 <HidePasswordIcon
                   className={styles.authIcon}
@@ -206,19 +275,25 @@ export default function Reset({ params }) {
               )}
             </button>
           </div>
+          {confirmPasswordError && (
+            <p className={styles.errorText}>{confirmPasswordError}</p>
+          )}
+
           <div className={styles.authBottomBtn}>
-               <button
-            type="submit"
-            disabled={isLoading}
-            className={styles.formAuthButton}
-          >
-            {isLoading ? <Loader /> : "Reset "}
-          </button>
-       
-          </div> 
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={styles.formAuthButton}
+            >
+              {isLoading ? <Loader /> : "Reset Password"}
+            </button>
+          </div>
           <h3>
             Already have an account?{" "}
-            <div className={styles.btnLogin} onClick={Login}>
+            <div
+              className={styles.btnLogin}
+              onClick={() => router.push("/authentication/login", { scroll: false })}
+            >
               Login
             </div>
           </h3>

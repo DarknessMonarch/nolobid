@@ -17,6 +17,8 @@ import { QrCodeIcon as VerificationIcon } from "@heroicons/react/24/outline";
 export default function Verify() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [verificationCode, setVerificationCode] = useState(""); 
+  const [error, setError] = useState(""); 
   const router = useRouter();
   const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
@@ -28,7 +30,7 @@ export default function Verify() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -40,24 +42,48 @@ export default function Verify() {
     );
   };
 
+  const validateForm = () => {
+    if (!verificationCode) {
+      setError("Verification code is required");
+      return false;
+    }
+    if (verificationCode.length !== 5) {
+      setError("Verification code must be exactly 5 characters long");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value.trim();
+    setVerificationCode(value);
+    if (value.length > 5) {
+      setError("Verification code must be exactly 5 characters long");
+    } else {
+      setError("");
+    }
+  };
+
   async function onSubmit(e) {
     e.preventDefault();
-    const verificationCode = e.target.Verification.value.trim();
 
-    if (!verificationCode) {
-      toast.error("Verification code is required");
+    if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${SERVER_API}/users/public/verify/${verificationCode}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${SERVER_API}/users/public/verify/${verificationCode}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
@@ -124,17 +150,21 @@ export default function Verify() {
           <div className={styles.authInput}>
             <VerificationIcon
               className={styles.authIcon}
-              alt="Verification icon"
+              alt="Verification code icon"
               width={20}
               height={20}
             />
             <input
               type="text"
-              name="Verification"
-              id="Verification"
+              name="verificationCode"
+              id="verificationCode"
               placeholder="00000"
+              value={verificationCode}
+              onChange={handleInputChange}
+              maxLength={5}
             />
           </div>
+          {error && <p className={styles.errorText}>{error}</p>}
           <div className={styles.authBottomBtn}>
             <button
               type="submit"

@@ -110,6 +110,12 @@
     border: none;
   }
 
+  .errorText {
+    font-size: .8rem;
+    font-weight: 300;
+    color: var(--secondary-color);
+  }
+
   .showBtn {
     cursor: pointer;
     background-color: transparent;
@@ -293,6 +299,9 @@
     transform: none;
     padding: 0 30px;
     border-radius: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     align-items: center;
     backdrop-filter: none;

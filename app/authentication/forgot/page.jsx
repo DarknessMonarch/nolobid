@@ -6,25 +6,31 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
 import LogoImg from "@/public/assets/logo.png";
-import { useAuthStore } from "@/app/store/Auth";
 import styles from "@/app/styles/auth.module.css";
 import auth1Image from "@/public/assets/auth1Image.jpg";
 import auth2Image from "@/public/assets/auth2Image.jpg";
 import auth3Image from "@/public/assets/auth3Image.jpg";
 import auth4Image from "@/public/assets/auth4Image.jpg";
 
+import { QrCodeIcon as ForgetCodeIcon } from "@heroicons/react/24/outline";
 
-import {
-  EnvelopeIcon as EmailIcon,
-} from "@heroicons/react/24/outline";
-
-export default function Forgot() {
+export default function Verify() {
   const [isLoading, setIsLoading] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [forgetCode, setforgetCode] = useState(""); 
+  const [error, setError] = useState(""); 
+  const router = useRouter();
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
-  
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -36,39 +42,61 @@ export default function Forgot() {
     );
   };
 
-  useEffect(() => {
-    const interval = setInterval(nextImage, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [currentImageIndex]);
-
-
-  const router = useRouter();
-
-  const Login = () => {
-    router.push("login", { scroll: false });
+  const validateForm = () => {
+    if (!forgetCode) {
+      setError("Reset code is required");
+      return false;
+    }
+    if (forgetCode.length !== 5) {
+      setError("Reset code must be exactly 5 characters long");
+      return false;
+    }
+    setError("");
+    return true;
   };
 
-  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+  const handleInputChange = (e) => {
+    const value = e.target.value.trim();
+    setforgetCode(value);
+    if (value.length > 5) {
+      setError("Reset code must be exactly 5 characters long");
+    } else {
+      setError("");
+    }
+  };
 
   async function onSubmit(e) {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
-      // const response = await fetch("/api/submit", {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const response = await fetch(
+        `${SERVER_API}/users/public/reset/${forgetCode}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      toast.success("check your email for reset link")
-      router.push("reset", { scroll: false });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Reset code verification failed");
+      }
+
+      userId = data._id;
+
+      toast.success("reset code verified, redirecting to reset page...");
+      router.push(`/reset/${userId}`, { scroll: false });
     } catch (error) {
       console.error(error);
-      toast.error("reset failed");
+      toast.error(error.message || "Reset code verification failed");
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +104,7 @@ export default function Forgot() {
 
   return (
     <div className={styles.authComponent}>
-     <div className={styles.authComponentBgImage}>
+      <div className={styles.authComponentBgImage}>
         <Image
           className={styles.authImage}
           src={images[currentImageIndex]}
@@ -86,7 +114,7 @@ export default function Forgot() {
           objectFit="cover"
           priority={true}
         />
-        <div class={styles.slideController}>
+        <div className={styles.slideController}>
           <div onClick={nextImage} className={styles.slideBtn}>
             Next
           </div>
@@ -107,49 +135,51 @@ export default function Forgot() {
       </div>
       <div className={styles.authWrapper}>
         <form onSubmit={onSubmit} className={styles.formContainer}>
-        <div className={styles.formLogo}>
-          <Image
-            className={styles.logo}
-            src={LogoImg}
-            alt="logo"
-            width={50}
-            priority={true}
-
-          />
+          <div className={styles.formLogo}>
+            <Image
+              className={styles.logo}
+              src={LogoImg}
+              alt="logo"
+              width={50}
+              priority={true}
+            />
           </div>
           <div className={styles.formHeader}>
-            <h1>Forgot Password</h1>
-            <p>Enter your Email</p>
+            <h1>Forgot password</h1>
+            <p>Enter your reset code to reset your password</p>
           </div>
-          {/* Email */}
-
+          {/* forgetCode code */}
           <div className={styles.authInput}>
-            <EmailIcon
+            <ForgetCodeIcon
               className={styles.authIcon}
-              alt="Email icon"
+              alt="forgetCode icon"
               width={20}
               height={20}
             />
             <input
               type="text"
-              name="Email"
-              id="Email"
-              placeholder="Email"
+              name="forgetCode"
+              id="forgetCode"
+              placeholder="00000"
+              value={forgetCode}
+              onChange={handleInputChange}
+              maxLength={5}
             />
           </div>
+          {error && <p className={styles.errorText}>{error}</p>}
           <div className={styles.authBottomBtn}>
-               <button
-            type="submit"
-            disabled={isLoading}
-            className={styles.formAuthButton}
-          >
-            {isLoading ? <Loader /> : "Get link"}
-          </button>
-          </div> 
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={styles.formAuthButton}
+            >
+              {isLoading ? <Loader /> : "Request password reset"}
+            </button>
+          </div>
           <h3>
-            Already have an account?{" "}
-            <div className={styles.btnLogin} onClick={Login}>
-              Login
+            Don&apos;t have an account?{" "}
+            <div className={styles.btnLogin} onClick={() => router.push("signup", { scroll: false })}>
+              Sign up
             </div>
           </h3>
         </form>

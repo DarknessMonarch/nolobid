@@ -44,7 +44,7 @@ export default function Login() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,7 +63,8 @@ export default function Login() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.usernameEmail.trim()) newErrors.usernameEmail = "usernameEmail is required";
+    if (!formData.usernameEmail.trim())
+      newErrors.usernameEmail = "usernameEmail is required";
     if (!terms) newErrors.terms = "You must accept the terms and conditions";
     if (!formData.password) newErrors.password = "Password is required";
 
@@ -116,18 +117,32 @@ export default function Login() {
           priority={true}
         />
         <div className={styles.slideController}>
-          <div onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)} className={styles.slideBtn}>
+          <div
+            onClick={() =>
+              setCurrentImageIndex((prev) => (prev + 1) % images.length)
+            }
+            className={styles.slideBtn}
+          >
             Next
           </div>
           <div className={styles.imageSlider}>
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`${styles.circleAdv} ${currentImageIndex === index ? styles.activeCircle : ""}`}
+                className={`${styles.circleAdv} ${
+                  currentImageIndex === index ? styles.activeCircle : ""
+                }`}
               ></div>
             ))}
           </div>
-          <div onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)} className={styles.slideBtn}>
+          <div
+            onClick={() =>
+              setCurrentImageIndex(
+                (prev) => (prev - 1 + images.length) % images.length
+              )
+            }
+            className={styles.slideBtn}
+          >
             Previous
           </div>
         </div>
@@ -155,16 +170,18 @@ export default function Login() {
               width={20}
               height={20}
             />
-            <input 
-              type="usernameEmail" 
-              name="usernameEmail" 
+            <input
+              type="usernameEmail"
+              name="usernameEmail"
               value={formData.usernameEmail}
               onChange={handleInputChange}
-              placeholder="username or email" 
+              placeholder="username or email"
             />
           </div>
-          {errors.usernameEmail && <p className={styles.errorText}>{errors.usernameEmail}</p>}
-          
+          {errors.usernameEmail && (
+            <p className={styles.errorText}>{errors.usernameEmail}</p>
+          )}
+
           {/* Password */}
           <div className={styles.authInput}>
             <PasswordIcon
@@ -186,13 +203,13 @@ export default function Login() {
               onClick={toggleShowPassword}
             >
               {showPassword ? (
-                <HidePasswordIcon
+                <ShowPasswordIcon
                   className={styles.authIcon}
                   width={20}
                   height={20}
                 />
               ) : (
-                <ShowPasswordIcon
+                <HidePasswordIcon
                   className={styles.authIcon}
                   width={20}
                   height={20}
@@ -200,8 +217,10 @@ export default function Login() {
               )}
             </button>
           </div>
-          {errors.password && <p className={styles.errorText}>{errors.password}</p>}
-          
+          {errors.password && (
+            <p className={styles.errorText}>{errors.password}</p>
+          )}
+
           <div className={styles.termsContainer}>
             <input
               type="checkbox"
@@ -209,12 +228,15 @@ export default function Login() {
               checked={terms}
               onChange={handleTermsChange}
             />
-            <label onClick={() => router.push("/page/terms", { scroll: false })} htmlFor="terms">
+            <label
+              onClick={() => router.push("/page/terms", { scroll: false })}
+              htmlFor="terms"
+            >
               Accept terms and conditions
             </label>
           </div>
           {errors.terms && <p className={styles.errorText}>{errors.terms}</p>}
-          
+
           <button
             type="submit"
             disabled={isLoading}
@@ -226,7 +248,10 @@ export default function Login() {
           </button>
           <h3>
             Don&apos;t have an account?{" "}
-            <div className={styles.btnLogin} onClick={() => router.push("signup", { scroll: false })}>
+            <div
+              className={styles.btnLogin}
+              onClick={() => router.push("signup", { scroll: false })}
+            >
               Sign up
             </div>
           </h3>

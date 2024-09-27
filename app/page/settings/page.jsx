@@ -10,10 +10,12 @@ import styles from "@/app/styles/settings.module.css";
 import toast from "react-hot-toast";
 
 import {
+  PhoneIcon,
   KeyIcon as PasswordIcon,
   UserIcon as UserNameIcon,
   EnvelopeIcon as EmailIcon,
-  PhoneIcon,
+  EyeIcon as ShowPasswordIcon,
+  EyeSlashIcon as HidePasswordIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon as EditIcon } from "@heroicons/react/24/solid";
 
@@ -21,8 +23,18 @@ const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
 export default function SettingsPage() {
   const [profileImage, setProfileImage] = useState(Profile);
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuth, username, email, profile, userType, setUser , clearUser, accessToken} = useAuthStore();
+  const {
+    isAuth,
+    username,
+    email,
+    profile,
+    userType,
+    setUser,
+    clearUser,
+    accessToken,
+  } = useAuthStore();
   const [formData, setFormData] = useState({
     username: username,
     email: email,
@@ -38,6 +50,10 @@ export default function SettingsPage() {
   }, [isAuth]);
 
   const fileInputRef = useRef(null);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -66,33 +82,35 @@ export default function SettingsPage() {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
-
+      setProfileImage(imageUrl); 
+  
       const formData = new FormData();
-      formData.append('profilePic', file);
-
+      formData.append("profile_pic", file);
+  
       try {
         const response = await fetch(`${SERVER_API}/users/update/profilepic`, {
-          method: 'POST',
+          method: "POST",
           body: formData,
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
-
+  
         if (!response.ok) {
-          throw new Error(data.errors ||  'Failed to update profile picture' );
+          const data = await response.json(); 
+          throw new Error(data.errors || "Failed to update profile picture");
         }
-
-        const data = await response.json();
-        setUser({ profile: data.profilePic });
-        toast.success('Profile picture updated successfully');
+  
+        const data = await response.json(); 
+        setUser({ profile: data.profile_pic }); 
+        toast.success("Profile picture updated successfully");
       } catch (error) {
-        console.error('Error updating profile picture:', error);
-        toast.error('Failed to update profile picture');
+        console.error("Error updating profile picture:", error);
+        toast.error("Failed to update profile picture");
       }
     }
   };
+  
 
   const handleIconClick = () => {
     fileInputRef.current.click();
@@ -106,52 +124,52 @@ export default function SettingsPage() {
 
     try {
       const response = await fetch(`${SERVER_API}/users/update/details`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          settingorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error(data.errors || 'Failed to update user details');
+        throw new Error(data.errors || "Failed to update user details");
       }
 
       const data = await response.json();
       setUser(data);
-      toast.success('Profile updated successfully');
+      toast.success("Profile updated successfully");
     } catch (error) {
-      console.error('Error updating profile:', error);
-      toast.error('Failed to update profile');
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const deleteAccount = async () => {
-    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      try {
-        const response = await fetch(`${SERVER_API}/users/delete`, {
-          method: 'DELETE',
-          headers: {
-           'Authorization': `Bearer ${accessToken}`,
-          },
-        });
+  // const deleteAccount = async () => {
+  //   if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+  //     try {
+  //       const response = await fetch(`${SERVER_API}/users/delete`, {
+  //         method: 'DELETE',
+  //         headers: {
+  //          'settingorization': `Bearer ${accessToken}`,
+  //         },
+  //       });
 
-        if (!response.ok) {
-          throw new Error('Failed to delete account');
-        }
+  //       if (!response.ok) {
+  //         throw new Error('Failed to delete account');
+  //       }
 
-        toast.success('Account deleted successfully');
-        clearUser();
-        redirect("/page/home");
-      } catch (error) {
-        console.error('Error deleting account:', error);
-        toast.error('Failed to delete account');
-      }
-    }
-  };
+  //       toast.success('Account deleted successfully');
+  //       clearUser();
+  //       redirect("/page/home");
+  //     } catch (error) {
+  //       console.error('Error deleting account:', error);
+  //       toast.error('Failed to delete account');
+  //     }
+  //   }
+  // };
 
   return (
     <form onSubmit={updateProfile} className={styles.formSettingContainer}>
@@ -192,13 +210,13 @@ export default function SettingsPage() {
       <div className={styles.settingWrapinfo}>
         <div className={styles.settingWrapS}>
           {/* Username */}
-          <div className={styles.authInputContainer}>
-            <label htmlFor="username" className={styles.authLabel}>
+          <div className={styles.settingInputContainer}>
+            <label htmlFor="username" className={styles.settingLabel}>
               Username
             </label>
-            <div className={styles.authInput}>
+            <div className={styles.settingInput}>
               <UserNameIcon
-                className={styles.authIcon}
+                className={styles.settingIcon}
                 alt="Username icon"
                 width={20}
                 height={20}
@@ -212,17 +230,19 @@ export default function SettingsPage() {
                 placeholder="noloblid"
               />
             </div>
-            {errors.username && <p className={styles.errorText}>{errors.username}</p>}
+            {errors.username && (
+              <p className={styles.errorText}>{errors.username}</p>
+            )}
           </div>
 
           {/* Email */}
-          <div className={styles.authInputContainer}>
-            <label htmlFor="email" className={styles.authLabel}>
+          <div className={styles.settingInputContainer}>
+            <label htmlFor="email" className={styles.settingLabel}>
               Email
             </label>
-            <div className={styles.authInput}>
+            <div className={styles.settingInput}>
               <EmailIcon
-                className={styles.authIcon}
+                className={styles.settingIcon}
                 alt="email icon"
                 width={20}
                 height={20}
@@ -240,13 +260,13 @@ export default function SettingsPage() {
           </div>
         </div>
         {/* Phone */}
-        <div className={styles.authInputContainer}>
-          <label htmlFor="phoneNumber" className={styles.authLabel}>
+        <div className={styles.settingInputContainer}>
+          <label htmlFor="phoneNumber" className={styles.settingLabel}>
             Phone Number
           </label>
-          <div className={styles.authInput}>
+          <div className={styles.settingInput}>
             <PhoneIcon
-              className={styles.authIcon}
+              className={styles.settingIcon}
               alt="phone icon"
               width={20}
               height={20}
@@ -260,41 +280,64 @@ export default function SettingsPage() {
               placeholder="2547xxxxxxxx"
             />
           </div>
-          {errors.phoneNumber && <p className={styles.errorText}>{errors.phoneNumber}</p>}
+          {errors.phoneNumber && (
+            <p className={styles.errorText}>{errors.phoneNumber}</p>
+          )}
         </div>
         {/*  password */}
-        <div className={styles.authInputContainer}>
-          <label htmlFor="password" className={styles.authLabel}>
+        <div className={styles.settingInputContainer}>
+          <label htmlFor="password" className={styles.settingLabel}>
             Password
           </label>
-          <div className={styles.authInput}>
+          <div className={styles.settingInput}>
             <PasswordIcon
-              className={styles.authIcon}
+              className={styles.settingIcon}
               alt="password icon"
               width={20}
               height={20}
             />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
-              id="password"
               value={formData.password}
               onChange={handleInputChange}
-              placeholder="*********"
+              placeholder="Password"
             />
+            <button
+              type="button"
+              className={styles.showBtn}
+              onClick={toggleShowPassword}
+            >
+              {showPassword ? (
+                <ShowPasswordIcon
+                  className={styles.settingIcon}
+                  width={20}
+                  height={20}
+                />
+              ) : (
+                <HidePasswordIcon
+                  className={styles.settingIcon}
+                  width={20}
+                  height={20}
+                />
+              )}
+            </button>
           </div>
-          {errors.password && <p className={styles.errorText}>{errors.password}</p>}
+
+          {errors.password && (
+            <p className={styles.errorText}>{errors.password}</p>
+          )}
         </div>
         <button
           type="submit"
           disabled={isLoading}
-          className={styles.formAuthButton}
+          className={styles.formsettingButton}
         >
           {isLoading ? <Loader /> : "Update"}
         </button>
-        <span onClick={deleteAccount} className={styles.deleteAccount}>
+        {/* <span onClick={deleteAccount} className={styles.deleteAccount}>
           Delete account
-        </span>
+        </span> */}
       </div>
     </form>
   );

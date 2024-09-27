@@ -23,7 +23,9 @@
   .profileSection {
     gap: 10px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
 
   }
 
@@ -32,10 +34,9 @@
     right: 0;
     padding: 10px;
     font-weight: 400;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     position: absolute;
     text-transform: capitalize;
-    color: var(--secondary-color);
   }
 
   .profileImageContain {
@@ -86,6 +87,7 @@
     gap: 5px;
     display: flex;
     padding: 10px 0;
+    text-align: center;
     flex-direction: column;
     text-transform: capitalize;
   }
@@ -93,6 +95,7 @@
   .profileDetails h1 {
     font-size: .8rem;
     font-weight: 300;
+    color: var(--secondary-color);
   }
 
   .profileDetails h3 {
@@ -117,14 +120,14 @@
     flex-direction: column;
   }
 
-  .authInputContainer {
+  .settingInputContainer {
     gap: 20px;
     width: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .authLabel {
+  .settingLabel {
     font-size: 1rem;
     font-weight: 300;
     text-transform: capitalize;
@@ -132,43 +135,47 @@
 
 
 
-  .authInput {
+  .settingInput {
     gap: 20px;
     width: 100%;
     display: flex;
     padding: 10px 20px;
     border-radius: 8px;
     align-items: center;
+    color: var(--background-color) ;
     background-color: var(--primary-light-color);
 
   }
 
-  .authInput:hover {
+  .settingInput:hover {
     border: 1px solid var(--secondary-light-color);
   }
 
-  .authInput input {
+  .settingInput input {
     width: 100%;
     border: none;
     outline: none;
     padding: 10px;
+    color: var(--background-color);
     background: transparent;
     
   }
+
+
   
-  .authInput input:-webkit-autofill,
-  .authInput input:-webkit-autofill:hover,
-  .authInput input:-webkit-autofill:focus,
-  .authInput input:-webkit-autofill:active {
+  .settingInput input:-webkit-autofill,
+  .settingInput input:-webkit-autofill:hover,
+  .settingInput input:-webkit-autofill:focus,
+  .settingInput input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
     -webkit-text-fill-color: var(--background-color) !important;
   }
 
-  .authInput input:focus {
+  .settingInput input:focus {
     background-color: transparent;
   }
 
-  .authInput input::placeholder {
+  .settingInput input::placeholder {
     font-size: 0.8rem;
     text-transform: capitalize;
     color: var(--background-color);
@@ -185,7 +192,7 @@
     color: var(--secondary-color);
   }
 
-  .formAuthButton {
+  .formsettingButton {
     gap: 10px;
     width: 100%;
     max-height: 50px;
@@ -197,11 +204,16 @@
     background-color: var(--background-color);
   }
 
-  .formAuthButton:hover {
+  .formsettingButton:hover {
     color: var(--background-color);
     background-color: var(--secondary-color);
   }
 
+  .showBtn {
+    cursor: pointer;
+    color: var(--background-color);
+    background-color: transparent;
+  }
 
 
   .deleteAccount {
@@ -235,8 +247,12 @@
     justify-content: space-between;
   }
 
-  .authInput {
+  .settingInput {
     padding: 14px;
+  }
+
+  .profileDetails {
+    text-align: start;
   }
 
   .profileDetails h3 {

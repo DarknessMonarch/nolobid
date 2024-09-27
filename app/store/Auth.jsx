@@ -17,11 +17,12 @@ export const useAuthStore = create(
       refreshToken: "",
       firstTime: false,
       enabled: false,
+      authorized:false,
 
       setUser: (userData) => 
         set({
           isAuth: true,
-          profile:null,
+          profile:userData.profilePic.fileLink,
           username: userData.username,
           email: userData.email,
           phoneNumber: userData.phoneNumber,
@@ -31,6 +32,7 @@ export const useAuthStore = create(
           refreshToken: userData.refreshToken,
           firstTime: userData.firstTime,
           enabled: userData.enabled,
+          authorized:userData.authorized
         }),
 
       clearUser: () => 
@@ -47,6 +49,7 @@ export const useAuthStore = create(
           refreshToken: "",
           firstTime: false,
           enabled: false,
+          authorized:false
         }),
 
       refreshAccessToken: async () => {

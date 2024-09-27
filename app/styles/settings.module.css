@@ -9,39 +9,34 @@
     justify-content: space-between;
   }
 
+
+  .formSettingContainer span {
+    font-size: .8rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--secondary-color);
+  }
+
   .settingWrap {
     width: 100%;
     display: flex;
-    position: relative;
-    padding: 20px 10px;
     border-radius: 12px;
     flex-direction: column;
     background-color: var(--primary-light-color);
   }
-
 
   .profileSection {
     gap: 10px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-
+    justify-content: space-between;
   }
 
-  .settingWrap span {
-    top: 0;
-    right: 0;
-    padding: 10px;
-    font-weight: 400;
-    font-size: 0.7rem;
-    position: absolute;
-    text-transform: capitalize;
-  }
 
   .profileImageContain {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     display: flex;
     position: relative;
     align-items: center;
@@ -57,7 +52,6 @@
     border-radius: inherit;
     object-position: center;
     border: 4px solid var(--primary-glass-color);
-
   }
 
   .uploadEditIcon {
@@ -84,27 +78,40 @@
   }
 
   .profileDetails {
-    gap: 5px;
+    gap: 10px;
+    flex-grow: 1;
     display: flex;
-    padding: 10px 0;
-    text-align: center;
+    padding: 10px 4px;
     flex-direction: column;
     text-transform: capitalize;
   }
 
+  
+
+
   .profileDetails h1 {
-    font-size: .8rem;
+    font-size: 0.9rem;
     font-weight: 300;
     color: var(--secondary-color);
   }
 
-  .profileDetails h3 {
+  .profileGlass {
+    gap: 5px;
     padding: 10px;
-    font-size: .6rem;
-    font-weight: 300;
+    display: flex;
     border-radius: 12px;
+    flex-direction: column;
     background-color: var(--primary-glass-color);
+  }
 
+  .profileGlass h3,
+  .profileGlass h2 {
+    font-size: 0.8rem;
+    font-weight: 300;
+  }
+
+  .profileGlass h3 {
+    text-transform: lowercase;
   }
 
   .settingWrapinfo {
@@ -133,8 +140,6 @@
     text-transform: capitalize;
   }
 
-
-
   .settingInput {
     gap: 20px;
     width: 100%;
@@ -142,9 +147,8 @@
     padding: 10px 20px;
     border-radius: 8px;
     align-items: center;
-    color: var(--background-color) ;
+    color: var(--background-color);
     background-color: var(--primary-light-color);
-
   }
 
   .settingInput:hover {
@@ -158,11 +162,8 @@
     padding: 10px;
     color: var(--background-color);
     background: transparent;
-    
   }
 
-
-  
   .settingInput input:-webkit-autofill,
   .settingInput input:-webkit-autofill:hover,
   .settingInput input:-webkit-autofill:focus,
@@ -215,7 +216,6 @@
     background-color: transparent;
   }
 
-
   .deleteAccount {
     cursor: pointer;
     text-align: center;
@@ -223,11 +223,26 @@
   }
 }
 
+/* smaller phones  */
+
+@media (width: 20em) {
+  .profileSection {
+    justify-content: center;
+  }
+
+  .profileDetails {
+    flex-grow: 0;
+    padding: 10px 0;
+    text-align: center;
+
+  }
+}
+
 /* using it as global style for larger devices  */
 @media only screen and (min-width: 48em) {
   .formSettingContainer {
     height: 100%;
-}
+  }
   .settingWrap {
     width: fit-content;
   }
@@ -236,7 +251,7 @@
     width: 100px;
     height: 100px;
   }
-  
+
   .settingWrapinfo {
     gap: 40px;
   }
@@ -254,14 +269,4 @@
   .profileDetails {
     text-align: start;
   }
-
-  .profileDetails h3 {
-    padding: 10px;
-    font-size: .8rem;
-    font-weight: 300;
-    border-radius: 12px;
-
-  }
-
-
 }

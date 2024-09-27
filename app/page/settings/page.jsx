@@ -34,6 +34,7 @@ export default function SettingsPage() {
     setUser,
     clearUser,
     accessToken,
+    authorized,
   } = useAuthStore();
   const [formData, setFormData] = useState({
     username: username,
@@ -174,8 +175,6 @@ export default function SettingsPage() {
   return (
     <form onSubmit={updateProfile} className={styles.formSettingContainer}>
       <div className={styles.settingWrap}>
-        <span>{userType}</span>
-
         <input
           type="file"
           accept="image/*"
@@ -203,7 +202,10 @@ export default function SettingsPage() {
           </div>
           <div className={styles.profileDetails}>
             <h1>{username}</h1>
+            
+            <div className={styles.profileGlass}>
             <h3>{email}</h3>
+            </div>
           </div>
         </div>
       </div>
@@ -335,6 +337,7 @@ export default function SettingsPage() {
         >
           {isLoading ? <Loader /> : "Update"}
         </button>
+        <span>{userType} Account status: {authorized ? "Approved" : "Pending"}</span>
         {/* <span onClick={deleteAccount} className={styles.deleteAccount}>
           Delete account
         </span> */}

@@ -66,6 +66,7 @@
     padding: 10px 20px;
     border-radius: 8px;
     align-items: center;
+    color: var(--background-color);
     background-color: transparent;
     border: 1px solid var(--background-light-color);
   }
@@ -84,6 +85,7 @@
   }
 
   .authInput input:focus {
+    color: var(--background-color);
     background-color: transparent;
   }
 

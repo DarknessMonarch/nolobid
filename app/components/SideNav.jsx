@@ -10,7 +10,7 @@ import {
   HomeIcon,
   WalletIcon,
   BookOpenIcon as TermIcon,
-  ChartBarIcon as AnalyticIcon,
+  ChartPieIcon as DashBoardIcon,
   Cog8ToothIcon as SettingIcon,
   IdentificationIcon as ContactIcon,
   InformationCircleIcon as AboutIcon,
@@ -24,8 +24,6 @@ export default function SideNavComponent() {
   const router = useRouter();
 
   const logOut = async () => {
-    setIsLoading(true);
-
     try {
       const response = await fetch(`${SERVER_API}/users/logout`, {
         method: "GET",
@@ -45,11 +43,8 @@ export default function SideNavComponent() {
       toast.success("Logout Sucessfully");
     } catch (error) {
       toast.error(error.message || "Logout failed");
-    } finally {
-      setIsLoading(false);
     }
   };
-
 
   const handleWallet = () => {
     if (pathname !== "/page/home") {
@@ -112,12 +107,12 @@ export default function SideNavComponent() {
 
         {isAuth ? (
           <Link
-            href="/page/analytic"
+            href="/page/dashboard"
             className={`${styles.sideNavLinkContainer} ${isActive(
-              "/page/analytic"
+              "/page/dashboard"
             )}`}
           >
-            <AnalyticIcon
+            <DashBoardIcon
               height={24}
               width={24}
               className={styles.sideNavIcon}

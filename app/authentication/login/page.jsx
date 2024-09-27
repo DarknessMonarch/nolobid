@@ -87,7 +87,7 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.errors || "Login failed");
       }
 
       const responseData = await response.json();
@@ -99,7 +99,7 @@ export default function Login() {
       toast.success("Welcome");
       router.push("/page/home", { scroll: false });
     } catch (error) {
-      toast.error(error.message || "Login failed");
+      toast.error( "Login failed, credentials do not match");
     } finally {
       setIsLoading(false);
     }

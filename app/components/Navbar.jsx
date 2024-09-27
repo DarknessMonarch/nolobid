@@ -159,7 +159,7 @@ export default function Navbar() {
                   className={styles.profileImg}
                 />
                 <div className={styles.userDetails}>
-                  <h1>Monarch</h1>
+                  <h1>{username}</h1>
                 </div>
               </div>
               <div

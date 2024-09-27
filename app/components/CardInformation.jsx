@@ -2,14 +2,10 @@
 
 import Image from "next/image";
 import toast from "react-hot-toast";
-import tv from "@/public/assets/tv.png";
-import ps5 from "@/public/assets/ps5.png";
 import Loader from "@/app/components/loader";
 import { useState, useEffect } from "react";
 import { useTimer } from "@/app/hooks/timer";
-import Iphone from "@/public/assets/iphone.png";
-import Portable from "@/public/assets/portable.png";
-import cardDataJson from "@/app/components/data.json";
+import { useProductStore } from "@/app/store/Product";
 import styles from "@/app/styles/cardInformation.module.css";
 import {
   BanknotesIcon as AmountIcon,
@@ -18,17 +14,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
-const imageMap = {
-  tv,
-  ps5,
-  Iphone,
-  Portable,
-};
-
 export default function CardInformation() {
-  const { timeLeft, isClient, formatTime } = useTimer();
   const [isLoading, setIsLoading] = useState(false);
-  const [product, setProduct] = useState([]);
+  const { product, setProduct } = useProductStore();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -43,8 +31,16 @@ export default function CardInformation() {
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
- 
 
+  useEffect(() => {
+    if (
+      searchParams.get("id") !== null &&
+      searchParams.get("id") !== "" &&
+      searchParams.get("id") !== "empty"
+    ) {
+      getProductsByID(searchParams.get("id"));
+    }
+  }, [searchParams.get("id")]);
   const getProductsByID = async (id) => {
     setIsLoading(true);
 
@@ -55,7 +51,6 @@ export default function CardInformation() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -69,12 +64,33 @@ export default function CardInformation() {
     }
   };
 
+  async function onSubmit(event) {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      const response = await fetch("/api/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      // Handle the response data as needed
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const { timeLeft, isClient, formatTime } = useTimer(product.expiryDate);
+
   <>
-  {product.map((data, index) => (
-    <div className={`${styles.cardContainer} ${styles.emptyCard} skeleton`} key={index}>
+    <div className={`${styles.cardContainer} ${styles.emptyCard} skeleton`}>
       <div className={styles.cardImageWrapper}>
         <div className={styles.cardImageTop}>
-          <span>{data.id}</span>
+          <span>{product.productCode}</span>
 
           <CloseIcon
             className={styles.closeIcon}
@@ -84,52 +100,50 @@ export default function CardInformation() {
             height={24}
           />
         </div>
-        <Image
-          className={styles.cardImage}
-          src={imageMap[data.image]}
-          alt={data.name}
-          height={200}
-          priority={true}
-        />
+        <div className={styles.productImageSlider}>
+          {product.images?.map((image, index) => (
+            <Image
+              className={styles.cardImage}
+              src={image.fileLink}
+              alt={product.productName}
+              height={200}
+              priority={true}
+              key={index}
+            />
+          ))}
+          <div className={styles.imageSlider}>
+            {product.images?.map((_, index) => (
+              <div
+                key={index}
+                className={`${styles.circleAdv} ${
+                  currentImageIndex === index ? styles.activeCircle : ""
+                }`}
+              ></div>
+            ))}
+          </div>
+        </div>
+
         <div className={styles.cardImageInfo}>
-          <h2>{data.name}</h2>
-          <p>{data.description}</p>
+          <h2>{product.productName}</h2>
+          <p>{product.description}</p>
         </div>
       </div>
       <div className={styles.cardGlass}>
         <div className={styles.cardGlassInfo}>
           <h3>Bid Ending in: </h3>{" "}
-          <span>
-            {isClient ? formatTime(timeLeft) : "20 H :00 M: 00 S"}
-          </span>
+          <span>{isClient ? formatTime(timeLeft) : "20 H :00 M: 00 S"}</span>
         </div>{" "}
         <hr className={styles.cardHr} />
         <div className={styles.cardGlassInfo}>
-          <h3>Market Price: </h3> <span>{data.marketPrice}</span>
+          <h3>Market Price: </h3> <span>{product.marketPrice}</span>
         </div>
       </div>
       <div className={styles.cardBottom}>
-        <div className={styles.cardBottomInfo}>
-          <h3>Condition: </h3> <span>{data.condition}</span>
-        </div>
-        <div className={styles.cardBottomInfo}>
-          <h3>Leading Price: </h3> <span>{data.leadingPrice}</span>
-        </div>
-        <div className={styles.cardBottomInfo}>
-          <h3>Manufacturer Color: </h3> <span>{data.color}</span>
-        </div>
-        <div className={styles.cardBottomInfo}>
-          <h3>SSD Capacity: </h3> <span>{data.storage}</span>
-        </div>
-        <div className={styles.cardBottomInfo}>
-          <h3>Brand: </h3> <span>{data.brand}</span>
-        </div>
-        <div className={styles.cardBottomInfo}>
-          <h3>Resolution: </h3> <span>{data.resolution}</span>
-        </div>
-        <div className={styles.cardBottomInfo}>
-          <h3>Market Price: </h3> <span>{data.marketPrice}</span>
-        </div>
+        {product.featureList?.map((feature, index) => (
+          <div className={styles.cardBottomInfo} key={index}>
+            <h3>{feature.featureProperty} </h3> <span>{feature.value}</span>
+          </div>
+        ))}
       </div>
       <form onSubmit={onSubmit} className={styles.footerForm}>
         {/* Amount */}
@@ -178,6 +192,5 @@ export default function CardInformation() {
         </div>
       </form>
     </div>
-  ))}
-</>;
+  </>;
 }

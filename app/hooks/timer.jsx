@@ -1,28 +1,32 @@
-"use client";
-
 import { useState, useEffect } from "react";
 
-export const useTimer = (initialTime = 20 * 60 * 60) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
+export const useTimer = (expiryDate) => {
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); 
-    const savedTime = localStorage.getItem("biddingTimeLeft");
-    if (savedTime) {
-      setTimeLeft(parseInt(savedTime, 10));
-    }
+    setIsClient(true);
+
+    const calculateTimeLeft = () => {
+      const currentTime = new Date().getTime();
+      const targetTime = new Date(expiryDate).getTime();
+      const difference = targetTime - currentTime;
+
+      if (difference > 0) {
+        setTimeLeft(Math.floor(difference / 1000)); 
+      } else {
+        setTimeLeft(0); 
+      }
+    };
+
+    calculateTimeLeft();
 
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        const newTime = prevTime > 0 ? prevTime - 1 : 0;
-        localStorage.setItem("biddingTimeLeft", newTime.toString());
-        return newTime;
-      });
-    }, 1000);
+      calculateTimeLeft();
+    }, 1000); 
 
-    return () => clearInterval(timer); 
-  }, []);
+    return () => clearInterval(timer);
+  }, [expiryDate]);
 
   const formatTime = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);

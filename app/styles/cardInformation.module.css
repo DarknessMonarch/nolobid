@@ -11,10 +11,18 @@
     background-color: var(--primary-light-color);
   }
 
-  .emptyCard {
+
+  .productImageSlider {
     width: 100%;
-    background-color: none;
+    display: flex;
+    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-align: start;
+    scroll-snap-type: proximity;
   }
+
 
   .cardImage {
     width: 100%;
@@ -26,6 +34,30 @@
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
+  }
+
+  .imageSlider {
+    gap: 5px;
+    right: 0;
+    padding: 10px;
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    border-radius: inherit;
+  }
+
+  .circleAdv {
+    width: 10px;
+    height: 10px;
+    border-radius: 360%;
+    border: 2px solid var(--background-color);
+  }
+
+  .activeCircle {
+    width: 20px;
+    height: 10px;
+    border-radius: 12px;
+    background-color: var(--background-color);
   }
 
   .cardImageInfo {
@@ -44,6 +76,8 @@
     align-items: center;
     justify-content: space-between;
   }
+
+
 
   .cardImageTop span {
     font-weight: 300;
@@ -206,6 +240,11 @@
   .cardGlass {
     padding: 10px 14px;
   }
+
+  .imageSlider {
+    justify-content: center;
+  }
+
 
   .closeIcon {
     display: none;

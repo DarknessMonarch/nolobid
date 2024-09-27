@@ -11,6 +11,11 @@
     background-color: var(--primary-light-color);
   }
 
+  .emptyCard {
+    width: 100%;
+    background-color: none;
+  }
+
   .cardImage {
     width: 100%;
     object-fit: contain;

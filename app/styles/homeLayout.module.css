@@ -29,6 +29,10 @@
     background-color: var(--primary-light-color);
   }
 
+  .emptyCard {
+    width: 100%;
+  }
+
   .sideContent.slideIn {
     transform: translateY(0);
   }

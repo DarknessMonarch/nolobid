@@ -30,6 +30,7 @@ export default function Card() {
 
   const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
   const emptyCardCount = 20;
+  const searchKey = searchParams.get("q") || "";
 
   const handleCardClick = (id) => {
     const params = new URLSearchParams(searchParams);
@@ -43,8 +44,10 @@ export default function Card() {
   };
 
   // useEffect(() => {
-  //   getProducts();
-  // });
+  //   if (accessToken) {
+  //     getProducts();
+  //   }
+  // }, [accessToken]);
 
   const getProducts = async () => {
     setIsLoading(true);
@@ -54,7 +57,7 @@ export default function Card() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -67,21 +70,31 @@ export default function Card() {
     }
   };
 
+  const searchProducts = searchKey
+    ? products.filter((item) =>
+        item.name.toLowerCase().includes(searchKey.toLowerCase())
+      )
+    : products;
+
   const renderEmptyCards = () => {
-    return Array(emptyCardCount).fill(0).map((_, index) => (
-      <div className={`${styles.cardContainer} ${styles.emptyCard} skeleton`} key={`empty-${index}`}>
- 
-      </div>
-    ));
+    return Array(emptyCardCount)
+      .fill(0)
+      .map((_, index) => (
+        <div
+          onClick={() => handleCardClick("empty")}
+          className={`${styles.cardContainer} ${styles.emptyCard} skeleton`}
+          key={`empty-${index}`}
+        ></div>
+      ));
   };
 
   return (
     <div className={styles.cardMain}>
-      {products.length === 0 ? (
+      {searchProducts.length === 0 || isLoading ? (
         renderEmptyCards()
       ) : (
         <>
-          {products.map((data, index) => (
+          {searchProducts.map((data, index) => (
             <div
               className={styles.cardContainer}
               key={index}

@@ -97,7 +97,6 @@
 
 .skeleton {
   cursor: progress;
-  border-radius: 12px;
   background: linear-gradient(90deg, var(--primary-light-color) 25%, var(--primary-glass-color) 50%, var(--primary-light-color) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;

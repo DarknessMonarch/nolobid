@@ -23,7 +23,7 @@ import {
 
 export default function Navbar() {
   const { amount, showAmount, toggleShowAmount } = useWalletStore();
-  const { isAuth, username, clearUser, accessToken } = useAuthStore();
+  const { isAuth, username, clearUser, profile, accessToken } = useAuthStore();
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -63,10 +63,10 @@ export default function Navbar() {
 
     try {
       const response = await fetch(`${SERVER_API}/users/logout`, {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -152,9 +152,10 @@ export default function Navbar() {
 
               <div className={styles.userProfile}>
                 <Image
-                  src={ProfileImg}
+                  src={profile === null ? ProfileImg : profile}
                   height={35}
-                  alt="profile image"
+                  width={35}
+                  alt={username}
                   priority={true}
                   className={styles.profileImg}
                 />

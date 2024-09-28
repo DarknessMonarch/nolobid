@@ -4,34 +4,34 @@ import { persist } from "zustand/middleware";
 export const useProductStore = create(
   persist(
     (set, get) => ({
-      product: [],
+      product: null,
       
-      setProduct: (productsData) => 
+      setProduct: (productData) => 
         set({
-          products: productsData.map((product) => ({
-            id: product.id,
-            productName: product.productName,
-            description: product.description,
-            images: product.images,
-            featureList: product.featureList,
-            bidPrice: product.bidPrice,
-            marketPrice: product.marketPrice,
-            productCode: product.productCode,
-            isActive: product.isActive,
-            isDeleted: product.isDeleted,
-            expiryDate: product.expiryDate,
-            addedBy: product.addedBy,
-            addedOn: product.addedOn,
-            updatedBy: product.updatedBy,
-            deletedBy: product.deletedBy,
-            deletedOn: product.deletedOn,
-            updatedOn: product.updatedOn
-          })),
+          product: {
+            id: productData.id,
+            productName: productData.productName,
+            description: productData.description,
+            images: productData.images,
+            featureList: productData.featureList,
+            bidPrice: productData.bidPrice,
+            marketPrice: productData.marketPrice,
+            productCode: productData.productCode,
+            isActive: productData.isActive,
+            isDeleted: productData.isDeleted,
+            expiryDate: productData.expiryDate,
+            addedBy: productData.addedBy,
+            addedOn: productData.addedOn,
+            updatedBy: productData.updatedBy,
+            deletedBy: productData.deletedBy,
+            deletedOn: productData.deletedOn,
+            updatedOn: productData.updatedOn
+          },
         }),
 
       clearProduct: () =>
         set({
-          products: []
+          product: null
         }),
     }),
     {

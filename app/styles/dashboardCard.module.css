@@ -1,0 +1,63 @@
+@media screen {
+    .infocardContainer {
+      gap: 10px;
+      display: flex;
+      padding: 10px 0;
+      overflow-x: auto; 
+      overflow-y: hidden;
+      flex-wrap: nowrap; 
+      justify-content: flex-start;
+    }
+  
+    .infocard {
+      gap: 10px;
+      flex-grow: 1;
+      width: 300px; 
+      padding: 20px;
+      display: flex;
+      min-width: 240px;
+      border-radius: 12px;
+      flex-direction: column;
+      justify-content: center;
+      background-color: var(--primary-light-color);
+    }
+  
+    .infocardIcon {
+      color: var(--secondary-color);
+    }
+  
+    .infocard h2 {
+      font-size: 1rem !important;
+      font-weight: 100;
+      color: var(--secondary-color);
+    }
+  
+    .infocard p {
+      font-size: 0.9rem !important;
+      font-weight: 100;
+      text-align: start;
+    }
+  }
+  
+  /* For larger devices */
+  @media only screen and (min-width: 48em) {
+    .infocardContainer {
+      justify-content: space-between;
+    }
+  
+   
+  }
+  /* iPad Pro & Laptop screens */
+  @media only screen and (min-width: 49em) and (max-width: 64em) {
+   
+  }
+  
+  /* Desktop and 4k screens */
+  @media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  
+  }
+  
+  /* 5k screens and above */
+  @media only screen and (min-width: 91em) {
+  
+  }

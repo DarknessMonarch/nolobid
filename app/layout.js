@@ -65,7 +65,7 @@ export default function RootLayout({ children }) {
           {children}
         </div>
         <Toaster
-          position="top-right"
+          position="top-center"
           reverseOrder={false}
           gutter={8}
           containerClassName=""

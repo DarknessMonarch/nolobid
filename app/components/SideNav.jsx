@@ -19,10 +19,11 @@ import {
 
 export default function SideNavComponent() {
   const searchParams = useSearchParams();
-  const { isAuth, clearUser } = useAuthStore();
+  const { isAuth, clearUser , accessToken } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
   const logOut = async () => {
     try {
       const response = await fetch(`${SERVER_API}/users/logout`, {
@@ -72,6 +73,7 @@ export default function SideNavComponent() {
     if (isWalletOpen()) return "";
     return pathname === path ? styles.activesideNav : "";
   };
+
 
   return (
     <div className={styles.sideNavContainer}>

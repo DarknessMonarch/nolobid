@@ -22,7 +22,6 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 
-const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +52,9 @@ export default function SignUp() {
       (prevIndex) => (prevIndex - 1 + images.length) % images.length
     );
   };
+
+const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
 
   const formatPhoneNumber = (value) => {
     if (!value) return value;

@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react';
 import Wallet from '@/app/components/Wallet';
 import { useSearchParams } from "next/navigation";
+import { useProductStore } from "@/app/store/Product";
 import styles from '@/app/styles/homeLayout.module.css';
 import CardInformation from '@/app/components/CardInformation';
 
 export default function HomeLayout({ children }) {
+  const { product } = useProductStore();
   const searchParams = useSearchParams();
   const [isMobile, setIsMobile] = useState(false);
   const isEmpty = searchParams.get('id') === "empty";
@@ -27,13 +29,13 @@ export default function HomeLayout({ children }) {
   
   const shouldShowSideContent = (hasWalletParam || hasIdParam) && (!isMobile || isWalletOpen || hasIdParam);
   
+  const isProductEmpty = Array.isArray(product) ? product.length === 0 : !product;
+
   const sideContentClasses = `
     ${styles.sideContent}     
     ${isMobile && (isWalletOpen || hasIdParam) ? styles.slideIn : ''}
-    ${isEmpty ? `${styles.emptyCard} skeleton` : ''}
-  `;
-  
-  
+    ${isEmpty && isProductEmpty ? `${styles.emptyCard} skeleton` : ''}
+  `.trim();
 
   return (
     <div className={styles.homeMain}>

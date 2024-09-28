@@ -1,14 +1,24 @@
 @media screen {
   .formSettingContainer {
-    gap: 20px;
+    width: 100%;
     display: flex;
     padding: 10px;
     overflow: hidden;
     overflow-y: auto;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
   }
 
+
+  .formSettingMain {
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+  }
 
   .formSettingContainer span {
     font-size: .8rem;
@@ -123,8 +133,12 @@
   .settingWrapS {
     gap: 20px;
     display: flex;
+    padding: 10px;
+    border-radius: 12px;
     align-items: center;
     flex-direction: column;
+    background-color:  var(--primary-light-color);
+    
   }
 
   .settingInputContainer {
@@ -148,7 +162,7 @@
     border-radius: 8px;
     align-items: center;
     color: var(--background-color);
-    background-color: var(--primary-light-color);
+    background-color: var(--primary-color);
   }
 
   .settingInput:hover {
@@ -258,7 +272,6 @@
 
   .settingWrapS {
     gap: 20px;
-    flex-direction: row;
     justify-content: space-between;
   }
 
@@ -270,3 +283,26 @@
     text-align: start;
   }
 }
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+  .formSettingMain {
+    width: calc(100% / 2);
+  }
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  .formSettingMain {
+    width: calc(100% / 2);
+  }
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+  .formSettingMain {
+    width: calc(100% / 2);
+  }
+}
+

@@ -9,17 +9,21 @@ import { useProductStore } from "@/app/store/Product";
 import styles from "@/app/styles/cardInformation.module.css";
 import {
   BanknotesIcon as AmountIcon,
-  PhoneIcon as PhoneIcon,
+  PhoneIcon,
   XMarkIcon as CloseIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function CardInformation() {
   const [isLoading, setIsLoading] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { product, setProduct } = useProductStore();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
   const Login = () => {
     toast.error("Please Login to start Promotion");
     router.push("/authentication/login", { scroll: false });
@@ -28,22 +32,11 @@ export default function CardInformation() {
   const closeCard = () => {
     const params = new URLSearchParams(searchParams);
     params.delete("id");
-
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  useEffect(() => {
-    if (
-      searchParams.get("id") !== null &&
-      searchParams.get("id") !== "" &&
-      searchParams.get("id") !== "empty"
-    ) {
-      getProductsByID(searchParams.get("id"));
-    }
-  }, [searchParams.get("id")]);
   const getProductsByID = async (id) => {
     setIsLoading(true);
-
     try {
       const response = await fetch(
         `${SERVER_API}/products/public/single/${id}`,
@@ -56,13 +49,20 @@ export default function CardInformation() {
       );
 
       const data = await response.json();
-      setProduct(data);
+      setProduct(data.data);
     } catch (error) {
       console.error("Error fetching product", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (id && id !== "empty") {
+      getProductsByID(id);
+    }
+  }, [searchParams]);
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -84,14 +84,17 @@ export default function CardInformation() {
     }
   }
 
-  const { timeLeft, isClient, formatTime } = useTimer(product.expiryDate);
+  const { timeLeft, isClient, formatTime } = useTimer(product?.expiryDate);
 
-  <>
-    <div className={`${styles.cardContainer} ${styles.emptyCard} skeleton`}>
+  if (!product) {
+    return null; 
+  }
+
+  return (
+    <div className={styles.cardContainer}>
       <div className={styles.cardImageWrapper}>
         <div className={styles.cardImageTop}>
           <span>{product.productCode}</span>
-
           <CloseIcon
             className={styles.closeIcon}
             onClick={closeCard}
@@ -106,6 +109,7 @@ export default function CardInformation() {
               className={styles.cardImage}
               src={image.fileLink}
               alt={product.productName}
+              width={200}
               height={200}
               priority={true}
               key={index}
@@ -122,7 +126,6 @@ export default function CardInformation() {
             ))}
           </div>
         </div>
-
         <div className={styles.cardImageInfo}>
           <h2>{product.productName}</h2>
           <p>{product.description}</p>
@@ -130,9 +133,9 @@ export default function CardInformation() {
       </div>
       <div className={styles.cardGlass}>
         <div className={styles.cardGlassInfo}>
-          <h3>Bid Ending in: </h3>{" "}
+          <h3>Bid Ending in: </h3>
           <span>{isClient ? formatTime(timeLeft) : "20 H :00 M: 00 S"}</span>
-        </div>{" "}
+        </div>
         <hr className={styles.cardHr} />
         <div className={styles.cardGlassInfo}>
           <h3>Market Price: </h3> <span>{product.marketPrice}</span>
@@ -141,12 +144,11 @@ export default function CardInformation() {
       <div className={styles.cardBottom}>
         {product.featureList?.map((feature, index) => (
           <div className={styles.cardBottomInfo} key={index}>
-            <h3>{feature.featureProperty} </h3> <span>{feature.value}</span>
+            <h3>{feature.featureProperty} </h3> <span>{feature.featureValue}</span>
           </div>
         ))}
       </div>
       <form onSubmit={onSubmit} className={styles.footerForm}>
-        {/* Amount */}
         <div className={styles.formInput}>
           <AmountIcon
             className={styles.formIcon}
@@ -186,11 +188,10 @@ export default function CardInformation() {
             {isLoading ? <Loader /> : "Bid"}
           </button>
         </div>
-
         <div className={styles.formPromoteBtn} onClick={Login}>
           Promote
         </div>
       </form>
     </div>
-  </>;
+  );
 }

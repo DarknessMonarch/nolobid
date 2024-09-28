@@ -29,7 +29,6 @@ export default function Reset({ params }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const router = useRouter();
-  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
 
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
 
@@ -102,6 +101,8 @@ export default function Reset({ params }) {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
+
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -124,7 +125,7 @@ export default function Reset({ params }) {
 
     try {
       const response = await fetch(
-        `${SERVER_API}/api/user/users/public/update/recover/${params.slug}`,
+        `${SERVER_API}/users/public/update/recover/${params.slug}`,
         {
           method: "PUT",
           headers: {

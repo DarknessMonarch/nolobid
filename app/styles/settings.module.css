@@ -195,6 +195,12 @@
     text-transform: capitalize;
     color: var(--background-color);
   }
+
+  .errorText{
+    list-style: none;
+    color: var(--secondary-color);
+  }
+
   .formChangeS {
     width: 100%;
     padding: 10px;

@@ -1,41 +1,79 @@
 "use client";
+import { useDashCardStore } from "@/app/store/DashCards";
 import styles from "@/app/styles/dashboardCard.module.css";
 
 import {
-    UserIcon as UserNameIcon,
-    EnvelopeIcon as EmailIcon,
-    PhoneIcon,
-  } from "@heroicons/react/24/outline";
-
-const InfocardData = [
-  {
-    icon: "",
-    title: "1. Enter Bid",
-    moneyMade:"",
-    description:
-      "Visit  our Website,select the item you wish to bid on and enter your bid amount!",
-  },
-  {
-    title: "2. Wallet Deposit",
-
-    description: "Pay directly through mpesa or deposit to your wallet to pay",
-  },
-  {
-    title: "3. Wait for a win",
-
-    description:
-      "After the bidding is closed, you will be announced as the winner if your bid was the Lowest Unique Bid",
-  },
-];
+  LinkIcon,
+  CubeIcon as ProductIcon,
+  UserGroupIcon as RefferalIcon,
+  CreditCardIcon as RevenueIcon,
+  ArrowTrendingUpIcon as IncreaseIcon,
+  ArrowTrendingDownIcon as DecreaseIcon,
+} from "@heroicons/react/24/outline";
 
 export default function DashboardCard() {
+  const { showCard, setShowCard } = useDashCardStore();
+
+  const dashCardData = [
+    {
+      name: "Revenue",
+      icon: RevenueIcon,
+      title: "Total revenue",
+      revenue: "Ksh 100,000",
+      stats: "10% increase from last month",
+    },
+    {
+      name: "Promotions",
+      icon: ProductIcon,
+      title: "Products promoted revenue",
+      revenue: "Ksh 100,000",
+      stats: "10% decrease from last month",
+    },
+    {
+      name: "Referral",
+      icon: RefferalIcon,
+      title: "Referrals earning",
+      revenue: "$100,000",
+      stats: "15% increase from last month",
+    },
+
+    {
+      name: "Links",
+      icon: LinkIcon,
+      title: "Links generated",
+      revenue: "+100,000",
+      stats: "10% decrease from last month",
+    },
+  ];
+
   return (
-    <div className={styles.infocardContainer}>
-      {InfocardData.map((item, index) => (
-        <div className={styles.infocard} key={index}>
-          <h2> {item.title}</h2>
-          <p>{item.description}</p>
-          {/* <ClockIcon height={20} width={20} className={styles.sideNavIcon} /> */}
+    <div className={styles.dashcardContainer}>
+      {dashCardData.map((data, index) => (
+        <div
+          className={`${styles.dashcard} ${
+            showCard === data.name ? styles.dashcardActive : ""
+          }`}
+          onClick={() => setShowCard(data.name)}
+          key={index}
+        >
+          <div className={styles.dashcardTitle}>
+            <h3> {data.title}</h3>
+            <div className={styles.dashCardIconWrapper}>
+            <data.icon height={24} width={24} />
+            </div>
+          </div>
+          <h1>{data.revenue}</h1>
+          {data.stats.includes("increase") ? (
+            <div className={styles.statsContainer}>
+              <IncreaseIcon height={20} width={20} />
+              <p>{data.stats}</p>
+            </div>
+          ) : (
+            <div className={styles.statsContainer}>
+              <DecreaseIcon height={20} width={20} />
+              <p>{data.stats}</p>
+            </div>
+          )}
         </div>
       ))}
     </div>

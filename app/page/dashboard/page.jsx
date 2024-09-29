@@ -1,23 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { redirect } from "next/navigation";
-import { useState, useEffect } from "react";
-import Loader from "@/app/components/loader";
 import { useAuthStore } from "@/app/store/Auth";
-import Refferal from "@/app/components/Refferal";
+import Referrals from "@/app/components/Referrals";
+import { useState, useEffect, useRef } from "react";
 import styles from "@/app/styles/dashboard.module.css";
+import { useDashCardStore } from "@/app/store/DashCards";
 import DashboardCard from "@/app/components/DashboardCard";
 import StatisticGraph from "@/app/components/StatisticsGraph";
 
-import {
-  PhoneIcon,
-  UserIcon as UserNameIcon,
-  EnvelopeIcon as EmailIcon,
-  CalendarIcon as DateIcon,
-} from "@heroicons/react/24/outline";
-
 export default function DashboardPage() {
+  const { showCard, setShowCard } = useDashCardStore();
   const [isLoading, setIsLoading] = useState(false);
   const { isAuth, username } = useAuthStore();
 
@@ -39,7 +32,6 @@ export default function DashboardPage() {
       });
 
       const data = await response.json();
-      // Handle the response data as needed
     } catch (error) {
       console.error(error);
     } finally {
@@ -49,26 +41,18 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.dashboardContainer}>
-      <div className={styles.dashboardHeader}>
-        <h1>Welcome {username}</h1>
-        <div className={styles.dateFilter}>
-          <DateIcon height={20} width={20} className={styles.sideNavIcon} />
-          <input type="date" name="date" className={styles.dateFilter} />
-        </div>
-        </div>
-        <div className={styles.dashboardContent}>
-          <DashboardCard />
-          <div className={styles.dashboardLayout}>
-            <div className={styles.sideContent}>
-              <StatisticGraph />
-            </div>
+      <div className={styles.dashboardTitle}>
+        <h1>Welcome </h1> <span>{username}</span>
+      </div>
+        <DashboardCard />
+        <div className={styles.dashboardLayout}>
+          <div className={styles.sideContent}>
+            <StatisticGraph />
           </div>
           <div className={styles.sideContent}>
-            <Refferal />
-            <div className={styles.refferalLinkContainer}></div>
-          </div>
+            <Referrals />
         </div>
-    
+      </div>
     </div>
   );
 }

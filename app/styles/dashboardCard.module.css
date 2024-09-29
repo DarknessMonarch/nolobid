@@ -1,47 +1,105 @@
 @media screen {
-    .infocardContainer {
+    .dashcardContainer {
       gap: 10px;
       display: flex;
       padding: 10px 0;
       overflow-x: auto; 
-      overflow-y: hidden;
       flex-wrap: nowrap; 
+      overflow-y: hidden;
+      scroll-behavior: smooth;
       justify-content: flex-start;
+      scroll-snap-type: x mandatory;
+      min-height: var(--dashboard-card-height);
     }
   
-    .infocard {
+    .dashcard {
       gap: 10px;
       flex-grow: 1;
       width: 300px; 
       padding: 20px;
       display: flex;
-      min-width: 240px;
+      cursor: pointer;
+      min-width: 300px;
       border-radius: 12px;
       flex-direction: column;
       justify-content: center;
+      scroll-snap-align: center;
       background-color: var(--primary-light-color);
     }
+
+    .dashcard:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .dashcardActive {
+      background-color: var(--secondary-color);
+
+    }
   
-    .infocardIcon {
+    .dashcardTitle{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dashcardTitle h3 {
+      font-size: .9rem;
+      font-weight: 300;
+      color: var(--background-light-color);
+    }
+
+    .dashcardTitle h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .dashCardIconWrapper {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      border-radius: 360%;
+      justify-content: center;
+      background-color: var(--primary-color);
+    }
+
+    .statsContainer {
+      gap: 4px;
+      display: flex;
+      align-items: center;
       color: var(--secondary-color);
+      
     }
-  
-    .infocard h2 {
-      font-size: 1rem !important;
+
+    .statsContainer p {
       font-weight: 100;
+      font-size: .9rem;
+    }
+
+    .dashcard:hover .statsContainer{
+      color: var(--background-color);
+    }
+    
+    .dashcard:hover .dashCardIconWrapper {
       color: var(--secondary-color);
+      background-color: var(--background-color);
     }
-  
-    .infocard p {
-      font-size: 0.9rem !important;
-      font-weight: 100;
-      text-align: start;
+
+    .dashcardActive .statsContainer{
+      color: var(--background-color);
     }
+ 
+    .dashcardActive .dashCardIconWrapper {
+      color: var(--secondary-color);
+      background-color: var(--background-color);
+    }
+    
+    
   }
   
   /* For larger devices */
   @media only screen and (min-width: 48em) {
-    .infocardContainer {
+    .dashcardContainer {
       justify-content: space-between;
     }
   

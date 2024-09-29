@@ -4,9 +4,11 @@
     display: flex;
     padding: 10px 0;
     overflow-x: auto; 
-    overflow-y: hidden;
     flex-wrap: nowrap; 
+    overflow-y: hidden;
+    scroll-behavior: smooth;
     justify-content: flex-start;
+    scroll-snap-type: x mandatory;
   }
 
   .infocard {
@@ -15,10 +17,12 @@
     width: 300px; 
     padding: 20px;
     display: flex;
-    min-width: 240px;
+    min-width: 280px;
+    min-height: 150px;
     border-radius: 12px;
     flex-direction: column;
     justify-content: center;
+    scroll-snap-align: center;
     background-color: var(--primary-light-color);
   }
 

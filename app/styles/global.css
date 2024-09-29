@@ -2,13 +2,12 @@
   * {
     /* dynamic style */
     --primary-color: #000328ff;
-    --secondary-color: #FE850D;
+    --secondary-color: #fe850d;
     --background-color: #ffffff;
     --primary-light-color: #101641;
-    --primary-glass-color: #161C45;
+    --primary-glass-color: #161c45;
     --background-light-color: #d3d1d1;
     --shadow-effect: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-
 
     margin: 0;
     padding: 0;
@@ -17,6 +16,7 @@
     /* global-width */
     --sidenav-width: 60px;
     --sideContent-width: 400px;
+    --dashboard-card-height: 200px;
   }
 
   /* ::-webkit-scrollbar {
@@ -38,16 +38,20 @@
     outline: none;
   }
 
-
-   input:-webkit-autofill,
-   input:-webkit-autofill:hover,
-   input:-webkit-autofill:focus,
-   input:-webkit-autofill:active {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
     -webkit-text-fill-color: var(--background-color) !important;
     transition: background-color 5000s ease-in-out 0s;
     -webkit-text-fill-color: var(--background-color) !important;
   }
 
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
 
   button {
     outline: none;
@@ -58,37 +62,32 @@
   input:hover {
     outline: none;
     background-color: transparent;
-
   }
 
   input::placeholder {
     color: var(--background-color);
   }
 
-
   textarea {
-    flex: 1; 
-    border: none; 
-    outline: none; 
-    resize: none; 
-    padding: 0.5rem; 
-    font-size: 1rem; 
-    line-height: 1.5; 
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
     border-radius: 4px;
     background: transparent;
   }
 
-   
- textarea::placeholder {
-    color: var(--background-color); 
+  textarea::placeholder {
+    color: var(--background-color);
   }
-
 
   textarea:focus,
   textarea:hover {
     outline: none;
-    border-color: none; 
-
+    border-color: none;
   }
 
   select {
@@ -96,10 +95,14 @@
   }
 }
 
-
 .skeleton {
   cursor: progress;
-  background: linear-gradient(90deg, var(--primary-light-color) 25%, var(--primary-glass-color) 50%, var(--primary-light-color) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--primary-light-color) 25%,
+    var(--primary-glass-color) 50%,
+    var(--primary-light-color) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   background-color: var(--background-light-color);
@@ -134,7 +137,6 @@
   *::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-
   }
 }
 

@@ -17,7 +17,6 @@ import Youtube from "@/public/icons/youtube.svg";
 import {
   UserIcon as UserNameIcon,
   EnvelopeIcon as EmailIcon,
-  phoneNumberIcon,
 } from "@heroicons/react/24/outline";
 
 export default function ContactPage() {

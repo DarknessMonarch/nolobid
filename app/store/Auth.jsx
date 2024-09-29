@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
-const TOKEN_REFRESH_INTERVAL = 50 * 60 * 1000; 
+const TOKEN_REFRESH_INTERVAL = 50 * 60 * 1000; // 50 minutes
 
 export const useAuthStore = create(
   persist(
@@ -20,7 +20,7 @@ export const useAuthStore = create(
       enabled: false,
       authorized: false,
       tokenExpirationTime: null,
-      refreshInterval: null,
+      refreshTimeoutId: null,
 
       setUser: (userData) => {
         const tokenExpirationTime = Date.now() + TOKEN_REFRESH_INTERVAL;
@@ -39,11 +39,11 @@ export const useAuthStore = create(
           authorized: userData.authorized,
           tokenExpirationTime,
         });
-        get().startTokenRefreshInterval();
+        get().scheduleTokenRefresh();
       },
 
       clearUser: () => {
-        get().stopTokenRefreshInterval();
+        get().cancelTokenRefresh();
         set({
           isAuth: false,
           profile: null,
@@ -82,21 +82,28 @@ export const useAuthStore = create(
           }
 
           const data = await response.json();
-          const tokenExpirationTime = Date.now() + TOKEN_REFRESH_INTERVAL;
-          set({ 
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
-            tokenExpirationTime 
-          });
-          return true;
+
+          if (data.responsecode === "00" && data.data) {
+            const tokenExpirationTime = Date.now() + TOKEN_REFRESH_INTERVAL;
+            set({ 
+              accessToken: data.data.accessToken,
+              refreshToken: data.data.newRefreshToken,
+              tokenExpirationTime 
+            });
+            get().scheduleTokenRefresh();
+            return true;
+          } else {
+            throw new Error("Invalid response from refresh token endpoint");
+          }
         } catch (error) {
           console.error("Error refreshing token:", error);
+          get().clearUser(); 
           return false;
         }
       },
 
       getAccessToken: async () => {
-        const { accessToken, refreshAccessToken, tokenExpirationTime } = get();
+        const { accessToken, tokenExpirationTime, refreshAccessToken } = get();
         if (!accessToken || Date.now() >= tokenExpirationTime) {
           const refreshed = await refreshAccessToken();
           if (!refreshed) {
@@ -106,18 +113,25 @@ export const useAuthStore = create(
         return get().accessToken;
       },
 
-      startTokenRefreshInterval: () => {
-        const interval = setInterval(() => {
+      scheduleTokenRefresh: () => {
+        const { tokenExpirationTime, refreshTimeoutId } = get();
+        if (refreshTimeoutId) {
+          clearTimeout(refreshTimeoutId);
+        }
+        
+        const timeUntilRefresh = tokenExpirationTime - Date.now() - 60000; // Refresh 1 minute before expiration
+        const newTimeoutId = setTimeout(() => {
           get().refreshAccessToken();
-        }, TOKEN_REFRESH_INTERVAL);
-        set({ refreshInterval: interval });
+        }, timeUntilRefresh);
+        
+        set({ refreshTimeoutId: newTimeoutId });
       },
 
-      stopTokenRefreshInterval: () => {
-        const { refreshInterval } = get();
-        if (refreshInterval) {
-          clearInterval(refreshInterval);
-          set({ refreshInterval: null });
+      cancelTokenRefresh: () => {
+        const { refreshTimeoutId } = get();
+        if (refreshTimeoutId) {
+          clearTimeout(refreshTimeoutId);
+          set({ refreshTimeoutId: null });
         }
       },
     }),

@@ -1,23 +1,81 @@
 @media screen {
 
   .dashboardContainer {
+    gap: 10px;
     height: 100%;
     display: flex;
+    padding: 10px;
     overflow: hidden;
     overflow-y: auto;
     overflow-x: hidden;
     flex-direction: column;
   }
 
-  .dashboardHeader {
+  .dashboardTitle {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
   }
+
+  .dashboardTitle h1, .dashboardTitle span {
+    font-weight: 500;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+  }
+
+  .dashboardTitle span {
+    display: flex;
+    color: var(--secondary-color);
+  
+  }
+
+
+  .dashboardLayout {
+    gap: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .sideContent{
+    padding: 10px;
+    display: flex;
+    height: fit-content;
+    border-radius: 12px;
+    background-color: var(--primary-light-color);
+  }    
+
 }
 
 /* using it as global style for larger devices  */
 @media only screen and (min-width: 48em) {
+  .dashboardContainer {
+    overflow: hidden;
+    overflow-y: hidden;
+  }
+
+
+  .dashboardTitle {
+    gap: 10px;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .dashboardLayout {
+    flex-direction: row;
+    height: calc(100% - var(--dashboard-card-height));
+  }
+
+  .sideContent{
+    flex: 50%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    overflow: hidden;
+    overflow-y: auto;
+    border-radius: 12px;
+    background-color: var(--primary-light-color);
+  }   
 
 }
 

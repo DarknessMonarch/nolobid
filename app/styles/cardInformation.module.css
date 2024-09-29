@@ -2,32 +2,23 @@
   .cardContainer {
     gap: 20px;
     width: 100%;
+    height: 100%;
     display: flex;
     cursor: pointer;
-    height: fit-content;
     border-radius: 12px;
     flex-direction: column;
     justify-content: space-between;
     background-color: var(--primary-light-color);
   }
 
-
-  .productImageSlider {
-    width: 100%;
+  .innnerCard {
+    gap: 20px;
     display: flex;
-    overflow: hidden;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    scroll-snap-align: start;
-    scroll-snap-type: proximity;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
-
-  .cardImage {
-    width: 100%;
-    object-fit: contain;
-  }
+ 
 
   .cardImageWrapper {
     gap: 20px;
@@ -36,28 +27,45 @@
     flex-direction: column;
   }
 
+  .productImageSlider {
+    width: 100%;
+    display: flex;
+    position: relative;
+
+  }
+
+
+  .cardImage {
+    width:100%; 
+    object-fit: contain;
+    scroll-snap-align: center;
+  }
+
   .imageSlider {
     gap: 5px;
-    right: 0;
+    left: 50%;
+    bottom: 0;
     padding: 10px;
     display: flex;
     position: absolute;
+    align-items: center;
     justify-content: center;
     border-radius: inherit;
+    transform: translateX(-50%);
   }
 
   .circleAdv {
     width: 10px;
     height: 10px;
     border-radius: 360%;
-    border: 2px solid var(--background-color);
+    border: 2px solid var(--secondary-color);
   }
 
   .activeCircle {
     width: 20px;
     height: 10px;
     border-radius: 12px;
-    background-color: var(--background-color);
+    background-color: var(--secondary-color);
   }
 
   .cardImageInfo {
@@ -226,7 +234,7 @@
     border-radius: 8px;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
+    color: var(--background-color);
     background-color: var(--secondary-color);
   }
 }

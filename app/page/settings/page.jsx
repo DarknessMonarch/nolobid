@@ -284,7 +284,7 @@ export default function SettingsPage() {
           <div className={styles.profileImageContain}>
             <Image
               src={profile === null ? profileImage : profile}
-              alt="Profile Image"
+              alt={username}
               className={styles.profileImage}
               width={100}
               height={100}

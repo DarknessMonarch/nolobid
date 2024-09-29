@@ -1,0 +1,108 @@
+@media screen {
+  .referralContainer {
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .referralHeader {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .referralHeader h1 {
+    font-size: 1.4rem;
+  }
+
+  .referralHeader p {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--background-light-color);
+  }
+
+  .referralContainerWrapper {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .referralImage {
+    width: 50px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid var(--primary-light-color);
+  }
+
+  .referralImageInfo {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .referralImageInfo p {
+    padding: 10px;
+    background-color: var(--primary-glass-color);
+  }
+
+  .referralImageInfoWrapper h2 {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .referralImageInfoWrapper span {
+    color: var(--secondary-color);
+
+    font-size: 0.7rem;
+    font-weight: 300
+    
+
+  }
+
+
+}
+
+/* using it as global style for larger devices  */
+@media only screen and (min-width: 48em) {
+  .referralContainerWrapper {
+    padding: 10px;
+  }
+
+  .referralImageInfoWrapper h2 {
+    font-size:1.2rem;
+  }
+
+  .referralImageInfoWrapper span {
+    font-size: .9rem;
+    color: var(--background-light-color);
+  }
+
+  .referralImage {
+    width: 100px;
+    height: 50px;
+  }
+
+  .referralImageInfo {
+    flex-direction: row;
+  }
+}
+
+/* ipad pro screens & laptop */
+@media only screen and (min-width: 49em) and (max-width: 64em) {
+}
+
+/* large screens : Desktop and 4k screens */
+
+@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+}
+
+/* 5k screens and above */
+@media only screen and (min-width: 91em) {
+}

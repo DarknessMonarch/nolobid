@@ -19,7 +19,7 @@ export default function DashboardCard() {
       name: "Revenue",
       icon: RevenueIcon,
       title: "Total revenue",
-      revenue: "Ksh 100,000",
+      revenue: "Ksh 200,000",
       stats: "10% increase from last month",
     },
     {
@@ -33,7 +33,7 @@ export default function DashboardCard() {
       name: "Referral",
       icon: RefferalIcon,
       title: "Referrals earning",
-      revenue: "$100,000",
+      revenue: "Ksh 100,000",
       stats: "15% increase from last month",
     },
 
@@ -41,7 +41,7 @@ export default function DashboardCard() {
       name: "Links",
       icon: LinkIcon,
       title: "Links generated",
-      revenue: "+100,000",
+      revenue: "+ 100,000",
       stats: "10% decrease from last month",
     },
   ];

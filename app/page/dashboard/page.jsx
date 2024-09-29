@@ -1,18 +1,20 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import { useAuthStore } from "@/app/store/Auth";
+import { useState, useEffect } from "react";
+import Links from "@/app/components/Links";
+import Revenue from "@/app/components/Revenue";
 import Referrals from "@/app/components/Referrals";
-import { useState, useEffect, useRef } from "react";
-import styles from "@/app/styles/dashboard.module.css";
-import { useDashCardStore } from "@/app/store/DashCards";
+import Promotions from "@/app/components/Promotions";
 import DashboardCard from "@/app/components/DashboardCard";
 import StatisticGraph from "@/app/components/StatisticsGraph";
+import { useAuthStore } from "@/app/store/Auth";
+import { useDashCardStore } from "@/app/store/DashCards";
+import styles from "@/app/styles/dashboard.module.css";
 
 export default function DashboardPage() {
-  const { showCard, setShowCard } = useDashCardStore();
-  const [isLoading, setIsLoading] = useState(false);
   const { isAuth, username } = useAuthStore();
+  const { showCard } = useDashCardStore();
 
   useEffect(() => {
     if (!isAuth) {
@@ -20,37 +22,34 @@ export default function DashboardPage() {
     }
   }, [isAuth]);
 
-  async function onSubmit(event) {
-    event.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const formData = new FormData(event.currentTarget);
-      const response = await fetch("/api/submit", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+  const renderCardContent = () => {
+    switch (showCard) {
+      case "Referral":
+        return <Referrals />;
+      case "Promotions":
+        return <Promotions />;
+      case "Links":
+        return <Links />;
+      case "Revenue":
+        return <Revenue />;
+      default:
+        return <Revenue />;
     }
-  }
+  };
 
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboardTitle}>
-        <h1>Welcome </h1> <span>{username}</span>
+        <h1>Welcome</h1>
+        <span>{username}</span>
       </div>
-        <DashboardCard />
-        <div className={styles.dashboardLayout}>
-          <div className={styles.sideContent}>
-            <StatisticGraph />
-          </div>
-          <div className={styles.sideContent}>
-            <Referrals />
+      <DashboardCard />
+      <div className={styles.dashboardLayout}>
+        <div className={styles.sideContent}>
+          <StatisticGraph />
+        </div>
+        <div className={styles.sideContent}>
+          {renderCardContent()}
         </div>
       </div>
     </div>

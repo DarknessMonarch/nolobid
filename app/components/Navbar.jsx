@@ -59,11 +59,9 @@ export default function Navbar() {
   }, []);
 
   const logOut = async () => {
-    setIsLoading(true);
-
     try {
       const response = await fetch(`${SERVER_API}/users/logout`, {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -80,10 +78,9 @@ export default function Navbar() {
       toast.success("Logout Sucessfully");
     } catch (error) {
       toast.error(error.message || "Logout failed");
-    } finally {
-      setIsLoading(false);
     }
   };
+
 
   const login = () => {
     router.push("/authentication/login", { scroll: false });

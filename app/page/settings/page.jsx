@@ -24,6 +24,8 @@ export default function SettingsPage() {
   const [profileImage, setProfileImage] = useState(Profile);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
+  const [errors, setErrors] = useState({});
   const {
     isAuth,
     username,
@@ -46,8 +48,6 @@ export default function SettingsPage() {
   });
 
   const SERVER_API = process.env.NEXT_PUBLIC_SERVER_API;
-
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (!isAuth) {
@@ -89,8 +89,11 @@ export default function SettingsPage() {
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
-    if (formData.phoneNumber && !/^254\d{9}$/.test(formData.phoneNumber)) {
-      newErrors.phoneNumber = "Phone number must be in the format 2547xxxxxxxx";
+    if (!/^254\d{9}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be in the format 254xxxxxxxxx";
+    }
+    if (codeSent && formData.verificationCode.length !== 5) {
+      newErrors.verificationCode = "Verification code must be 5 digits";
     }
     if (formData.newPassword) {
       const passwordErrors = validatePassword(formData.newPassword);
@@ -119,35 +122,38 @@ export default function SettingsPage() {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB size limit
+      if (file.size > 5 * 1024 * 1024) {
+        // 5MB size limit
         toast.error("Please upload an image smaller than 5MB.");
         return;
       }
-  
+
       const imageUrl = URL.createObjectURL(file);
       setProfileImage(imageUrl);
-  
+
       const formData = new FormData();
       formData.append("profile_pic", file);
-  
+
       try {
         const response = await fetch(`${SERVER_API}/users/update/profilepic`, {
           method: "POST",
           body: formData,
           headers: {
-            "Authorization": `Bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
-  
+
         if (response.status === 201) {
           toast.success("Profile pic updated successfully");
-  
-          const data = await response.json().catch(() => null); 
+
+          const data = await response.json().catch(() => null);
           if (data && data.profile_pic) {
             setUser({ profile: data.profile_pic });
           }
         } else if (response.status === 413) {
-          toast.error("File is too large. Please upload an image smaller than 5MB.");
+          toast.error(
+            "File is too large. Please upload an image smaller than 5MB."
+          );
         } else {
           throw new Error("Unexpected response format. Please try again.");
         }
@@ -173,7 +179,7 @@ export default function SettingsPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           username: formData.username,
@@ -205,7 +211,7 @@ export default function SettingsPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           oldPassword: formData.oldPassword,
@@ -232,38 +238,61 @@ export default function SettingsPage() {
     }
   };
 
-  const updatePhoneNumber = async (e) => {
+  const sendVerificationCode = async () => {
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${SERVER_API}/users/phone/update/${formData.phoneNumber}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to send verification code");
+      }
+
+      toast.success("Verification code sent successfully");
+      setCodeSent(true);
+    } catch (error) {
+      console.error("Error sending verification code:", error);
+      toast.error("Failed to send verification code");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyPhoneNumber = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setIsLoading(true);
-
     try {
-      const response = await fetch(`${SERVER_API}/users/update/phoneNumber`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          phoneNumber: formData.phoneNumber,
-          verificationCode: formData.verificationCode,
-        }),
-      });
+      const response = await fetch(
+        `${SERVER_API}/users/public/verify/${formData.phoneNumber}/${formData.verificationCode}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to update phone number");
+        throw new Error("Failed to verify phone number");
       }
 
-      toast.success("Phone number updated successfully");
-      setFormData((prev) => ({
-        ...prev,
-        phoneNumber: "",
-        verificationCode: "",
-      }));
+      toast.success("Phone number verified and updated successfully");
+      setFormData({ phoneNumber: "", verificationCode: "" });
+      setCodeSent(false);
     } catch (error) {
-      console.error("Error updating phone number:", error);
-      toast.error("Failed to update phone number");
+      console.error("Error verifying phone number:", error);
+      toast.error("Failed to verify phone number");
     } finally {
       setIsLoading(false);
     }
@@ -272,312 +301,331 @@ export default function SettingsPage() {
   return (
     <div className={styles.formSettingContainer}>
       <div className={styles.formSettingMain}>
-      <div className={styles.settingWrap}>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          ref={fileInputRef}
-          style={{ display: "none" }}
-        />
-        <div className={styles.profileSection}>
-          <div className={styles.profileImageContain}>
-            <Image
-              src={profile === null ? profileImage : profile}
-              alt={username}
-              className={styles.profileImage}
-              width={100}
-              height={100}
-            />
-            <div className={styles.uploadEditIcon} onClick={handleIconClick}>
-              <EditIcon
-                className={styles.EditIcon}
-                alt="Edit Icon"
-                width={20}
-                height={20}
+        <div className={styles.settingWrap}>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            ref={fileInputRef}
+            style={{ display: "none" }}
+          />
+          <div className={styles.profileSection}>
+            <div className={styles.profileImageContain}>
+              <Image
+                src={profile === null ? profileImage : profile}
+                alt={username}
+                className={styles.profileImage}
+                width={100}
+                height={100}
               />
+              <div className={styles.uploadEditIcon} onClick={handleIconClick}>
+                <EditIcon
+                  className={styles.EditIcon}
+                  alt="Edit Icon"
+                  width={20}
+                  height={20}
+                />
+              </div>
             </div>
-          </div>
-          <div className={styles.profileDetails}>
-            <h1>{username}</h1>
-            <div className={styles.profileGlass}>
-              <h3>{email}</h3>
+            <div className={styles.profileDetails}>
+              <h1>{username}</h1>
+              <div className={styles.profileGlass}>
+                <h3>{email}</h3>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className={styles.settingWrapinfo}>
-        
-        <form onSubmit={updateProfile} className={styles.settingWrapS}>
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="username" className={styles.settingLabel}>
-              Username
-            </label>
-            <div className={styles.settingInput}>
-              <UserNameIcon
-                className={styles.settingIcon}
-                alt="Username icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type="text"
-                name="username"
-                id="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                placeholder="noloblid"
-              />
-            </div>
-            {errors.username && (
-              <p className={styles.errorText}>{errors.username}</p>
-            )}
-          </div>
 
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="email" className={styles.settingLabel}>
-              Email
-            </label>
-            <div className={styles.settingInput}>
-              <EmailIcon
-                className={styles.settingIcon}
-                alt="email icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type="text"
-                name="email"
-                id="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="noloblid@gmail.com"
-              />
+        <div className={styles.settingWrapinfo}>
+          <form onSubmit={updateProfile} className={styles.settingWrapS}>
+            <div className={styles.settingInputContainer}>
+              <label htmlFor="username" className={styles.settingLabel}>
+                Username
+              </label>
+              <div className={styles.settingInput}>
+                <UserNameIcon
+                  className={styles.settingIcon}
+                  alt="Username icon"
+                  width={20}
+                  height={20}
+                />
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="noloblid"
+                />
+              </div>
+              {errors.username && (
+                <p className={styles.errorText}>{errors.username}</p>
+              )}
             </div>
-            {errors.email && <p className={styles.errorText}>{errors.email}</p>}
-          </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={styles.formsettingButton}
-          >
-            {isLoading ? <Loader /> : "Update Profile"}
-          </button>
-        </form>
-
-     
-        <form onSubmit={updatePhoneNumber} className={styles.settingWrapS}>
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="verificationCode" className={styles.settingLabel}>
-              Verification Code
-            </label>
-            <div className={styles.settingInput}>
-              <VerificationIcon
-                className={styles.settingIcon}
-                alt="Verification code icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type="text"
-                name="verificationCode"
-                id="verificationCode"
-                placeholder="00000"
-                value={formData.verificationCode}
-                onChange={handleInputChange}
-                maxLength={5}
-              />
+            <div className={styles.settingInputContainer}>
+              <label htmlFor="email" className={styles.settingLabel}>
+                Email
+              </label>
+              <div className={styles.settingInput}>
+                <EmailIcon
+                  className={styles.settingIcon}
+                  alt="email icon"
+                  width={20}
+                  height={20}
+                />
+                <input
+                  type="text"
+                  name="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="noloblid@gmail.com"
+                />
+              </div>
+              {errors.email && (
+                <p className={styles.errorText}>{errors.email}</p>
+              )}
             </div>
-          {errors.verificationCode && (
-            <p className={styles.errorText}>{errors.verificationCode}</p>
-          )}
-          
-          </div>
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="phoneNumber" className={styles.settingLabel}>
-              Phone Number
-            </label>
-            <div className={styles.settingInput}>
-              <PhoneIcon
-                className={styles.settingIcon}
-                alt="phone icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type="text"
-                name="phoneNumber"
-                id="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="2547xxxxxxxx"
-              />
-            </div>
-            {errors.phoneNumber && (
-              <p className={styles.errorText}>{errors.phoneNumber}</p>
-            )}
-          </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={styles.formsettingButton}
-          >
-            {isLoading ? <Loader /> : "Update Phone Number"}
-          </button>
-        </form>
-        <form onSubmit={updatePassword} className={styles.settingWrapS}>
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="oldPassword" className={styles.settingLabel}>
-              Old Password
-            </label>
-            <div className={styles.settingInput}>
-              <PasswordIcon
-                className={styles.settingIcon}
-                alt="password icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type={showPassword ? "text" : "password"}
-                name="oldPassword"
-                value={formData.oldPassword}
-                onChange={handleInputChange}
-                placeholder="Old Password"
-              />
-                 <button
-                type="button"
-                className={styles.showBtn}
-                onClick={toggleShowPassword}
-              >
-                {showPassword ? (
-                  <ShowPasswordIcon
-                    className={styles.settingIcon}
-                    width={20}
-                    height={20}
-                  />
-                ) : (
-                  <HidePasswordIcon
-                    className={styles.settingIcon}
-                    width={20}
-                    height={20}
-                  />
-                )}
-              </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={styles.formsettingButton}
+            >
+              {isLoading ? <Loader /> : "Update Profile"}
+            </button>
+          </form>
+          <form onSubmit={verifyPhoneNumber} className={styles.settingWrapS}>
+            <div className={styles.settingInputContainer}>
+              <label htmlFor="phoneNumber" className={styles.settingLabel}>
+                Phone Number
+              </label>
+              <div className={styles.settingInput}>
+                <PhoneIcon
+                  className={styles.settingIcon}
+                  alt="phone icon"
+                  width={20}
+                  height={20}
+                />
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  placeholder="254xxxxxxxxx"
+                  disabled={codeSent}
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className={styles.errorText}>{errors.phoneNumber}</p>
+              )}
             </div>
-          </div>
 
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="newPassword" className={styles.settingLabel}>
-              New Password
-            </label>
-            <div className={styles.settingInput}>
-              <PasswordIcon
-                className={styles.settingIcon}
-                alt="password icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type={showPassword ? "text" : "password"}
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleInputChange}
-                placeholder="New Password"
-              />
-                 <button
-                type="button"
-                className={styles.showBtn}
-                onClick={toggleShowPassword}
-              >
-                {showPassword ? (
-                  <ShowPasswordIcon
-                    className={styles.settingIcon}
-                    width={20}
-                    height={20}
-                  />
-                ) : (
-                  <HidePasswordIcon
-                    className={styles.settingIcon}
-                    width={20}
-                    height={20}
-                  />
-                )}
-              </button>
-            </div>
-            {errors.newPassword && Array.isArray(errors.newPassword) && (
-              <ul className={styles.errorList}>
-                {errors.newPassword.map((error, index) => (
-                  <li key={index} className={styles.errorText}>{error}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className={styles.settingInputContainer}>
-            <label htmlFor="confirmNewPassword" className={styles.settingLabel}>
-              Confirm New Password
-            </label>
-            <div className={styles.settingInput}>
-              <PasswordIcon
-                className={styles.settingIcon}
-                alt="password icon"
-                width={20}
-                height={20}
-              />
-              <input
-                type={showPassword ? "text" : "password"}
-                name="confirmNewPassword"
-                value={formData.confirmNewPassword}
-                onChange={handleInputChange}
-                placeholder="Confirm New Password"
-              />
+            {!codeSent ? (
               <button
                 type="button"
-                className={styles.showBtn}
-                onClick={toggleShowPassword}
+                onClick={sendVerificationCode}
+                disabled={isLoading}
+                className={styles.formsettingButton}
               >
-                {showPassword ? (
-                  <ShowPasswordIcon
-                    className={styles.settingIcon}
-                    width={20}
-                    height={20}
-                  />
-                ) : (
-                  <HidePasswordIcon
-                    className={styles.settingIcon}
-                    width={20}
-                    height={20}
-                  />
-                )}
+                {isLoading ? <Loader /> : "Send Verification Code"}
               </button>
-            </div>
-            {errors.confirmNewPassword && (
-              <p className={styles.errorText}>{errors.confirmNewPassword}</p>
+            ) : (
+              <>
+                <div className={styles.settingInputContainer}>
+                  <label
+                    htmlFor="verificationCode"
+                    className={styles.settingLabel}
+                  >
+                    Verification Code
+                  </label>
+                  <div className={styles.settingInput}>
+                    <VerificationIcon
+                      className={styles.settingIcon}
+                      alt="Verification code icon"
+                      width={20}
+                      height={20}
+                    />
+                    <input
+                      type="text"
+                      name="verificationCode"
+                      id="verificationCode"
+                      placeholder="00000"
+                      value={formData.verificationCode}
+                      onChange={handleInputChange}
+                      maxLength={5}
+                    />
+                  </div>
+                  {errors.verificationCode && (
+                    <p className={styles.errorText}>
+                      {errors.verificationCode}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className={styles.formsettingButton}
+                >
+                  {isLoading ? <Loader /> : "Verify and Update Phone Number"}
+                </button>
+              </>
             )}
-          </div>
+          </form>
+          <form onSubmit={updatePassword} className={styles.settingWrapS}>
+            <div className={styles.settingInputContainer}>
+              <label htmlFor="oldPassword" className={styles.settingLabel}>
+                Old Password
+              </label>
+              <div className={styles.settingInput}>
+                <PasswordIcon
+                  className={styles.settingIcon}
+                  alt="password icon"
+                  width={20}
+                  height={20}
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="oldPassword"
+                  value={formData.oldPassword}
+                  onChange={handleInputChange}
+                  placeholder="Old Password"
+                />
+                <button
+                  type="button"
+                  className={styles.showBtn}
+                  onClick={toggleShowPassword}
+                >
+                  {showPassword ? (
+                    <ShowPasswordIcon
+                      className={styles.settingIcon}
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <HidePasswordIcon
+                      className={styles.settingIcon}
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </button>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={styles.formsettingButton}
-          >
-            {isLoading ? <Loader /> : "Update Password"}
-          </button>
-          <div className={styles.accountStatus}>
-          <span>
-            {userType} Account status: {authorized ? "Approved" : "Pending"}
-          </span>
+            <div className={styles.settingInputContainer}>
+              <label htmlFor="newPassword" className={styles.settingLabel}>
+                New Password
+              </label>
+              <div className={styles.settingInput}>
+                <PasswordIcon
+                  className={styles.settingIcon}
+                  alt="password icon"
+                  width={20}
+                  height={20}
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleInputChange}
+                  placeholder="New Password"
+                />
+                <button
+                  type="button"
+                  className={styles.showBtn}
+                  onClick={toggleShowPassword}
+                >
+                  {showPassword ? (
+                    <ShowPasswordIcon
+                      className={styles.settingIcon}
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <HidePasswordIcon
+                      className={styles.settingIcon}
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </button>
+              </div>
+              {errors.newPassword && Array.isArray(errors.newPassword) && (
+                <ul className={styles.errorList}>
+                  {errors.newPassword.map((error, index) => (
+                    <li key={index} className={styles.errorText}>
+                      {error}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className={styles.settingInputContainer}>
+              <label
+                htmlFor="confirmNewPassword"
+                className={styles.settingLabel}
+              >
+                Confirm New Password
+              </label>
+              <div className={styles.settingInput}>
+                <PasswordIcon
+                  className={styles.settingIcon}
+                  alt="password icon"
+                  width={20}
+                  height={20}
+                />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="confirmNewPassword"
+                  value={formData.confirmNewPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirm New Password"
+                />
+                <button
+                  type="button"
+                  className={styles.showBtn}
+                  onClick={toggleShowPassword}
+                >
+                  {showPassword ? (
+                    <ShowPasswordIcon
+                      className={styles.settingIcon}
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <HidePasswordIcon
+                      className={styles.settingIcon}
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </button>
+              </div>
+              {errors.confirmNewPassword && (
+                <p className={styles.errorText}>{errors.confirmNewPassword}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={styles.formsettingButton}
+            >
+              {isLoading ? <Loader /> : "Update Password"}
+            </button>
+            <div className={styles.accountStatus}>
+              <span>
+                {userType} Account status: {authorized ? "Approved" : "Pending"}
+              </span>
+            </div>
+          </form>
         </div>
-        </form>
-
-       
       </div>
-      </div>
-     
     </div>
   );
 }
-            

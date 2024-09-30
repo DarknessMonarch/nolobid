@@ -1,24 +1,30 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-export const useWalletStore = create((set) => {
-  const initialState = {
-    amount: 500,
-    showAmount: false,
-  };
+export const useWalletStore = create(
+  persist(
+    (set) => {
+      const initialState = {
+        amount: 0,
+        showAmount: false,
+      };
 
-  return {
-    ...initialState,
-    setAmount: (newAmount) => {
-      set({ amount: newAmount });
+      return {
+        ...initialState,
+        setAmount: (newAmount) => {
+          set({ amount: newAmount });
+        },
+        toggleShowAmount: () => {
+          set((state) => ({ showAmount: !state.showAmount }));
+        },
+        clearAmount: () => {
+          set({ amount: 0 });
+        },
+      };
     },
-    toggleShowAmount: () => {
-      set((state) => ({ showAmount: !state.showAmount }));
-    },
-    deposit: (value) => {
-      set((state) => ({ amount: state.amount + value }));
-    },
-    withdraw: (value) => {
-      set((state) => ({ amount: state.amount - value }));
-    },
-  };
-});
+    {
+      name: 'wallet-storage',
+      getStorage: () => localStorage,
+    }
+  )
+);

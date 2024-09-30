@@ -101,7 +101,7 @@
 
   .walletControllerBtn h3 {
     font-weight: 300;
-    font-size: 1rem;
+    font-size: .8rem;
   }
 
   .activeWalletBtn {
@@ -185,6 +185,43 @@
     color: var(--background-color);
     background-color: var(--secondary-color);
   }
+
+
+  /* unauthorizedContainer */
+
+  .unauthorizedInfo {
+    gap: 10px;
+    height: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+
+  .unauthorizedInfo h2, .walletAccess h2  {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--secondary-color);
+  }
+  
+  .unauthorizedInfo p {
+    font-size: .8rem;
+  }
+
+
+  .walletAccess {
+    text-align: center;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    color: var(--secondary-color);
+    align-items: center;
+    justify-content: center;
+  }
+
+
 }
 
 /* using it as global style for larger devices  */

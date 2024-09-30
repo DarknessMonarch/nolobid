@@ -41,7 +41,7 @@ const ProductCard = ({ data, handleCardClick }) => {
       <div className={styles.cardBottom}>
         <div className={styles.cardBottomInfo}>
           <ClockIcon height={20} width={20} className={styles.sideNavIcon} />
-          <h3>{isClient ? formatTime(timeLeft) : "20 H :00 M: 00 S"}</h3>
+          <h3>{isClient ? formatTime(timeLeft) : "20 D : 60 H :00 M: 00 S"}</h3>
         </div>
         <div className={styles.cardBottomInfo}>
           <UserIcon height={20} width={20} className={styles.sideNavIcon} />

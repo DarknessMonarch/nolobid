@@ -188,6 +188,11 @@
     border: 1px solid var(--secondary-color);
   }
 
+
+  .formIcon {
+    color: var(--background-color);
+  }
+
   .formInput:hover .formIcon {
    color: var(--secondary-color);
   }

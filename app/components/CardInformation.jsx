@@ -7,9 +7,9 @@ import { useProductStore } from "@/app/store/Product";
 import { useState, useEffect, useCallback } from "react";
 import styles from "@/app/styles/cardInformation.module.css";
 import {
-  BanknotesIcon as bidAmountIcon,
   PhoneIcon,
   XMarkIcon as CloseIcon,
+  BanknotesIcon as BidIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
@@ -227,24 +227,25 @@ export default function CardInformation() {
 
       <form onSubmit={onSubmit} className={styles.footerForm}>
         <div className={styles.formInput}>
-          <bidAmountIcon
+          <BidIcon
             className={styles.formIcon}
             alt="bidAmount icon"
-            width={30}
-            height={30}
+            width={20}
+            height={20}
           />
+        
           <input
             type="text"
             name="bidAmount"
             value={formData.bidAmount}
             onChange={handleInputChange}
-            placeholder="10"
+            placeholder="Your bid price"
           />
           {errors.bidAmount && <span className={styles.error}>{errors.bidAmount}</span>}
         </div>
         <div className={styles.formInput}>
           <PhoneIcon
-            className={styles.settingIcon}
+            className={styles.formIcon}
             alt="phone icon"
             width={20}
             height={20}

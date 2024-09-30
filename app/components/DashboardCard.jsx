@@ -40,7 +40,7 @@ export default function DashboardCard() {
     {
       name: "Links",
       icon: LinkIcon,
-      title: "Links generated",
+      title: "Generated promotion links",
       revenue: "+ 100,000",
       stats: "10% decrease from last month",
     },

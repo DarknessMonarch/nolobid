@@ -63,10 +63,6 @@ export const useAuthStore = create(
 
       refreshAccessToken: async () => {
         const { refreshToken } = get();
-        if (!refreshToken) {
-          console.error("No refresh token available");
-          return false;
-        }
 
         try {
           const response = await fetch(`${SERVER_API}/users/public/promoter/refresh`, {
@@ -101,14 +97,10 @@ export const useAuthStore = create(
           return false;
         }
       },
-
       getAccessToken: async () => {
         const { accessToken, tokenExpirationTime, refreshAccessToken } = get();
         if (!accessToken || Date.now() >= tokenExpirationTime) {
-          const refreshed = await refreshAccessToken();
-          if (!refreshed) {
-            return null;
-          }
+       
         }
         return get().accessToken;
       },

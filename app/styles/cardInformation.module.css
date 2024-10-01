@@ -242,6 +242,81 @@
     color: var(--background-color);
     background-color: var(--secondary-color);
   }
+
+  /* pop up content  */
+  .popupContent{
+    gap: 50px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .popupContentInner{
+    gap: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .popupHeader{
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .socialContainer {
+    gap: 10px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    
+  }
+
+  .socialIconWrap {
+    width: 50px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    justify-content: center;
+    border: 1px solid var(--background-color);
+  }
+
+  .socialIconWrap:hover {
+    border: 1px solid var(--secondary-color);
+  }
+
+  .copyInner {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .copyInner h1 {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .shareIcon{
+    height: 24px;
+    width: 24px;
+  }
+
+  .copyField{
+    gap: 10px;
+    display: flex;
+    padding: 10px;
+    overflow: hidden;
+    align-items: center;
+    border-radius: 12px;
+    background-color: var(--primary-glass-color);
+
+  }
+
+  .copyField span {
+    font-size: .6rem;
+  }
+  
 }
 
 /* using it as global style for larger devices  */

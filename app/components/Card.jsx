@@ -9,6 +9,8 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 const ProductCard = ({ data, handleCardClick }) => {
   const { timeLeft, isClient, formatTime } = useTimer(data.expiryDate);
 
+  
+
   return (
     <div
       className={styles.cardContainer}
@@ -66,6 +68,8 @@ export default function Card() {
   useEffect(() => {
     getProducts();
   }, []);
+  
+  
 
   const getProducts = async () => {
     setIsLoading(true);
@@ -87,7 +91,7 @@ export default function Card() {
 
   const searchProducts = searchKey
     ? products.filter((item) =>
-        item.productName.toLowerCase().includes(searchKey.toLowerCase())
+        item.productName.toLowerCase().includes(searchKey.toLowerCase()) || item.productCode.toLowerCase().includes(searchKey.toLowerCase())
       )
     : products;
 

@@ -110,7 +110,7 @@ export default function CardInformation() {
 
   const generateShareLink = useCallback(() => {
     if (product && username) {
-      const link = `https://nolobid.vercel.app/${username}/${product.productCode}`;
+      const link = `https://nolobid.vercel.app/page/home/${username}/${product.productCode}`;
       setShareLink(link);
     }
   }, [product, username]);

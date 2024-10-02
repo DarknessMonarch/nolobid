@@ -19,7 +19,7 @@ import {
 
 export default function SideNavComponent() {
   const searchParams = useSearchParams();
-  const { isAuth, clearUser , accessToken } = useAuthStore();
+  const { isAuth, clearUser, accessToken } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -36,6 +36,12 @@ export default function SideNavComponent() {
 
       const data = await response.json();
 
+      if (response.status === 401) {
+        clearUser();
+        toast.error("Session Expired. Please Login Again");
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(data.message || "Logout failed");
       }
@@ -43,7 +49,8 @@ export default function SideNavComponent() {
       clearUser();
       toast.success("Logout Sucessfully");
     } catch (error) {
-      toast.error(error.message || "Logout failed");
+      clearUser();
+      console.error("logout Sucessfully:");
     }
   };
 
@@ -73,7 +80,6 @@ export default function SideNavComponent() {
     if (isWalletOpen()) return "";
     return pathname === path ? styles.activesideNav : "";
   };
-
 
   return (
     <div className={styles.sideNavContainer}>

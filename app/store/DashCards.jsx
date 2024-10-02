@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export const useDashCardStore = create(
   persist(
     (set, get) => ({
-      showCard: "Revenue",
+      showCard: "Referral",
       setShowCard: (name) =>
         set({
           showCard: name,

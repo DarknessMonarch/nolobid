@@ -24,6 +24,13 @@ export default function DashboardCard() {
       stats: "0% analyis done",
     },
     {
+      name: "Wallet",
+      icon: WalletIcon,
+      title: "Wallet activities",
+      revenue: "Ksh 0",
+      stats: "0% analyis done",
+    },
+    {
       name: "Promotions",
       icon: ProductIcon,
       title: "Products promoted revenue",
@@ -38,13 +45,7 @@ export default function DashboardCard() {
       stats: "0% analyis done",
     },
 
-    {
-      name: "Wallet",
-      icon: WalletIcon,
-      title: "Wallet activities",
-      revenue: "Ksh 0",
-      stats: "0% analyis done",
-    },
+  
   ];
 
   return (

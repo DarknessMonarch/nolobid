@@ -70,6 +70,12 @@ export default function Navbar() {
 
       const data = await response.json();
 
+      if (response.status === 401) {
+        clearUser();
+        toast.error("Session Expired. Please Login Again");
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(data.message || "Logout failed");
       }
@@ -77,10 +83,10 @@ export default function Navbar() {
       clearUser();
       toast.success("Logout Sucessfully");
     } catch (error) {
-      toast.error(error.message || "Logout failed");
+      clearUser();
+      console.error("logout Sucessfully:");
     }
   };
-
 
   const login = () => {
     router.push("/authentication/login", { scroll: false });

@@ -39,7 +39,7 @@ export default function SignUp() {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    referredBy: "", 
+    invitedBy: "", 
   });
 
   const [terms, setTerms] = useState(false);

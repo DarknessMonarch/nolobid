@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, usePathname, redirect } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import styles from "@/app/styles/promotion.module.css";
 import { useEffect } from 'react';
 
 export default function PromotionPage() {
@@ -21,5 +22,9 @@ export default function PromotionPage() {
   }, [pathname, router]);
 
 
-  return null;
+  return (
+    <div className={styles.promotion}>
+     <span className={styles.promotionLoader}></span>
+    </div>
+  );
 }

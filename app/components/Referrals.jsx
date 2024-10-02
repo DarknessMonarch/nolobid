@@ -1,49 +1,30 @@
 "use client";
-import Image from "next/image";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useAuthStore } from "@/app/store/Auth";
 import { useReferralStore } from "@/app/store/Referral";
 import styles from "@/app/styles/referrals.module.css";
-import ProfileImage from "@/public/assets/auth1Image.jpg";
-import { useEffect } from "react";
 
 export default function Referral() {
-  const { username, email, profile } = useAuthStore();
-  const { referrals, referralLink, setReferralLink, generateMockReferralLink } = useReferralStore();
+  const { username } = useAuthStore();
+  const { referrals, referralLink, setReferralLink } = useReferralStore();
 
   useEffect(() => {
-    useReferralStore.getState().setReferrals([
-      { profile, title: username, email, amount: 100 },
-      { profile, title: username, email, amount: 100 },
-      { profile, title: username, email, amount: 100 },
-    ]);
+    generateReferralLink();
   }, []);
-
-  const generateReferralLink = async () => {
-    try {
-      const response = await fetch('/api/referrals/mine/link', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to generate referral link');
-      }
-      const data = await response.json();
-      setReferralLink(data.link);
-    } catch (error) {
-      console.error('Error generating referral link:', error);
-      generateMockReferralLink();
-    }
+  const generateReferralLink = () => {
+    const link = `https://nolobid.vercel.app/authentication/signup?referral=${username}`;
+    setReferralLink(link);
   };
 
   const copyReferralLink = () => {
-    navigator.clipboard.writeText(referralLink)
+    navigator.clipboard
+      .writeText(referralLink)
       .then(() => {
-        console.log('Referral link copied to clipboard');
+        toast.success("Referral link copied to clipboard");
       })
       .catch((err) => {
-        console.error('Failed to copy referral link:', err);
+        toast.error("Failed to copy referral link");
       });
   };
 
@@ -53,16 +34,12 @@ export default function Referral() {
       <p>You made {referrals.length} referrals this month</p>
 
       <div className={styles.generateLinkContainer}>
-        <button onClick={generateReferralLink}>Generate Referral Link</button>
-        {referralLink && (
-          <>
-            <input type="text" value={referralLink} readOnly />
-            <button onClick={copyReferralLink}>Copy Link</button>
-          </>
-        )}
+        <div className={styles.referralLinkInput}>{referralLink}</div>
+        <button onClick={copyReferralLink} className={styles.copyButton}>Copy Link</button>
       </div>
 
-      {referrals.map((data, index) => (
+      {/* Uncomment the below code to display referrals */}
+      {/* {referrals.map((data, index) => (
         <div key={index} className={styles.referralItem}>
           <div className={styles.referralInfo}>
             <Image src={data.profile || ProfileImage} alt="Profile" width={50} height={50} />
@@ -75,7 +52,7 @@ export default function Referral() {
             +{data.amount}
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 }

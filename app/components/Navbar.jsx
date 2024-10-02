@@ -22,8 +22,8 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function Navbar() {
+  const { isAuth, username, clearUser, profile, accessToken, authorized } = useAuthStore();
   const { amount, showAmount, toggleShowAmount } = useWalletStore();
-  const { isAuth, username, clearUser, profile, accessToken } = useAuthStore();
   const [isSearching, setIsSearching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -115,9 +115,11 @@ export default function Navbar() {
           )}
         </div>
         <div className={styles.navContainerBottom}>
-          {isAuth ? (
+          {isAuth  ? (
             <>
-              <div className={styles.wallet}>
+            {
+              authorized ?  (
+                <div className={styles.wallet}>
                 {showAmount ? null : (
                   <HideAmountIcon
                     className={styles.hideIcon}
@@ -146,6 +148,9 @@ export default function Navbar() {
                   </>
                 )}
               </div>
+              ) : null
+            }
+              
 
               <div className={styles.userProfile}>
                 <Image

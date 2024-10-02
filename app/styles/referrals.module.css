@@ -23,11 +23,48 @@
     color: var(--background-light-color);
   }
 
+  .generateLinkContainer {
+    gap: 20px;
+    display: flex;
+    overflow: hidden;
+    align-items: start;
+    flex-direction: column;
+  }
+
+
+  .copyButton {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-effect);
+  }
+  
+
+  .copyButton:hover {
+    background-color: var(--secondary-color);
+  }
+
   .referralContainerWrapper {
     gap: 10px;
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: space-between;
+  }
+
+
+  .referralLinkInput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    text-wrap: break-word;
+    color: var(--secondary-color);
+    background-color: var(--primary-color);
   }
 
   .referralImage {
@@ -61,12 +98,8 @@
     color: var(--secondary-color);
 
     font-size: 0.7rem;
-    font-weight: 300
-    
-
+    font-weight: 300;
   }
-
-
 }
 
 /* using it as global style for larger devices  */
@@ -76,11 +109,11 @@
   }
 
   .referralImageInfoWrapper h2 {
-    font-size:1.2rem;
+    font-size: 1.2rem;
   }
 
   .referralImageInfoWrapper span {
-    font-size: .9rem;
+    font-size: 0.9rem;
     color: var(--background-light-color);
   }
 
@@ -91,6 +124,12 @@
 
   .referralImageInfo {
     flex-direction: row;
+  }
+
+  .copyButton {
+    gap: 10px;
+    padding: 10px;
+    width: fit-content;
   }
 }
 

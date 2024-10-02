@@ -42,6 +42,20 @@ export const useAuthStore = create(
         get().scheduleTokenRefresh();
       },
 
+      updateUser: (userData) => {
+        set({
+          profile: userData.profilePic.fileLink,
+          username: userData.username,
+          email: userData.email,
+          phoneNumber: userData.phoneNumber,
+          userType: userData.userType,
+          role: userData.role,
+          firstTime: userData.firstTime,
+          enabled: userData.enabled,
+          authorized: userData.isAuthorized,
+        });
+      },
+
       clearUser: () => {
         get().cancelTokenRefresh();
         set({

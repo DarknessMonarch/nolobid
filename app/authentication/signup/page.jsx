@@ -3,7 +3,6 @@
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
 import LogoImg from "@/public/assets/logo.png";
 import styles from "@/app/styles/auth.module.css";
@@ -11,6 +10,7 @@ import auth1Image from "@/public/assets/auth1Image.jpg";
 import auth2Image from "@/public/assets/auth2Image.jpg";
 import auth3Image from "@/public/assets/auth3Image.jpg";
 import auth4Image from "@/public/assets/auth4Image.jpg";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import {
   KeyIcon as PasswordIcon,
@@ -28,6 +28,10 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [referral, setReferral] = useState(null); 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -35,14 +39,14 @@ export default function SignUp() {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
+    referredBy: "", 
   });
-  const [errors, setErrors] = useState({});
-  const [terms, setTerms] = useState(false);
 
+  const [terms, setTerms] = useState(false);
+  const [errors, setErrors] = useState({});
+  
   const images = [auth1Image, auth2Image, auth3Image, auth4Image];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const router = useRouter();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,15 +56,13 @@ export default function SignUp() {
     return () => clearInterval(interval);
   }, [images.length]);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
-  };
+  // Referral setup from query params
+  useEffect(() => {
+    const referralParam = searchParams.get("referral");
+    if (referralParam && referralParam !== "") {
+      setReferral(referralParam);
+    }
+  }, [searchParams]);
 
   const handleTermsChange = (e) => {
     setTerms(e.target.checked);
@@ -127,6 +129,7 @@ export default function SignUp() {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) newErrors.username = "Username is required";
@@ -162,6 +165,14 @@ export default function SignUp() {
 
     try {
       const { confirmPassword, ...dataToSend } = formData;
+
+      // Only send referral if it's available
+      if (referral) {
+        dataToSend.referredBy = referral;
+      } else {
+        delete dataToSend.referredBy;
+      }
+
       const response = await fetch(
         `${SERVER_API}/users/public/promoters/register`,
         {
@@ -178,6 +189,7 @@ export default function SignUp() {
       if (!response.ok) {
         throw new Error(data.errors || "Sign up failed");
       }
+
       toast.success(
         data.message ||
           "Sign up successful! Please check your email for verification."

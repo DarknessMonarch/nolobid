@@ -11,6 +11,7 @@ import {
   LinkIcon,
   PhoneIcon,
   ShareIcon,
+  NoSymbolIcon as NotFoundIcon,
   XMarkIcon as CloseIcon,
   BanknotesIcon as BidIcon,
 } from "@heroicons/react/24/outline";
@@ -29,6 +30,7 @@ export default function CardInformation() {
   const { product, setProduct } = useProductStore();
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
+  const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const { isAuth, username } = useAuthStore();
   const pathname = usePathname();
@@ -64,6 +66,7 @@ export default function CardInformation() {
 
   const getProductsByID = async (id) => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch(
         `${SERVER_API}/products/public/single/${id}`,
@@ -76,9 +79,23 @@ export default function CardInformation() {
       );
 
       const data = await response.json();
-      setProduct(data.data);
+
+      if (response.ok) {
+        if (
+          data.responsecode === "01" &&
+          data.errors &&
+          data.errors.includes("Product not found")
+        ) {
+          setError("Product not found");
+        } else {
+          setProduct(data.data);
+        }
+      } else {
+        throw new Error(data.message || "Failed to fetch product");
+      }
     } catch (error) {
       console.error("Error fetching product", error);
+      setError(error.message || "An error occurred while fetching the product");
     } finally {
       setIsLoading(false);
     }
@@ -110,7 +127,7 @@ export default function CardInformation() {
 
   const generateShareLink = useCallback(() => {
     if (product && username) {
-      const link = `https://nolobid.vercel.app/page/home/${username}/${product.productCode}`;
+      const link = `https://nolobid.vercel.app/page/home${username}/${product.productCode}`;
       setShareLink(link);
     }
   }, [product, username]);
@@ -234,6 +251,15 @@ export default function CardInformation() {
 
   if (!product) {
     return null;
+  }
+
+  if (error) {
+    return (
+      <div className={styles.cardNotFound}>
+        <NotFoundIcon height={30} width={30} className={styles.notFoundImg} />
+        <h1>Product not found</h1>
+      </div>
+    );
   }
 
   return (

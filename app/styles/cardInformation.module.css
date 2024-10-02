@@ -18,6 +18,20 @@
     justify-content: space-between;
   }
 
+  .cardNotFound {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--secondary-color);
+  }
+
+  .cardNotFound h1 {
+    font-size: .9rem;
+    font-weight: 300;
+  }
  
 
   .cardImageWrapper {

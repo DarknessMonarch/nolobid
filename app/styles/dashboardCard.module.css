@@ -31,9 +31,17 @@
       background-color: var(--secondary-color);
     }
 
+    .dashcard:hover .dashcardTitle h3 {
+      color: var(--background-color);
+    }
+
     .dashcardActive {
       background-color: var(--secondary-color);
 
+    }
+
+    .dashcardActive .dashcardTitle h3 {
+      color: var(--background-color);
     }
   
     .dashcardTitle{

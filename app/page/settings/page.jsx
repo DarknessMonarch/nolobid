@@ -8,6 +8,7 @@ import { useAuthStore } from "@/app/store/Auth";
 import { useState, useEffect, useRef } from "react";
 import Profile from "@/public/assets/auth1Image.jpg";
 import styles from "@/app/styles/settings.module.css";
+import { getUserDetails } from "@/app/hooks/userDetails";
 
 import {
   PhoneIcon,
@@ -150,6 +151,7 @@ export default function SettingsPage() {
           if (data && data.profile_pic) {
             setUser({ profile: data.profile_pic });
           }
+        await getUserDetails();
         } else if (response.status === 413) {
           toast.error(
             "File is too large. Please upload an image smaller than 5MB."
@@ -192,6 +194,7 @@ export default function SettingsPage() {
       }
 
       toast.success("Profile updated successfully");
+      await getUserDetails();
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
@@ -230,6 +233,8 @@ export default function SettingsPage() {
         newPassword: "",
         confirmNewPassword: "",
       }));
+      await getUserDetails();
+
     } catch (error) {
       console.error("Error updating password:", error);
       toast.error("Failed to update password");
@@ -288,6 +293,8 @@ export default function SettingsPage() {
       }
 
       toast.success("Phone number verified and updated successfully");
+      await getUserDetails();
+
       setFormData({ phoneNumber: "", verificationCode: "" });
       setCodeSent(false);
     } catch (error) {

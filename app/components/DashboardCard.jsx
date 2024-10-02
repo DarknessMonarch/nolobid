@@ -3,10 +3,11 @@ import { useDashCardStore } from "@/app/store/DashCards";
 import styles from "@/app/styles/dashboardCard.module.css";
 
 import {
-  LinkIcon,
+
   CubeIcon as ProductIcon,
   UserGroupIcon as RefferalIcon,
   CreditCardIcon as RevenueIcon,
+  BanknotesIcon as WalletIcon,
   ArrowTrendingUpIcon as IncreaseIcon,
   ArrowTrendingDownIcon as DecreaseIcon,
 } from "@heroicons/react/24/outline";
@@ -19,30 +20,30 @@ export default function DashboardCard() {
       name: "Revenue",
       icon: RevenueIcon,
       title: "Total revenue",
-      revenue: "Ksh 200,000",
-      stats: "10% increase from last month",
+      revenue: "Ksh 0",
+      stats: "0% analyis done",
     },
     {
       name: "Promotions",
       icon: ProductIcon,
       title: "Products promoted revenue",
-      revenue: "Ksh 100,000",
-      stats: "10% decrease from last month",
+      revenue: "Ksh 0",
+      stats: "0% analyis done",
     },
     {
       name: "Referral",
       icon: RefferalIcon,
       title: "Referrals earning",
-      revenue: "Ksh 100,000",
-      stats: "15% increase from last month",
+      revenue: "Ksh 0",
+      stats: "0% analyis done",
     },
 
     {
-      name: "Links",
-      icon: LinkIcon,
-      title: "Generated promotion links",
-      revenue: "+ 100,000",
-      stats: "10% decrease from last month",
+      name: "Wallet",
+      icon: WalletIcon,
+      title: "Wallet activities",
+      revenue: "Ksh 0",
+      stats: "0% analyis done",
     },
   ];
 

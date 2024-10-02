@@ -2,15 +2,15 @@
 
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
-import Links from "@/app/components/Links";
 import Revenue from "@/app/components/Revenue";
+import { useAuthStore } from "@/app/store/Auth";
 import Referrals from "@/app/components/Referrals";
 import Promotions from "@/app/components/Promotions";
+import styles from "@/app/styles/dashboard.module.css";
+import { useDashCardStore } from "@/app/store/DashCards";
 import DashboardCard from "@/app/components/DashboardCard";
 import StatisticGraph from "@/app/components/StatisticsGraph";
-import { useAuthStore } from "@/app/store/Auth";
-import { useDashCardStore } from "@/app/store/DashCards";
-import styles from "@/app/styles/dashboard.module.css";
+import WalletActivities from "@/app/components/WalletActivities";
 
 export default function DashboardPage() {
   const { isAuth, username } = useAuthStore();
@@ -28,8 +28,8 @@ export default function DashboardPage() {
         return <Referrals />;
       case "Promotions":
         return <Promotions />;
-      case "Links":
-        return <Links />;
+      case "Wallet":
+        return <WalletActivities />;
       case "Revenue":
         return <Revenue />;
       default:

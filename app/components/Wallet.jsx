@@ -101,7 +101,7 @@ export default function Wallet() {
       toast.success(data.data);
       if (authorized) {
         toast.success("Authorization successful");
-        fetchWalletBalance();
+       await fetchWalletBalance();
       } else {
         toast.info("Authorization pending. login again to view balance");
       }
@@ -170,6 +170,7 @@ export default function Wallet() {
               `${transactionType}ed Ksh. ${amountValue.toLocaleString()}`
             );
           }
+          
           setTransactionAmount("");
           setPhoneNumber("");
         } else if (
@@ -181,7 +182,7 @@ export default function Wallet() {
         } else {
           throw new Error(`Failed to ${transactionType.toLowerCase()}`);
         }
-        fetchWalletBalance();
+        await fetchWalletBalance();
       } catch (error) {
         toast.error(error.message);
       } finally {

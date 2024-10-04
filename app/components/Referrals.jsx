@@ -1,20 +1,31 @@
 "use client";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useAuthStore } from "@/app/store/Auth";
+import { useAuthStore } from "@/app/store/Auth"; // Import useAuthStore to access phoneNumber
 import { useReferralStore } from "@/app/store/Referral";
 import styles from "@/app/styles/referrals.module.css";
 
+// Simple Base64 encoding function for encryption (temporary solution)
+const encryptPhoneNumber = (phoneNumber) => {
+  return btoa(phoneNumber); // Base64 encryption (replace with more secure method if needed)
+};
+
 export default function Referral() {
-  const { username } = useAuthStore();
+  // Access phoneNumber from the auth store
+  const { phoneNumber } = useAuthStore(); // Use phoneNumber instead of username
   const { referrals, referralLink, setReferralLink } = useReferralStore();
 
   useEffect(() => {
-    generateReferralLink();
-  }, []);
+    if (phoneNumber) {
+      generateReferralLink();
+    }
+  }, [phoneNumber]); // Run effect only when phoneNumber is available
+
   const generateReferralLink = () => {
-    const link = `https://nolobid.vercel.app/authentication/signup?referral=${username}`;
-    setReferralLink(link);
+    // Encrypt the phone number before generating the link
+    const encryptedPhoneNumber = encryptPhoneNumber(phoneNumber);
+    const link = `https://nolobid.vercel.app/authentication/signup?referral=${encryptedPhoneNumber}`;
+    setReferralLink(link); // Update the referral link in the store
   };
 
   const copyReferralLink = () => {
@@ -37,22 +48,6 @@ export default function Referral() {
         <div className={styles.referralLinkInput}>{referralLink}</div>
         <button onClick={copyReferralLink} className={styles.copyButton}>Copy Link</button>
       </div>
-
-      {/* Uncomment the below code to display referrals */}
-      {/* {referrals.map((data, index) => (
-        <div key={index} className={styles.referralItem}>
-          <div className={styles.referralInfo}>
-            <Image src={data.profile || ProfileImage} alt="Profile" width={50} height={50} />
-            <div>
-              <h3>{data.title}</h3>
-              <p>{data.email}</p>
-            </div>
-          </div>
-          <div className={styles.referralAmount}>
-            +{data.amount}
-          </div>
-        </div>
-      ))} */}
     </div>
   );
 }
